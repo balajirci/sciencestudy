@@ -130,6 +130,14 @@
     <p>Pyramid-style · Hardest clues first · May 18 Biology Bee</p>
   </div>
 
+  <!-- API KEY BANNER -->
+  <div id="apiKeyBanner" style="background:var(--surface);border:1px solid rgba(167,139,250,0.3);border-radius:12px;padding:14px 16px;margin-bottom:1.5rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--superpower);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;">API Key</span>
+    <input id="apiKeyInput" type="password" placeholder="sk-ant-..." style="flex:1;min-width:200px;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:8px;font-family:'DM Mono',monospace;font-size:12px;" />
+    <button onclick="saveApiKey()" style="background:var(--superpower);color:#1a0a2e;font-size:12px;font-weight:600;padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;">Save Key</button>
+    <span id="apiKeyStatus" style="font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);" id="keyStatus">No key saved</span>
+  </div>
+
   <div class="tabs">
     <button class="tab active" id="tab-quiz" onclick="switchTab('quiz')">Quiz</button>
     <button class="tab" id="tab-miss" onclick="switchTab('miss')">
@@ -283,7 +291,9 @@ async function generateQuestions(){
   document.getElementById('questionsContainer').innerHTML=`<div class="loading"><div class="loading-dot">●</div><div class="loading-dot">●</div><div class="loading-dot">●</div><br><br>Generating ${count} pyramid-style questions…</div>`;
   const prompt=`You are an expert IAC Biology Bee question writer for 4th grade elementary students.\n\nGenerate exactly ${count} pyramid-style biology bee questions. Each question must follow the IAC format where the hardest, most technical clues come FIRST and the easiest giveaway clue comes LAST.\n\nTopics to draw from (pick a good mix): ${topicList}\n\nReturn ONLY a valid JSON array. No markdown, no explanation, just the JSON array.\n\nEach question object:\n{\n  "topic": "topic name",\n  "answer": "the answer",\n  "note": "one sentence explaining why this is the answer",\n  "difficulty": "easy" or "medium" or "hard",\n  "clues": {\n    "superpower": "Very technical clue only an expert would know. 1-2 sentences.",\n    "power": "Moderately technical clue. 1-2 sentences.",\n    "normal": "A clue most biology students would recognize. 1-2 sentences.",\n    "giveaway": "The easiest most well-known fact. 1 sentence."\n  }\n}\n\nMake answers VARIED — organelles, scientists, diseases, processes, classifications, ecological concepts, genetic terms, body system functions. Do not repeat answers.`;
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:8000,messages:[{role:'user',content:prompt}]})});
+    const apiKey=localStorage.getItem('anthropicApiKey');
+    if(!apiKey){document.getElementById('questionsContainer').innerHTML='<div class="empty">⚠️ Please enter your Anthropic API key above and click Save Key.</div>';loading=false;btn.disabled=false;btn.textContent='Generate Questions';return;}
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:8000,messages:[{role:'user',content:prompt}]})});
     const data=await res.json();
     let text=data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
     text=text.replace(/```json|```/g,'').trim();
@@ -363,7 +373,7 @@ function setFilter(f){
 function renderMissList(){
   updateScore();
   const c=document.getElementById('missContainer');
-  if(missedList.length===0){c.innerHTML='<div class="empty"><div class="empty-icon">📋</div>No missed questions yet.<br><span style="font-size:12px;">Questions Advith misses will appear here automatically.</span></div>';return;}
+  if(missedList.length===0){c.innerHTML='<div class="empty"><div class="empty-icon">📋</div>No missed questions yet.<br><span style="font-size:12px;">Questions Abhinav misses will appear here automatically.</span></div>';return;}
   let items=missedList.map((m,i)=>({m,i}));
   if(missFilter==='needs') items=items.filter(({m})=>!m.mastered);
   if(missFilter==='mastered') items=items.filter(({m})=>m.mastered);
@@ -392,7 +402,19 @@ function startRedrill(){
   setFilter('needs');
 }
 
-renderTopics();updateScore();
+function saveApiKey(){
+  const k=document.getElementById('apiKeyInput').value.trim();
+  if(!k){alert('Please paste your API key first.');return;}
+  localStorage.setItem('anthropicApiKey',k);
+  document.getElementById('apiKeyStatus').textContent='✓ Key saved';
+  document.getElementById('apiKeyStatus').style.color='var(--accent)';
+  document.getElementById('apiKeyInput').value='';
+}
+function loadApiKey(){
+  const k=localStorage.getItem('anthropicApiKey');
+  if(k){document.getElementById('apiKeyStatus').textContent='✓ Key saved';document.getElementById('apiKeyStatus').style.color='var(--accent)';}
+}
+renderTopics();updateScore();loadApiKey();
 </script>
 </body>
 </html>
