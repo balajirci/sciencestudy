@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abhinav's Biology Bee Trainer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+  :root {
+    --bg:#0f1117;--surface:#181c27;--surface2:#1e2333;--border:rgba(255,255,255,0.08);
+    --accent:#4ade80;--accent3:#f87171;--text:#e8eaf0;--muted:#6b7280;
+    --superpower:#a78bfa;--power:#60a5fa;--normal:#4ade80;--after:#94a3b8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(74,222,128,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(74,222,128,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  .app{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:2rem 1.5rem;}
+  .header{text-align:center;margin-bottom:2rem;}
+  .header-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(74,222,128,0.3);padding:4px 14px;border-radius:20px;margin-bottom:1rem;}
+  h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,5vw,3rem);color:var(--text);line-height:1.1;margin-bottom:.5rem;}
+  h1 em{font-style:italic;color:var(--accent);}
+  .header p{color:var(--muted);font-size:14px;}
+  .tabs{display:flex;gap:4px;margin-bottom:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px;}
+  .tab{flex:1;padding:10px 16px;border-radius:9px;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;}
+  .tab:hover{color:var(--text);}
+  .tab.active{background:var(--surface2);color:var(--text);}
+  .tab-badge{background:var(--accent3);color:#1a0505;font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;font-family:'DM Mono',monospace;min-width:18px;text-align:center;}
+  .tab-badge.hidden{display:none;}
+  .score-bar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:1rem;}
+  .score-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;}
+  .score-dot{width:8px;height:8px;border-radius:50%;}
+  .score-num{font-size:16px;font-weight:500;}
+  .score-correct .score-num{color:var(--accent);}
+  .score-incorrect .score-num{color:var(--accent3);}
+  .score-sep{color:var(--border);margin:0 4px;}
+  .progress-line{height:2px;background:var(--surface2);border-radius:2px;margin-bottom:1.5rem;overflow:hidden;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--superpower),var(--power),var(--normal));border-radius:2px;transition:width .4s;}
+  .topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:1.5rem;}
+  .topic-btn{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;text-align:left;transition:all .15s;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;}
+  .topic-btn:hover{border-color:rgba(74,222,128,0.4);background:var(--surface2);}
+  .topic-btn.active{border-color:var(--accent);background:rgba(74,222,128,0.08);color:var(--accent);}
+  .topic-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);display:block;margin-bottom:2px;}
+  .controls-row{display:flex;gap:10px;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;}
+  .btn{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:10px 20px;border-radius:8px;border:none;cursor:pointer;transition:all .15s;}
+  .btn-primary{background:var(--accent);color:#0a1a10;}
+  .btn-primary:hover{background:#86efac;transform:translateY(-1px);}
+  .btn-primary:disabled{background:#2d4a35;color:#4a6b52;cursor:not-allowed;transform:none;}
+  select{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;}
+  select:focus{outline:none;border-color:rgba(74,222,128,0.4);}
+  .all-topics-btn{font-size:12px;padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+  .all-topics-btn:hover{color:var(--text);border-color:rgba(255,255,255,0.2);}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:1rem;}
+  .leg{display:flex;align-items:center;gap:5px;}
+  .leg-bar{width:12px;height:3px;border-radius:2px;}
+  .question-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem;position:relative;overflow:hidden;}
+  .question-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--superpower),var(--power),var(--normal));}
+  .question-card.miss-card::before{background:linear-gradient(90deg,var(--accent3),#fb923c);}
+  .question-card.miss-mastered{opacity:.55;}
+  .question-card.miss-mastered::before{background:var(--accent);}
+  .q-meta{display:flex;gap:10px;align-items:center;margin-bottom:1rem;flex-wrap:wrap;}
+  .q-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
+  .q-topic{font-size:11px;font-weight:500;padding:2px 10px;border-radius:20px;background:rgba(74,222,128,0.1);color:var(--accent);border:1px solid rgba(74,222,128,0.2);}
+  .q-difficulty{font-size:11px;padding:2px 10px;border-radius:20px;font-family:'DM Mono',monospace;}
+  .diff-easy{background:rgba(74,222,128,0.1);color:var(--normal);border:1px solid rgba(74,222,128,0.2);}
+  .diff-medium{background:rgba(96,165,250,0.1);color:var(--power);border:1px solid rgba(96,165,250,0.2);}
+  .diff-hard{background:rgba(167,139,250,0.1);color:var(--superpower);border:1px solid rgba(167,139,250,0.2);}
+  .miss-tag{font-size:11px;padding:2px 10px;border-radius:20px;background:rgba(248,113,113,0.1);color:var(--accent3);border:1px solid rgba(248,113,113,0.3);font-family:'DM Mono',monospace;}
+  .mastered-tag{font-size:11px;padding:2px 10px;border-radius:20px;background:rgba(74,222,128,0.1);color:var(--accent);border:1px solid rgba(74,222,128,0.2);font-family:'DM Mono',monospace;}
+  .pyramid-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem;}
+  .clue-block{border-left:2px solid;padding:.6rem 1rem;margin-bottom:.5rem;border-radius:0 8px 8px 0;font-size:14px;line-height:1.6;}
+  .clue-superpower{border-color:var(--superpower);background:rgba(167,139,250,0.05);}
+  .clue-superpower .pyramid-label{color:var(--superpower);}
+  .clue-power{border-color:var(--power);background:rgba(96,165,250,0.05);}
+  .clue-power .pyramid-label{color:var(--power);}
+  .clue-normal{border-color:var(--normal);background:rgba(74,222,128,0.05);}
+  .clue-normal .pyramid-label{color:var(--normal);}
+  .clue-giveaway{border-color:var(--after);background:rgba(148,163,184,0.05);}
+  .clue-giveaway .pyramid-label{color:var(--after);}
+  .clue-text{color:var(--text);}
+  .answer-section{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);}
+  .answer-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem;}
+  .answer-text{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--accent);}
+  .answer-note{font-size:12px;color:var(--muted);margin-top:.3rem;line-height:1.5;}
+  .clue-controls{display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap;}
+  .btn-clue{font-size:12px;padding:7px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;font-family:'DM Mono',monospace;transition:all .15s;}
+  .btn-clue:hover{color:var(--text);border-color:rgba(255,255,255,0.2);}
+  .btn-clue.sp{border-color:rgba(167,139,250,0.4);color:var(--superpower);}
+  .btn-clue.pw{border-color:rgba(96,165,250,0.4);color:var(--power);}
+  .btn-clue.nr{border-color:rgba(74,222,128,0.4);color:var(--normal);}
+  .btn-clue.gv{border-color:rgba(148,163,184,0.4);color:var(--after);}
+  .result-btns{display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap;}
+  .btn-correct{background:rgba(74,222,128,0.15);color:var(--accent);border:1px solid rgba(74,222,128,0.3);font-size:13px;padding:8px 18px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .15s;}
+  .btn-correct:hover{background:rgba(74,222,128,0.25);}
+  .btn-incorrect{background:rgba(248,113,113,0.1);color:var(--accent3);border:1px solid rgba(248,113,113,0.3);font-size:13px;padding:8px 18px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .15s;}
+  .btn-incorrect:hover{background:rgba(248,113,113,0.2);}
+  .btn-mastered{background:rgba(74,222,128,0.15);color:var(--accent);border:1px solid rgba(74,222,128,0.3);font-size:12px;padding:7px 14px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .15s;}
+  .btn-mastered:hover{background:rgba(74,222,128,0.25);}
+  .btn-remove{background:rgba(248,113,113,0.05);color:var(--muted);border:1px solid rgba(248,113,113,0.15);font-size:12px;padding:7px 14px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+  .btn-remove:hover{color:var(--accent3);}
+  .redrill-btn{background:var(--accent3);color:#1a0505;font-size:12px;font-weight:600;padding:8px 18px;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+  .redrill-btn:hover{background:#fca5a5;transform:translateY(-1px);}
+  .redrill-btn:disabled{background:#3d1c1c;color:#7a3c3c;cursor:not-allowed;transform:none;}
+  .btn-danger{background:rgba(248,113,113,0.1);color:var(--accent3);border:1px solid rgba(248,113,113,0.3);font-size:12px;padding:8px 14px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .15s;}
+  .btn-danger:hover{background:rgba(248,113,113,0.2);}
+  .loading{text-align:center;padding:3rem;font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);}
+  .loading-dot{display:inline-block;animation:pulse 1.2s ease-in-out infinite;}
+  .loading-dot:nth-child(2){animation-delay:.2s;}
+  .loading-dot:nth-child(3){animation-delay:.4s;}
+  @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+  .empty{text-align:center;padding:3rem;color:var(--muted);font-size:14px;line-height:1.8;}
+  .empty-icon{font-size:2.5rem;margin-bottom:.5rem;}
+  .miss-summary{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;}
+  .miss-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;flex:1;min-width:100px;}
+  .miss-stat-num{font-size:20px;font-weight:500;color:var(--text);}
+  .miss-stat-label{font-size:11px;color:var(--muted);margin-top:2px;}
+  .miss-filters{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;align-items:center;}
+  .filter-chip{font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-family:'DM Mono',monospace;transition:all .15s;}
+  .filter-chip:hover{color:var(--text);}
+  .filter-chip.active{background:rgba(248,113,113,0.1);color:var(--accent3);border-color:rgba(248,113,113,0.3);}
+  .miss-topic-header{font-size:12px;font-weight:500;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.1em;padding:6px 0;border-bottom:1px solid var(--border);margin-bottom:.8rem;display:flex;justify-content:space-between;align-items:center;}
+  .miss-topic-group{margin-bottom:1.5rem;}
+  .section-hidden{display:none;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="header-badge">IAC Biology Bee Trainer</div>
+    <h1>Abhinav's <em>Biology</em> Quiz</h1>
+    <p>Pyramid-style · Hardest clues first · May 18 Biology Bee</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" id="tab-quiz" onclick="switchTab('quiz')">Quiz</button>
+    <button class="tab" id="tab-miss" onclick="switchTab('miss')">
+      Miss List <span class="tab-badge hidden" id="missBadge">0</span>
+    </button>
+  </div>
+
+  <div class="score-bar">
+    <div class="score-item score-correct"><span class="score-dot" style="background:var(--accent)"></span><span class="score-num" id="scoreCorrect">0</span><span>correct</span></div>
+    <span class="score-sep">·</span>
+    <div class="score-item score-incorrect"><span class="score-dot" style="background:var(--accent3)"></span><span class="score-num" id="scoreIncorrect">0</span><span>missed</span></div>
+    <span class="score-sep">·</span>
+    <div class="score-item"><span class="score-num" id="scoreTotal">0</span><span>total</span></div>
+    <span style="margin-left:auto;font-size:11px;font-family:'DM Mono',monospace;color:var(--muted)" id="accuracyLabel"></span>
+  </div>
+  <div class="progress-line"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <!-- QUIZ TAB -->
+  <div id="section-quiz">
+    <div style="margin-bottom:.8rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace">TOPICS</span>
+      <button class="all-topics-btn" onclick="selectAll()">All</button>
+      <button class="all-topics-btn" onclick="selectNone()">None</button>
+    </div>
+    <div class="topic-grid" id="topicGrid"></div>
+    <div class="legend">
+      <div class="leg"><div class="leg-bar" style="background:var(--superpower)"></div>(+) superpower = 6pts</div>
+      <div class="leg"><div class="leg-bar" style="background:var(--power)"></div>(*) power = 5pts</div>
+      <div class="leg"><div class="leg-bar" style="background:var(--normal)"></div>normal = 4pts</div>
+      <div class="leg"><div class="leg-bar" style="background:var(--after)"></div>after read = 3pts</div>
+    </div>
+    <div class="controls-row">
+      <button class="btn btn-primary" id="generateBtn" onclick="generateQuestions()">Generate Questions</button>
+      <select id="countSelect">
+        <option value="10">10 questions</option>
+        <option value="20">20 questions</option>
+        <option value="30" selected>30 questions</option>
+        <option value="50">50 questions</option>
+      </select>
+      <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)" id="queueLabel"></span>
+    </div>
+    <div id="questionsContainer"><div class="empty">Select topics above and click <strong>Generate Questions</strong> to begin.</div></div>
+  </div>
+
+  <!-- MISS LIST TAB -->
+  <div id="section-miss" class="section-hidden">
+    <div class="miss-summary">
+      <div class="miss-stat"><div class="miss-stat-num" id="missTotal">0</div><div class="miss-stat-label">total missed</div></div>
+      <div class="miss-stat"><div class="miss-stat-num" id="masteredCount" style="color:var(--accent)">0</div><div class="miss-stat-label">mastered ✓</div></div>
+      <div class="miss-stat"><div class="miss-stat-num" id="stillNeeds" style="color:var(--accent3)">0</div><div class="miss-stat-label">still needs work</div></div>
+    </div>
+    <div class="controls-row" style="margin-bottom:1rem">
+      <button class="redrill-btn" id="redrillBtn" onclick="startRedrill()" disabled>Re-drill all missed</button>
+      <button class="btn-danger" onclick="clearMastered()">Clear mastered</button>
+    </div>
+    <div class="miss-filters">
+      <span style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">FILTER:</span>
+      <button class="filter-chip active" id="filter-all" onclick="setFilter('all')">All</button>
+      <button class="filter-chip" id="filter-needs" onclick="setFilter('needs')">Needs work</button>
+      <button class="filter-chip" id="filter-mastered" onclick="setFilter('mastered')">Mastered</button>
+    </div>
+    <div id="missContainer">
+      <div class="empty"><div class="empty-icon">📋</div>No missed questions yet.<br><span style="font-size:12px;">Questions Abhinav misses will appear here automatically.</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const TOPICS=[
+  {id:'cell',label:'Cell Structure & Function',ch:'9–11',tier:1},
+  {id:'photosynthesis',label:'Photosynthesis & Respiration',ch:'12–13',tier:1},
+  {id:'classification',label:'Biological Classification',ch:'4',tier:1},
+  {id:'bacteria_virus',label:'Bacteria & Viruses',ch:'17–18',tier:1},
+  {id:'body_overview',label:'Body Systems Overview',ch:'36–38',tier:1},
+  {id:'nervous_endocrine',label:'Nervous & Endocrine Systems',ch:'39',tier:1},
+  {id:'circulatory_respiratory',label:'Circulatory & Respiratory',ch:'40',tier:1},
+  {id:'digestive_immune',label:'Digestive & Immune Systems',ch:'41–42',tier:1},
+  {id:'genetics',label:'Genetics & Heredity',ch:'44',tier:1},
+  {id:'dna_rna',label:'DNA & RNA',ch:'45',tier:1},
+  {id:'evolution',label:'Evolution & Natural Selection',ch:'47–48',tier:1},
+  {id:'ecosystems',label:'Ecosystems & Food Webs',ch:'49–50',tier:1},
+  {id:'animals',label:'Animal Kingdom & Vertebrates',ch:'30–35',tier:2},
+  {id:'plants',label:'Plants & Photosynthesis',ch:'25–29',tier:2},
+  {id:'fungi',label:'Fungi & Protists',ch:'20–23',tier:2},
+  {id:'reproduction',label:'Reproduction & Development',ch:'43',tier:2},
+];
+
+let selectedTopics=new Set(TOPICS.filter(t=>t.tier===1).map(t=>t.id));
+let questions=[];
+let currentIdx=0;
+let scores={correct:0,incorrect:0};
+let clueStates={};
+let answerShown={};
+let answered={};
+let missedList=[];
+let missFilter='all';
+let missClueStates={};
+let missAnswerShown={};
+let currentTab='quiz';
+let loading=false;
+
+function switchTab(tab){
+  currentTab=tab;
+  document.getElementById('tab-quiz').classList.toggle('active',tab==='quiz');
+  document.getElementById('tab-miss').classList.toggle('active',tab==='miss');
+  document.getElementById('section-quiz').classList.toggle('section-hidden',tab!=='quiz');
+  document.getElementById('section-miss').classList.toggle('section-hidden',tab!=='miss');
+  if(tab==='miss') renderMissList();
+}
+
+function renderTopics(){
+  document.getElementById('topicGrid').innerHTML=TOPICS.map(t=>`
+    <button class="topic-btn ${selectedTopics.has(t.id)?'active':''}" onclick="toggleTopic('${t.id}')">
+      <span class="topic-num">Ch. ${t.ch} · Tier ${t.tier}</span>${t.label}
+    </button>`).join('');
+}
+function toggleTopic(id){selectedTopics.has(id)?selectedTopics.delete(id):selectedTopics.add(id);renderTopics();}
+function selectAll(){TOPICS.forEach(t=>selectedTopics.add(t.id));renderTopics();}
+function selectNone(){selectedTopics.clear();renderTopics();}
+
+function updateScore(){
+  document.getElementById('scoreCorrect').textContent=scores.correct;
+  document.getElementById('scoreIncorrect').textContent=scores.incorrect;
+  const total=scores.correct+scores.incorrect;
+  document.getElementById('scoreTotal').textContent=total;
+  const acc=total>0?Math.round(scores.correct/total*100):0;
+  document.getElementById('accuracyLabel').textContent=total>0?acc+'% accuracy':'';
+  const prog=questions.length>0?(currentIdx/questions.length*100):0;
+  document.getElementById('progressFill').style.width=prog+'%';
+  document.getElementById('queueLabel').textContent=questions.length>0?currentIdx+' of '+questions.length+' answered':'';
+  const unmastered=missedList.filter(m=>!m.mastered).length;
+  const badge=document.getElementById('missBadge');
+  badge.textContent=unmastered;
+  badge.classList.toggle('hidden',unmastered===0);
+  document.getElementById('missTotal').textContent=missedList.length;
+  const mc=missedList.filter(m=>m.mastered).length;
+  document.getElementById('masteredCount').textContent=mc;
+  document.getElementById('stillNeeds').textContent=missedList.length-mc;
+  const rb=document.getElementById('redrillBtn');
+  if(rb) rb.disabled=unmastered===0;
+}
+
+async function generateQuestions(){
+  if(loading) return;
+  if(selectedTopics.size===0){alert('Select at least one topic.');return;}
+  loading=true;
+  const btn=document.getElementById('generateBtn');
+  btn.disabled=true; btn.textContent='Generating...';
+  const count=document.getElementById('countSelect').value;
+  const topicList=TOPICS.filter(t=>selectedTopics.has(t.id)).map(t=>t.label).join(', ');
+  document.getElementById('questionsContainer').innerHTML=`<div class="loading"><div class="loading-dot">●</div><div class="loading-dot">●</div><div class="loading-dot">●</div><br><br>Generating ${count} pyramid-style questions…</div>`;
+  const prompt=`You are an expert IAC Biology Bee question writer for 4th grade elementary students.\n\nGenerate exactly ${count} pyramid-style biology bee questions. Each question must follow the IAC format where the hardest, most technical clues come FIRST and the easiest giveaway clue comes LAST.\n\nTopics to draw from (pick a good mix): ${topicList}\n\nReturn ONLY a valid JSON array. No markdown, no explanation, just the JSON array.\n\nEach question object:\n{\n  "topic": "topic name",\n  "answer": "the answer",\n  "note": "one sentence explaining why this is the answer",\n  "difficulty": "easy" or "medium" or "hard",\n  "clues": {\n    "superpower": "Very technical clue only an expert would know. 1-2 sentences.",\n    "power": "Moderately technical clue. 1-2 sentences.",\n    "normal": "A clue most biology students would recognize. 1-2 sentences.",\n    "giveaway": "The easiest most well-known fact. 1 sentence."\n  }\n}\n\nMake answers VARIED — organelles, scientists, diseases, processes, classifications, ecological concepts, genetic terms, body system functions. Do not repeat answers.`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:8000,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    let text=data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+    text=text.replace(/```json|```/g,'').trim();
+    const newQs=JSON.parse(text);
+    const offset=questions.length;
+    questions=[...questions,...newQs];
+    clueStates={};answerShown={};answered={};
+    renderQuestions();updateScore();
+  }catch(err){
+    document.getElementById('questionsContainer').innerHTML=`<div class="empty">Error generating questions. Please try again.<br><small>${err.message}</small></div>`;
+  }
+  loading=false;btn.disabled=false;btn.textContent='Generate More Questions';
+}
+
+function renderQuestions(){
+  const c=document.getElementById('questionsContainer');
+  if(questions.length===0){c.innerHTML='<div class="empty">Select topics above and click <strong>Generate Questions</strong> to begin.</div>';return;}
+  c.innerHTML=questions.map((q,i)=>buildCard(q,i,{prefix:'q',cs:clueStates[i]||0,ans:answered[i]||null,show:answerShown[i]||false,isMiss:false,mastered:false})).join('');
+}
+
+function buildCard(q,i,{prefix,cs,ans,show,isMiss,mastered}){
+  return `<div class="question-card ${isMiss?'miss-card':''} ${mastered?'miss-mastered':''}" >
+    <div class="q-meta">
+      <span class="q-num">#${i+1}</span>
+      <span class="q-topic">${q.topic}</span>
+      <span class="q-difficulty diff-${q.difficulty}">${q.difficulty}</span>
+      ${isMiss&&!mastered?'<span class="miss-tag">needs work</span>':''}
+      ${mastered?'<span class="mastered-tag">✓ mastered</span>':''}
+      ${!isMiss&&ans==='correct'?'<span style="font-size:11px;color:var(--accent);font-family:DM Mono,monospace">✓ correct</span>':''}
+      ${!isMiss&&ans==='incorrect'?'<span style="font-size:11px;color:var(--accent3);font-family:DM Mono,monospace">✗ missed</span>':''}
+    </div>
+    ${cs>=1?`<div class="clue-block clue-superpower"><div class="pyramid-label">(+) Superpower — 6 pts</div><div class="clue-text">${q.clues.superpower}</div></div>`:''}
+    ${cs>=2?`<div class="clue-block clue-power"><div class="pyramid-label">(*) Power — 5 pts</div><div class="clue-text">${q.clues.power}</div></div>`:''}
+    ${cs>=3?`<div class="clue-block clue-normal"><div class="pyramid-label">Normal — 4 pts</div><div class="clue-text">${q.clues.normal}</div></div>`:''}
+    ${cs>=4?`<div class="clue-block clue-giveaway"><div class="pyramid-label">Giveaway — 3 pts</div><div class="clue-text">${q.clues.giveaway}</div></div>`:''}
+    ${cs===0?`<div style="color:var(--muted);font-size:13px;padding:.5rem 0;font-family:'DM Mono',monospace">Read clues one at a time — stop when Abhinav buzzes in</div>`:''}
+    <div class="clue-controls">
+      ${cs<1?`<button class="btn-clue sp" onclick="${prefix}SC(${i},1)">▶ Superpower clue</button>`:''}
+      ${cs===1?`<button class="btn-clue pw" onclick="${prefix}SC(${i},2)">▶ Power clue</button>`:''}
+      ${cs===2?`<button class="btn-clue nr" onclick="${prefix}SC(${i},3)">▶ Normal clue</button>`:''}
+      ${cs===3?`<button class="btn-clue gv" onclick="${prefix}SC(${i},4)">▶ Giveaway clue</button>`:''}
+    </div>
+    ${cs>=1?`<div class="answer-section">
+      <div style="display:flex;gap:8px;margin-bottom:.8rem">
+        <button class="btn-clue" onclick="${prefix}TA(${i})" style="font-size:11px">${show?'Hide answer':'Reveal answer'}</button>
+      </div>
+      ${show?`<div class="answer-label">Answer</div><div class="answer-text">${q.answer}</div><div class="answer-note">${q.note}</div>`:''}
+      ${isMiss&&!mastered&&!ans?`<div class="result-btns" style="margin-top:.8rem">
+        <button class="btn-mastered" onclick="markMastered(${i})">✓ Got it this time</button>
+        <button class="btn-remove" onclick="removeMiss(${i})">Remove</button>
+      </div>`:''}
+      ${!isMiss&&!ans?`<div class="result-btns">
+        <button class="btn-correct" onclick="markAnswer(${i},'correct')">✓ Got it</button>
+        <button class="btn-incorrect" onclick="markAnswer(${i},'incorrect')">✗ Missed</button>
+      </div>`:''}
+    </div>`:''}
+  </div>`;
+}
+
+function qSC(i,l){clueStates[i]=l;renderQuestions();}
+function qTA(i){answerShown[i]=!answerShown[i];renderQuestions();}
+function markAnswer(i,result){
+  if(answered[i]) return;
+  answered[i]=result;
+  if(result==='correct') scores.correct++;
+  else{scores.incorrect++;missedList.push({q:questions[i],mastered:false,cs:0,show:false});}
+  currentIdx++;renderQuestions();updateScore();
+  if(currentTab==='miss') renderMissList();
+}
+
+function setFilter(f){
+  missFilter=f;
+  ['all','needs','mastered'].forEach(x=>document.getElementById('filter-'+x).classList.toggle('active',x===f));
+  renderMissList();
+}
+
+function renderMissList(){
+  updateScore();
+  const c=document.getElementById('missContainer');
+  if(missedList.length===0){c.innerHTML='<div class="empty"><div class="empty-icon">📋</div>No missed questions yet.<br><span style="font-size:12px;">Questions Advith misses will appear here automatically.</span></div>';return;}
+  let items=missedList.map((m,i)=>({m,i}));
+  if(missFilter==='needs') items=items.filter(({m})=>!m.mastered);
+  if(missFilter==='mastered') items=items.filter(({m})=>m.mastered);
+  if(items.length===0){c.innerHTML='<div class="empty">No questions match this filter.</div>';return;}
+  const byTopic={};
+  items.forEach(({m,i})=>{if(!byTopic[m.q.topic])byTopic[m.q.topic]=[];byTopic[m.q.topic].push({m,i});});
+  c.innerHTML=Object.entries(byTopic).map(([topic,grp])=>{
+    const nw=grp.filter(({m})=>!m.mastered).length;
+    return `<div class="miss-topic-group">
+      <div class="miss-topic-header">
+        <span>${topic}</span>
+        <span style="color:${nw>0?'var(--accent3)':'var(--accent)'}">${nw>0?nw+' need work':'✓ all mastered'}</span>
+      </div>
+      ${grp.map(({m,i})=>buildCard(m.q,i,{prefix:'miss',cs:m.cs||0,ans:null,show:m.show||false,isMiss:true,mastered:m.mastered})).join('')}
+    </div>`;
+  }).join('');
+}
+
+function missSC(i,l){if(missedList[i]){missedList[i].cs=l;renderMissList();}}
+function missTA(i){if(missedList[i]){missedList[i].show=!missedList[i].show;renderMissList();}}
+function markMastered(i){if(missedList[i]){missedList[i].mastered=true;missedList[i].cs=0;missedList[i].show=false;renderMissList();updateScore();}}
+function removeMiss(i){missedList.splice(i,1);renderMissList();updateScore();}
+function clearMastered(){missedList=missedList.filter(m=>!m.mastered);renderMissList();updateScore();}
+function startRedrill(){
+  missedList.forEach(m=>{if(!m.mastered){m.cs=0;m.show=false;}});
+  setFilter('needs');
+}
+
+renderTopics();updateScore();
+</script>
+</body>
+</html>
