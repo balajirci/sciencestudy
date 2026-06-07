@@ -1,0 +1,423 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:1rem 0 2rem;font-family:var(--font-sans)}
+.hdr{margin-bottom:1rem}
+.hdr-title{font-size:18px;font-weight:500;color:var(--color-text-primary)}
+.hdr-sub{font-size:12px;color:var(--color-text-secondary);margin-top:3px}
+.nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem}
+.nav-btn{font-size:12px;padding:4px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-secondary);cursor:pointer}
+.nav-btn.active{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary)}
+.pbar{height:3px;background:var(--color-background-secondary);border-radius:2px;margin-bottom:1rem;overflow:hidden}
+.pfill{height:100%;background:#1D9E75;border-radius:2px;transition:width 0.3s}
+.sec{display:none}
+.sec.active{display:block}
+.sec-hdr{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:8px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.sec-icon{font-size:18px;color:var(--color-text-secondary)}
+.sec-title{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.cards{display:flex;flex-direction:column;gap:8px}
+.card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;background:var(--color-background-primary)}
+.card-head{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.card-head-l{display:flex;align-items:center;gap:8px}
+.tag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500;white-space:nowrap}
+.tag-core{background:#E6F1FB;color:#0C447C}
+.tag-adv{background:#EEEDFE;color:#3C3489}
+.card-name{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.chev{font-size:13px;color:var(--color-text-secondary);transition:transform 0.2s}
+.card-body{display:none;padding:12px 14px;border-top:0.5px solid var(--color-border-tertiary)}
+.card-body.open{display:block}
+.card-head.open .chev{transform:rotate(180deg)}
+.defs{display:flex;flex-direction:column;gap:7px;margin-bottom:8px}
+.def{display:grid;grid-template-columns:160px 1fr;gap:8px;font-size:12px;line-height:1.5}
+.dt{font-weight:500;color:var(--color-text-primary)}
+.dd{color:var(--color-text-secondary)}
+.note{padding:8px 10px;border-radius:var(--border-radius-md);font-size:11px;line-height:1.6;margin-top:8px}
+.note-tip{background:var(--color-background-info);color:var(--color-text-info)}
+.note-warn{background:var(--color-background-warning);color:var(--color-text-warning)}
+.note-fact{background:var(--color-background-success);color:var(--color-text-success)}
+.note b{font-weight:500}
+.tbl{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
+.tbl th{text-align:left;padding:4px 7px;font-weight:500;color:var(--color-text-secondary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.tbl td{padding:4px 7px;color:var(--color-text-primary);border-bottom:0.5px solid var(--color-border-tertiary);vertical-align:top;line-height:1.4}
+.tbl tr:last-child td{border-bottom:none}
+.quiz-sec{margin-top:16px;padding-top:12px;border-top:0.5px solid var(--color-border-tertiary)}
+.quiz-lbl{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:10px}
+.quiz-q{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;margin-bottom:8px}
+.quiz-qt{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px;line-height:1.5}
+.quiz-opts{display:flex;flex-direction:column;gap:4px}
+.opt{padding:6px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);font-size:12px;cursor:pointer;color:var(--color-text-secondary);background:var(--color-background-primary);text-align:left;transition:background 0.15s,border-color 0.15s}
+.opt:hover{border-color:var(--color-border-secondary);color:var(--color-text-primary)}
+.opt.ok{background:var(--color-background-success);color:var(--color-text-success);border-color:var(--color-border-success)}
+.opt.no{background:var(--color-background-danger);color:var(--color-text-danger);border-color:var(--color-border-danger)}
+.expl{margin-top:6px;font-size:11px;color:var(--color-text-secondary);display:none;line-height:1.5}
+.expl.show{display:block}
+@media(max-width:480px){.def{grid-template-columns:1fr}.tbl th:nth-child(3),.tbl td:nth-child(3){display:none}}
+</style>
+
+<div class="wrap">
+  <h2 style="position:absolute;left:-9999px">Biology and Anatomy Science Bee study guide for Grade 9 Junior Varsity</h2>
+  <div class="hdr">
+    <div class="hdr-title">Biology &amp; Anatomy -- Science Bee Study Guide</div>
+    <div class="hdr-sub">Junior Varsity (Grade 9) &middot; 7 domains &middot; click any topic to expand</div>
+  </div>
+  <div class="nav" id="nav"></div>
+  <div class="pbar"><div class="pfill" id="pf" style="width:14%"></div></div>
+  <div id="secs"></div>
+</div>
+
+<script>
+const D=[
+{id:"cell",lbl:"Cell Biology",icon:"ti-dna",topics:[
+  {name:"Organelles & their functions",tag:"core",defs:[
+    ["Mitochondria","Powerhouse; produces ATP via cellular respiration (Krebs cycle + oxidative phosphorylation); has its own DNA; double membrane with cristae."],
+    ["Ribosomes","Site of protein synthesis; made of rRNA + proteins; free (cytoplasm) or bound (rough ER)."],
+    ["Rough ER","Studded with ribosomes; synthesizes and folds secretory proteins; exports via vesicles to Golgi."],
+    ["Smooth ER","No ribosomes; lipid synthesis, detoxification, Ca2+ storage; abundant in liver and muscle cells."],
+    ["Golgi apparatus","Sorts, modifies, packages proteins/lipids from ER; adds carbohydrate tags; has cis (receiving) and trans (shipping) faces."],
+    ["Lysosomes","Contain hydrolytic enzymes (acid hydrolases); digest old organelles (autophagy) and foreign material; pH ~4.5 inside."],
+    ["Vacuoles","Central vacuole in plants stores water, maintains turgor pressure; contractile vacuoles in protists expel excess water."],
+    ["Peroxisomes","Break down fatty acids; neutralize hydrogen peroxide via catalase; prominent in liver/kidney."],
+    ["Chloroplasts","Site of photosynthesis; thylakoids hold chlorophyll; stroma contains Calvin cycle enzymes; has own DNA."]
+  ],note:{type:"tip",text:"Secretory pathway: Rough ER -> Golgi -> vesicle -> membrane/secretion. Smooth ER handles lipids. Both branches connect to lysosomes."}},
+  {name:"Cell transport",tag:"core",defs:[
+    ["Passive transport","No energy needed; moves down concentration gradient. Includes simple diffusion and facilitated diffusion."],
+    ["Osmosis","Diffusion of water across a semipermeable membrane from low solute (hypotonic) to high solute (hypertonic) side."],
+    ["Active transport","Requires ATP; moves molecules against gradient. Example: Na+/K+ pump moves 3 Na+ out, 2 K+ in per cycle."],
+    ["Endocytosis","Cell engulfs material: phagocytosis (solids), pinocytosis (fluids), receptor-mediated endocytosis (specific ligands)."],
+    ["Exocytosis","Vesicle fuses with plasma membrane and releases contents outside; used by neurons and secretory cells."],
+    ["Tonicity","Hypotonic -> cell swells; Hypertonic -> cell shrinks; Isotonic -> no net water movement."]
+  ],note:{type:"fact",text:"Plant cells in a hypotonic solution become turgid (firm) because the cell wall prevents bursting. Animal cells lyse without a cell wall."}},
+  {name:"Apoptosis (programmed cell death)",tag:"advanced",defs:[
+    ["Apoptosis","Orderly, controlled cell death; cell shrinks, chromatin condenses, DNA cleaved into fragments."],
+    ["Caspases","Proteases that execute apoptosis; activated as a cascade; cleave key cellular proteins."],
+    ["Intrinsic pathway","Triggered by internal stress (DNA damage); mitochondria release cytochrome c -> activates caspase-9 -> caspase-3."],
+    ["Extrinsic pathway","Triggered by external death signals (e.g., FasL binding Fas receptor); activates caspase-8 -> caspase-3."],
+    ["vs. Necrosis","Necrosis: uncontrolled; cell swells and bursts, causes inflammation. Apoptosis: orderly, no inflammation, phagocytes clean up."],
+    ["Bcl-2 family","Pro-apoptotic (Bax, Bak) vs anti-apoptotic (Bcl-2, Bcl-xL) proteins regulate cytochrome c release."]
+  ],note:{type:"warn",text:"Key distinction: apoptosis = programmed, orderly, no inflammation. Necrosis = accidental, causes inflammation. Science Bee loves this comparison."}}
+],quizzes:[
+  {q:"Which organelle contains cristae and produces most of a cell's ATP?",opts:["Nucleus","Mitochondria","Chloroplast","Ribosome"],ans:1,ex:"Mitochondria have folded inner membranes called cristae, which house ATP synthase and electron transport chain complexes."},
+  {q:"A cell placed in a hypertonic solution will:",opts:["Swell and lyse","Shrink (crenate) as water leaves","Stay the same","Perform exocytosis"],ans:1,ex:"In a hypertonic solution, solute concentration outside > inside, so water leaves the cell by osmosis, causing it to shrink."},
+  {q:"Apoptosis is triggered internally via cytochrome c released from which organelle?",opts:["Nucleus","Lysosome","Mitochondria","Smooth ER"],ans:2,ex:"The intrinsic apoptosis pathway involves mitochondria releasing cytochrome c, which activates the caspase cascade."},
+  {q:"Which protein coat carries vesicles from the ER to the Golgi?",opts:["Clathrin","COPI","COPII","Dynein"],ans:2,ex:"COPII-coated vesicles carry cargo from the ER to the Golgi (anterograde transport). COPI handles retrograde Golgi-to-ER transport."}
+]},
+{id:"gen",lbl:"Genetics & Mol. Bio",icon:"ti-dna-2",topics:[
+  {name:"DNA & RNA structure",tag:"core",defs:[
+    ["DNA bases","Adenine (A) pairs with Thymine (T) via 2 H-bonds; Guanine (G) pairs with Cytosine (C) via 3 H-bonds. Purines: A, G (double ring). Pyrimidines: T, C, U (single ring)."],
+    ["RNA bases","Same as DNA but Uracil (U) replaces Thymine (T). Three main types: mRNA, tRNA, rRNA."],
+    ["DNA double helix","Antiparallel strands (5'->3' and 3'->5'); sugar-phosphate backbone outside, bases inside; right-handed B-form most common."],
+    ["Nucleotide","Monomer of DNA/RNA: phosphate group + pentose sugar (deoxyribose in DNA, ribose in RNA) + nitrogenous base."],
+    ["Histones","Proteins around which DNA wraps; nucleosome = 8 histones + 147 bp DNA; allows DNA compaction into chromatin."],
+    ["Chargaff's rules","%A = %T and %G = %C in any double-stranded DNA."]
+  ],note:{type:"tip",text:"Purines are bigger (double ring): A and G. Pyrimidines are smaller (single ring): C, T, U. Memory: Pure CUT -- Pyrimidines: Cytosine, Uracil, Thymine."}},
+  {name:"DNA replication",tag:"core",defs:[
+    ["Helicase","Unwinds and separates the DNA double helix at the replication fork by breaking H-bonds between bases."],
+    ["Primase","Synthesizes a short RNA primer to give DNA polymerase a starting point (DNA pol cannot start de novo)."],
+    ["DNA Polymerase III","Main replicating enzyme in prokaryotes; adds nucleotides only in 5'->3' direction; has proofreading (3'->5' exonuclease)."],
+    ["Leading strand","Synthesized continuously toward the replication fork in 5'->3' direction; needs only one primer."],
+    ["Lagging strand","Synthesized in short, discontinuous pieces (Okazaki fragments) away from the fork; needs many primers."],
+    ["Okazaki fragments","Short DNA segments on the lagging strand; RNA primers later replaced by DNA; joined by DNA ligase."],
+    ["DNA Ligase","Seals the nicks between Okazaki fragments by forming phosphodiester bonds."],
+    ["Telomerase","Extends telomeres at chromosome ends using an RNA template; absent in most somatic cells (contributes to aging)."]
+  ],note:{type:"fact",text:"Okazaki fragments -- Science Bee favorite: found on the LAGGING strand only, synthesized discontinuously, named after Reiji Okazaki. Joined by DNA ligase after RNA primers are replaced."}},
+  {name:"Transcription & translation",tag:"core",defs:[
+    ["Transcription","DNA -> mRNA; RNA polymerase binds promoter, unwinds DNA, synthesizes mRNA 5'->3'. Occurs in nucleus (eukaryotes)."],
+    ["mRNA processing","5' cap (7-methylguanosine) added; poly-A tail (~200 A's) added at 3' end; introns spliced out by spliceosome; exons joined."],
+    ["Poly-A tail","Stretch of ~200 adenines at 3' end of mRNA; protects from degradation; aids export from nucleus."],
+    ["Translation","mRNA -> protein; occurs on ribosomes; mRNA codons (3-base sequences) decoded by tRNA anticodons."],
+    ["Ribosome sites","A-site: aminoacyl/incoming tRNA. P-site: peptidyl/growing chain. E-site: exit. Large + small subunits."],
+    ["Start/Stop codons","Start: AUG (codes methionine). Stop: UAA, UAG, UGA (no matching tRNA; release factors terminate)."],
+    ["Central dogma","DNA -> (transcription) -> mRNA -> (translation) -> Protein. Reverse transcriptase (HIV) goes RNA -> DNA."]
+  ],note:{type:"tip",text:"Central dogma flow: DNA transcription -> mRNA translation -> Protein. HIV's reverse transcriptase reverses the first step: RNA -> DNA. This is why HIV integrates into host DNA."}},
+  {name:"Mendelian genetics & Punnett squares",tag:"core",defs:[
+    ["Dominant/recessive","Dominant allele (A) expressed even in one copy (Aa). Recessive (a) only expressed when homozygous (aa)."],
+    ["Monohybrid cross","Aa x Aa: 1 AA : 2 Aa : 1 aa genotypically; 3 dominant : 1 recessive phenotypically (3:1 ratio)."],
+    ["Incomplete dominance","Heterozygote shows intermediate phenotype (blend). Red x White -> Pink (e.g., snapdragons)."],
+    ["Codominance","Both alleles fully expressed. ABO blood type AB shows both A and B antigens simultaneously."],
+    ["Sex-linked traits","Genes on X chromosome. Males (XY) are hemizygous: one X-linked allele is enough. Examples: color blindness, hemophilia A."],
+    ["Dihybrid cross","AaBb x AaBb: 9:3:3:1 phenotype ratio (assumes independent assortment on different chromosomes)."],
+    ["Test cross","Cross unknown genotype with homozygous recessive (aa). Any recessive offspring -> parent was heterozygous."]
+  ],note:{type:"warn",text:"Incomplete dominance vs codominance: incomplete dominance produces a NEW blended phenotype (e.g., pink). Codominance shows BOTH original phenotypes simultaneously (e.g., AB blood type)."}},
+  {name:"Advanced: CRISPR, Hox genes, transposons",tag:"advanced",defs:[
+    ["CRISPR/Cas9","Guide RNA (gRNA) directs Cas9 nuclease to specific DNA sequence; creates double-strand break for gene editing. From bacterial immune system."],
+    ["PAM sequence","Protospacer Adjacent Motif (NGG for S. pyogenes Cas9); must be present downstream of target for Cas9 to cut."],
+    ["Hox genes","Homeotic genes in clusters; determine body-segment identity along anterior-posterior axis; contain 180 bp homeobox encoding homeodomain (DNA-binding protein)."],
+    ["Transposons","'Jumping genes'; DNA segments that move within the genome. Discovered by Barbara McClintock (Nobel 1983) in maize."],
+    ["Epigenetics","Heritable expression changes without DNA sequence change. DNA methylation (silencing); histone acetylation (activation)."]
+  ],note:{type:"fact",text:"Barbara McClintock discovered transposons in corn (maize) in the 1940s-50s, earning the 1983 Nobel Prize in Physiology or Medicine -- the only unshared female Nobel in that category."}}
+],quizzes:[
+  {q:"Short DNA segments synthesized discontinuously on the lagging strand are called:",opts:["Telomeres","Okazaki fragments","Exons","Poly-A tails"],ans:1,ex:"Okazaki fragments are synthesized on the lagging strand because DNA polymerase can only work in the 5' to 3' direction, away from the replication fork."},
+  {q:"Which enzyme unwinds the DNA double helix at the replication fork?",opts:["Ligase","Polymerase","Helicase","Topoisomerase"],ans:2,ex:"Helicase breaks the hydrogen bonds between base pairs to separate the two DNA strands, allowing replication to proceed."},
+  {q:"In a dihybrid cross AaBb x AaBb, the expected phenotypic ratio is:",opts:["1:2:1","3:1","9:3:3:1","1:1:1:1"],ans:2,ex:"Independent assortment of two heterozygous gene pairs produces the classic 9:3:3:1 ratio of phenotypes."},
+  {q:"CRISPR-Cas9 uses which molecule to guide it to the target DNA?",opts:["mRNA","tRNA","Guide RNA (gRNA)","rRNA"],ans:2,ex:"A synthetic guide RNA (gRNA) is complementary to the target DNA sequence and directs the Cas9 nuclease to the correct genomic location."}
+]},
+{id:"anat",lbl:"Human Anatomy",icon:"ti-stethoscope",topics:[
+  {name:"Integumentary & musculoskeletal",tag:"core",defs:[
+    ["Skin layers","Epidermis (keratinocytes, melanocytes) -> dermis (collagen, follicles, sebaceous glands) -> hypodermis (adipose tissue)."],
+    ["Femur","Longest and strongest bone in the human body; connects hip to knee; contains red bone marrow."],
+    ["Actin & myosin","Contractile proteins: thin actin filaments + thick myosin filaments; cross-bridge cycle powered by ATP (sliding filament theory)."],
+    ["Sarcomere","Basic contractile unit; from Z-line to Z-line; A-band contains myosin; I-band contains actin only."],
+    ["Neuromuscular junction","Synapse where motor neuron meets muscle fiber; acetylcholine released -> nicotinic receptors -> muscle action potential."]
+  ],note:{type:"tip",text:"Sliding filament theory: myosin heads bind actin, pivot (power stroke), detach, return -- each cycle requires ATP and Ca2+ (released from sarcoplasmic reticulum)."}},
+  {name:"Circulatory & respiratory",tag:"core",defs:[
+    ["Heart flow","Right atrium -> tricuspid valve -> right ventricle -> pulmonary valve -> pulmonary artery -> lungs -> pulmonary veins -> left atrium -> mitral valve -> left ventricle -> aortic valve -> aorta."],
+    ["Hemoglobin","Iron-containing protein in RBCs; 4 heme groups, each binds one O2; forms oxyhemoglobin; also carries CO2."],
+    ["Blood types","ABO: determined by antigens on RBCs. Type O = universal donor; Type AB = universal recipient. Rh factor: + or -."],
+    ["Pleura","Double-layered membrane surrounding lungs; visceral (inner) + parietal (outer) layers; pleural fluid reduces friction."],
+    ["Diaphragm","Dome-shaped muscle; contracts and flattens -> increases thoracic volume -> air flows in. Relaxes during exhalation."],
+    ["Alveoli","Tiny air sacs in lungs; site of gas exchange; one-cell-thick walls; surrounded by capillaries; ~700 million in human lungs."]
+  ],note:{type:"fact",text:"The SA node (sinoatrial node) in the right atrium is the heart's natural pacemaker, generating electrical impulses at ~60-100 bpm without requiring nervous input."}},
+  {name:"Digestive & endocrine",tag:"core",defs:[
+    ["Digestive pathway","Mouth (amylase) -> esophagus -> stomach (HCl + pepsin, pH ~2) -> small intestine (duodenum/jejunum/ileum) -> large intestine -> rectum."],
+    ["Pancreas dual role","Exocrine: digestive enzymes (amylase, lipase, proteases) -> duodenum. Endocrine: insulin (beta cells) + glucagon (alpha cells) -> bloodstream."],
+    ["Gallbladder","Stores and concentrates bile produced by the liver; releases bile into duodenum to emulsify dietary fats."],
+    ["Insulin vs glucagon","Insulin: lowers blood glucose -> promotes uptake and glycogen synthesis. Glucagon: raises blood glucose -> promotes glycogenolysis."],
+    ["Villi","Finger-like projections in small intestine; greatly increase surface area for nutrient absorption; covered in microvilli (brush border)."]
+  ],note:{type:"warn",text:"Exocrine vs endocrine pancreas: exocrine releases enzymes through a DUCT into the duodenum; endocrine (islets of Langerhans) releases hormones directly into the BLOODSTREAM."}},
+  {name:"Nervous system",tag:"core",defs:[
+    ["CNS vs PNS","CNS: brain + spinal cord. PNS: all nerves outside. PNS divides into somatic (voluntary) + autonomic (sympathetic: fight-or-flight; parasympathetic: rest-and-digest)."],
+    ["Action potential","Resting: -70 mV. Depolarization: Na+ rushes in -> +40 mV peak. Repolarization: K+ rushes out -> returns to -70 mV. Refractory period follows."],
+    ["Cerebellum","Controls coordination, balance, fine motor skills; receives vestibular and proprioceptive input; located at base of brain."],
+    ["Hypothalamus","Regulates homeostasis: temperature, hunger, thirst, circadian rhythms; controls pituitary gland; produces ADH and oxytocin."],
+    ["Purkinje cells","Large neurons in cerebellar cortex; receive input from parallel fibers and climbing fibers; only output neurons of the cerebellar cortex; inhibitory (GABA)."],
+    ["Neurotransmitters","Acetylcholine (muscles, memory), dopamine (reward/movement), serotonin (mood), GABA (inhibitory), glutamate (excitatory)."]
+  ],note:{type:"tip",text:"Purkinje cells -- Science Bee favorite: largest neurons in the brain, found ONLY in the cerebellum, enormous dendritic arbors, inhibitory output via GABA. Named after Czech physiologist Jan Purkyne."}}
+],quizzes:[
+  {q:"Which valve separates the left atrium from the left ventricle?",opts:["Tricuspid","Aortic","Pulmonary","Mitral (bicuspid)"],ans:3,ex:"The mitral (bicuspid) valve has two leaflets and separates the left atrium from the left ventricle. The tricuspid (3 leaflets) is on the right side."},
+  {q:"Purkinje cells are the primary output neurons of which brain structure?",opts:["Cerebrum","Hypothalamus","Cerebellum","Brainstem"],ans:2,ex:"Purkinje cells reside in the cerebellar cortex; their axons form the only output pathway from the cerebellar cortex, sending inhibitory signals."},
+  {q:"Bile is produced by the liver and stored in the:",opts:["Pancreas","Gallbladder","Duodenum","Jejunum"],ans:1,ex:"The gallbladder concentrates and stores bile, releasing it into the duodenum when dietary fats are detected."},
+  {q:"During muscle contraction, calcium ions are released from the:",opts:["Mitochondria","Sarcoplasmic reticulum","Lysosome","Nucleus"],ans:1,ex:"An action potential triggers Ca2+ release from the sarcoplasmic reticulum, enabling actin-myosin cross-bridge formation and contraction."}
+]},
+{id:"med",lbl:"Health & Disease",icon:"ti-pill",topics:[
+  {name:"Viral diseases",tag:"core",tbl:{h:["Virus","Type","Key facts"],r:[
+    ["HIV","Retrovirus (ssRNA)","Attacks CD4+ T cells; reverse transcriptase converts RNA->DNA; causes AIDS; treated with antiretrovirals (ART)."],
+    ["Ebola","Filovirus (ssRNA)","Hemorrhagic fever; Zaire strain most lethal; spread via body fluid contact; fruit bats are reservoir."],
+    ["Marburg","Filovirus (ssRNA)","Closely related to Ebola; Rousettus fruit bats are reservoir; causes hemorrhagic fever."],
+    ["SARS-CoV-2","Coronavirus (ssRNA)","Causes COVID-19; spike protein binds ACE2; mRNA vaccines encode spike protein."],
+    ["Poliovirus","Enterovirus (ssRNA)","Fecal-oral transmission; can destroy anterior horn motor neurons -> paralysis. Salk (inactivated) and Sabin (live-attenuated) vaccines."],
+    ["Influenza","Orthomyxovirus","Surface proteins HA (hemagglutinin) and NA (neuraminidase); antigenic drift vs antigenic shift (pandemic risk)."]
+  ]},note:{type:"fact",text:"HIV uses reverse transcriptase to convert its RNA genome into DNA, which integrates into the host cell's genome as a provirus. This is why HIV cannot be fully eliminated by current treatments."}},
+  {name:"Bacterial infections",tag:"core",defs:[
+    ["E. coli","Gram-negative rod; O157:H7 strain produces Shiga toxin -> hemorrhagic colitis; spread via contaminated food/water."],
+    ["Salmonella","Gram-negative; causes salmonellosis (food poisoning) and typhoid fever (S. typhi); invades intestinal epithelium."],
+    ["Streptococcus","Gram-positive cocci in chains; Group A (S. pyogenes): strep throat, scarlet fever, rheumatic fever."],
+    ["Botulism","Clostridium botulinum toxin; blocks acetylcholine release at neuromuscular junction -> FLACCID paralysis. Most potent biological toxin."],
+    ["Tetanus","Clostridium tetani toxin; blocks inhibitory neurotransmitters (glycine, GABA) -> SPASTIC paralysis. Opposite of botulism."],
+    ["Antibiotics targets","Beta-lactams: cell wall. Aminoglycosides/tetracyclines: 30S ribosome. Macrolides: 50S ribosome. Fluoroquinolones: DNA gyrase."]
+  ],note:{type:"warn",text:"Botulism vs tetanus: Botulinum toxin blocks ACE release -> FLACCID (can't contract). Tetanus toxin blocks inhibitory signals -> SPASTIC (can't relax). Opposite mechanisms -- classic exam trap."}},
+  {name:"Genetic & autoimmune disorders",tag:"core",defs:[
+    ["Sickle cell anemia","Point mutation in beta-globin gene (Glu->Val); HbS polymerizes when deoxygenated -> sickle-shaped RBCs -> vaso-occlusion; autosomal recessive."],
+    ["Lupus (SLE)","Systemic autoimmune; autoantibodies attack own tissues/dsDNA; butterfly (malar) rash; kidney involvement (lupus nephritis)."],
+    ["Parkinson's disease","Loss of dopaminergic neurons in substantia nigra; Lewy bodies (alpha-synuclein aggregates); resting tremor, rigidity, bradykinesia; L-DOPA treatment."],
+    ["Tourette syndrome","Multiple motor tics + at least one vocal tic; onset in childhood; associated with basal ganglia dopamine circuits."],
+    ["Down syndrome","Trisomy 21; nondisjunction during meiosis; intellectual disability, heart defects; 1 in ~700 births."],
+    ["Cystic fibrosis","Mutated CFTR gene (most common: deltaF508); defective Cl- channel -> thick mucus in lungs and pancreas; autosomal recessive."]
+  ],note:{type:"fact",text:"Sickle cell trait (heterozygous) provides significant resistance to malaria. This is why the sickle cell allele is maintained at high frequency in malaria-endemic regions -- a classic example of balancing selection."}},
+  {name:"Pharmacology & vitamins",tag:"advanced",defs:[
+    ["Vaccine types","Live-attenuated (MMR, chickenpox); inactivated (polio-Salk, flu); subunit (Hep B); mRNA (COVID-19 Pfizer/Moderna); viral vector (adenovirus-based)."],
+    ["Vitamin D","Fat-soluble; synthesized in skin via UV-B; activated in liver then kidney; promotes Ca2+ absorption; deficiency -> rickets (children), osteomalacia (adults)."],
+    ["Vitamin E","Fat-soluble antioxidant (tocopherol); protects cell membranes from lipid peroxidation; found in nuts, seeds, plant oils."],
+    ["Caffeine","Adenosine receptor antagonist; blocks inhibitory adenosine -> increased alertness; also inhibits phosphodiesterase (increases cAMP)."],
+    ["Histamine","Released by mast cells in allergic response; H1 receptors: bronchoconstriction, vasodilation, itch; H2: gastric acid secretion; antihistamines block H1."]
+  ],note:{type:"tip",text:"Fat-soluble vitamins: A, D, E, K (remember A-DEK). Water-soluble: B vitamins + C. Fat-soluble vitamins accumulate in fat/liver and can reach toxic levels; water-soluble are excreted in urine."}}
+],quizzes:[
+  {q:"Botulinum toxin causes paralysis by blocking the release of which neurotransmitter?",opts:["Dopamine","GABA","Acetylcholine","Serotonin"],ans:2,ex:"Botulinum toxin cleaves SNARE proteins at the neuromuscular junction, preventing acetylcholine release and causing flaccid paralysis."},
+  {q:"Sickle cell anemia is caused by a point mutation in which gene?",opts:["HBA1 (alpha-globin)","HBB (beta-globin)","CFTR","BRCA1"],ans:1,ex:"A single nucleotide change in the HBB gene causes glutamic acid to be replaced by valine in position 6 of the beta-globin chain."},
+  {q:"Caffeine works primarily by antagonizing which receptor?",opts:["Dopamine receptor","Adenosine receptor","Serotonin receptor","GABA receptor"],ans:1,ex:"Caffeine blocks adenosine receptors. Adenosine normally promotes drowsiness; blocking it keeps you alert and counteracts fatigue signals."},
+  {q:"Vitamin D deficiency in children causes which disease?",opts:["Scurvy","Pellagra","Rickets","Osteomalacia"],ans:2,ex:"Vitamin D deficiency impairs calcium absorption, leading to soft, weak bones called rickets in children (osteomalacia in adults)."}
+]},
+{id:"bot",lbl:"Botany",icon:"ti-plant",topics:[
+  {name:"Plant anatomy & transport",tag:"core",defs:[
+    ["Xylem","Dead, hollow vessel elements and tracheids; conducts water and minerals upward from roots; lignin-reinforced walls; cohesion-tension mechanism."],
+    ["Phloem","Living sieve tube cells + companion cells; transports sugars (sucrose) bidirectionally from sources to sinks; process called translocation."],
+    ["Stomata","Pores on leaf surfaces; surrounded by guard cells; open during day for CO2 uptake; close during drought/night to reduce water loss (transpiration)."],
+    ["Apoplast vs symplast","Apoplast: water moves through cell walls without crossing membranes. Symplast: water moves through cytoplasm via plasmodesmata."],
+    ["Root pressure","Osmotic pressure in roots pushes water up xylem; causes guttation (water droplets on leaf edges in the morning)."]
+  ],note:{type:"tip",text:"Xylem: X for eXiting water upward (dead cells, lignin walls). Phloem: P for Photosynthate (sugar) transport in both directions (living cells)."}},
+  {name:"Plant hormones",tag:"core",defs:[
+    ["Auxins (IAA)","Promote cell elongation; concentrated on shaded side -> phototropism. Cause apical dominance (suppress lateral buds). Produced at shoot apex."],
+    ["Gibberellins","Promote stem elongation, seed germination, fruit development, bolting; discovered in rice 'foolish seedling' (Bakanae) disease."],
+    ["Cytokinins","Promote cell division; delay senescence (leaf aging); synthesized in roots; work with auxin to regulate organ formation."],
+    ["Abscisic acid (ABA)","Stress hormone; promotes stomatal closure during drought; promotes seed dormancy; antagonizes gibberellins."],
+    ["Ethylene","Gas hormone; promotes fruit ripening, flower wilting, leaf abscission; autocatalytic ('one bad apple' effect)."]
+  ],note:{type:"fact",text:"Auxins have a dose-response relationship: low concentration promotes root growth but high concentration inhibits it -- the opposite response to shoots. This is why shoots grow toward light but roots grow away."}},
+  {name:"Photosynthesis",tag:"core",defs:[
+    ["Light reactions","In thylakoid membranes; capture light, split water (photolysis), produce ATP and NADPH, release O2 as byproduct. Involves Photosystems I and II."],
+    ["Calvin cycle","In stroma; CO2 fixed by RuBisCO onto RuBP (5C) -> 2x PGA (3C) -> G3P -> glucose; regenerates RuBP using ATP and NADPH."],
+    ["RuBisCO","Ribulose bisphosphate carboxylase/oxygenase; most abundant enzyme on Earth; catalyzes CO2 fixation; can also react with O2 (photorespiration)."],
+    ["C3 vs C4 vs CAM","C3: standard; first product is 3-carbon. C4 (corn, sugarcane): pre-fix CO2 in mesophyll -> reduces photorespiration. CAM (cacti): fix CO2 at night, use during day."],
+    ["Chlorophyll","Absorbs red (~680 nm) and blue (~430 nm) light; reflects green; chlorophyll a is primary, chlorophyll b is accessory pigment."]
+  ],note:{type:"warn",text:"Science Bee often tests RuBisCO and Calvin cycle steps: CO2 + RuBP (5C) -> 2x PGA (3C) -> G3P -> glucose. RuBisCO does the carbon fixation. The light reactions produce ATP/NADPH but do NOT directly fix CO2."}},
+  {name:"Plant reproduction",tag:"core",defs:[
+    ["Angiosperms","Flowering plants; seeds enclosed in fruit; largest plant group. Monocots (1 cotyledon, parallel veins) vs Dicots (2 cotyledons, net veins)."],
+    ["Gymnosperms","Naked seed; no fruit; conifers (pines, firs), cycads, ginkgo; seeds in cones; mostly wind-pollinated."],
+    ["Double fertilization","Unique to angiosperms; one sperm fertilizes egg -> zygote (2n); second sperm + two polar nuclei -> endosperm (3n) to nourish seed."],
+    ["Alternation of generations","Diploid sporophyte (dominant in vascular plants) alternates with haploid gametophyte. Spores (n) -> gametophyte -> gametes -> zygote -> sporophyte (2n)."]
+  ],note:{type:"fact",text:"Double fertilization is exclusive to angiosperms and a high-frequency exam topic. The triploid (3n) endosperm is the nutritious part of seeds -- in corn and wheat, it is what we eat as food."}}
+],quizzes:[
+  {q:"RuBisCO catalyzes which step of photosynthesis?",opts:["Photolysis of water","Carbon fixation in the Calvin cycle","ATP synthesis","Electron transport"],ans:1,ex:"RuBisCO attaches CO2 to RuBP (a 5-carbon compound) in the Calvin cycle -- this is the carbon fixation step that converts inorganic CO2 into organic molecules."},
+  {q:"Which plant hormone is a gas that promotes fruit ripening?",opts:["Auxin","Gibberellin","Cytokinin","Ethylene"],ans:3,ex:"Ethylene is the only plant hormone that is a gas at room temperature. It triggers fruit ripening and is autocatalytic -- one ripe fruit accelerates ripening of surrounding fruits."},
+  {q:"Which vascular tissue transports water from roots to leaves?",opts:["Phloem","Xylem","Cortex","Epidermis"],ans:1,ex:"Xylem consists of dead vessel elements and tracheids with lignified walls, conducting water and dissolved minerals upward via the cohesion-tension mechanism."},
+  {q:"Double fertilization, producing both an embryo and endosperm, is unique to:",opts:["Gymnosperms","Ferns","Angiosperms","Mosses"],ans:2,ex:"In angiosperms, two sperm cells are used: one fertilizes the egg (2n embryo) and one fertilizes two polar nuclei to form the triploid (3n) endosperm."}
+]},
+{id:"zoo",lbl:"Zoology",icon:"ti-paw",topics:[
+  {name:"Animal classification",tag:"core",tbl:{h:["Phylum / Group","Key features","Examples"],r:[
+    ["Chordata","Notochord, dorsal hollow nerve cord, pharyngeal slits, post-anal tail (at some stage)","Humans, fish, frogs, lizards, birds, mammals"],
+    ["Cnidaria","Radial symmetry, cnidocytes (stinging cells), 2 tissue layers, polyp or medusa body plan","Jellyfish, corals, sea anemones, Hydra"],
+    ["Arthropoda","Exoskeleton (chitin), jointed appendages, segmented body; largest animal phylum","Insects, spiders, crabs, lobsters, centipedes"],
+    ["Echinodermata","Spiny skin, water vascular system, pentaradial symmetry as adults, deuterostomes","Sea stars, sea urchins, sea cucumbers, sand dollars"],
+    ["Platyhelminthes","Flatworms; acoelomate; bilateral symmetry; many parasitic","Tapeworms, planaria, liver fluke"],
+    ["Annelida","Segmented worms; true coelom; closed circulatory system","Earthworms, leeches, polychaetes"]
+  ]},note:{type:"tip",text:"Taxonomy: Kingdom -> Phylum -> Class -> Order -> Family -> Genus -> Species. Memory aid: King Philip Came Over For Good Soup."}},
+  {name:"Notable animal groups",tag:"advanced",defs:[
+    ["Monotremes","Only egg-laying mammals; three species: duck-billed platypus + two echidnas; found in Australia/New Guinea; have mammary glands but no nipples; platypus has electroreceptors and venom."],
+    ["Marsupials","Born underdeveloped; complete development in pouch (marsupium); kangaroos, koalas, wombats, Tasmanian devil; mainly Australasia + American opossums."],
+    ["Arachnida","Class with 8 legs, 2 body segments (cephalothorax + abdomen), no antennae; includes spiders, scorpions, ticks, mites."],
+    ["Ticks","Arachnid ectoparasites; vectors for Lyme disease (Borrelia burgdorferi via Ixodes scapularis ticks); Rocky Mountain spotted fever (Rickettsia via Dermacentor ticks)."],
+    ["Cassowary","Ratite (flightless bird); considered most dangerous bird; found in New Guinea and NE Australia; has large casque on head; runs 50 km/h; dagger-like toe claw."],
+    ["Penguins","Flightless seabirds; wings evolved into flippers for swimming; southern hemisphere only; emperor penguin is the largest; breeds in Antarctic winter."]
+  ],note:{type:"fact",text:"The platypus is one of very few venomous mammals -- males have a venomous spur on their hind leg. It is also the only mammal known to use electroreception (detecting electric fields) to hunt prey underwater."}}
+],quizzes:[
+  {q:"Which phylum includes animals with cnidocytes (stinging cells)?",opts:["Arthropoda","Echinodermata","Cnidaria","Platyhelminthes"],ans:2,ex:"Cnidarians (jellyfish, corals, anemones) are named for their cnidocytes -- specialized stinging cells used to capture prey and deter predators."},
+  {q:"Monotremes are unique among mammals because they:",opts:["Have pouches","Lay eggs","Lack fur","Are invertebrates"],ans:1,ex:"Monotremes (platypus and echidnas) are the only mammals that lay eggs, while still producing milk and having fur."},
+  {q:"Lyme disease is transmitted by which arthropod?",opts:["Mosquitoes","Ixodes ticks","Fleas","Horse flies"],ans:1,ex:"Lyme disease, caused by the bacterium Borrelia burgdorferi, is transmitted primarily by Ixodes scapularis (deer tick / black-legged tick) in North America."},
+  {q:"Cassowaries belong to which group of birds?",opts:["Raptors","Ratites (flightless)","Wading birds","Passerines"],ans:1,ex:"Cassowaries are ratites -- flightless birds with flat sternums and no keel. The group includes ostriches, emus, rheas, kiwis, and cassowaries."}
+]},
+{id:"eco",lbl:"Ecology & Evolution",icon:"ti-trees",topics:[
+  {name:"Population ecology",tag:"core",defs:[
+    ["Carrying capacity (K)","Maximum population size an environment can sustain; limited by food, space, disease, predation."],
+    ["Logistic growth","S-shaped (sigmoidal) curve; population grows fast initially, slows as it approaches K, stabilizes at K. Equation: dN/dt = rN(1 - N/K)."],
+    ["Exponential growth","J-shaped curve; unrestricted growth; theoretical; equation: dN/dt = rN."],
+    ["Lotka-Volterra","Predator-prey model producing out-of-phase population cycles: prey peaks -> predator peaks -> prey crashes -> predator crashes."],
+    ["R vs K selection","R-selected: many small offspring, little parental care (insects, mice). K-selected: few large offspring, heavy parental care (elephants, humans)."],
+    ["Competitive exclusion","Gause's principle: two species competing for identical resources cannot coexist indefinitely; one will exclude the other."]
+  ],note:{type:"fact",text:"Lotka-Volterra equations were developed independently by Alfred Lotka and Vito Volterra. Volterra derived them to explain why WWI fishing bans paradoxically increased the proportion of predatory fish in the Adriatic."}},
+  {name:"Biomes",tag:"core",tbl:{h:["Biome","Climate","Key features"],r:[
+    ["Tundra","Very cold; permafrost; low precipitation","Sedges, mosses, lichens; caribou, arctic fox, lemmings; brief summer; lowest alpha diversity."],
+    ["Taiga (boreal)","Cold; moderate precipitation","Coniferous trees (spruce, fir, pine); moose, wolves, lynx; largest terrestrial biome by area."],
+    ["Temperate deciduous","Moderate temp; seasonal rainfall","Broad-leaved deciduous trees; deer, foxes, salamanders; rich soils; four seasons."],
+    ["Tropical rainforest","Hot; year-round high rainfall (200-400 cm)","Highest biodiversity; stratified canopy; epiphytes; nutrients locked in biomass, not soil."],
+    ["Grassland/Savanna","Warm; seasonal rainfall","Grasses dominate; African savanna: elephants, lions; temperate prairie: bison, prairie dogs."],
+    ["Desert","Low precipitation (<25 cm/yr)","Extreme temperature swings; CAM plants; xerophytes; camels, Gila monsters, fennec foxes."],
+    ["Alpine","Cold; high elevation; intense UV","Similar to tundra but no permafrost; krummholz trees at tree line; ibex, snow leopards."],
+    ["Mangrove","Tropical/subtropical coasts","Salt-tolerant trees with prop roots; nursery habitat for marine species; coastal storm buffer."]
+  ]},note:{type:"tip",text:"Alpine vs tundra: both have low, wind-swept vegetation, but tundra is at high LATITUDES (polar regions) and has permafrost; alpine is at high ELEVATIONS (mountains) and usually lacks permafrost."}},
+  {name:"Evolution & natural selection",tag:"core",defs:[
+    ["Natural selection","Differential reproductive success based on heritable variation; favorable traits become more common over generations."],
+    ["Genetic drift","Random change in allele frequencies due to chance; strongest in small populations; can eliminate alleles without selection."],
+    ["Founder effect","A small subset colonizes a new area; the founder population has reduced, non-representative genetic diversity. Example: Amish Ellis-van Creveld syndrome."],
+    ["Bottleneck effect","Dramatic population reduction (disaster) -> survivors have reduced, often unrepresentative genetic diversity. Example: cheetah genetic uniformity."],
+    ["Runaway selection","Fisher's model: a trait and a preference for that trait co-evolve in positive feedback -> extreme ornaments (peacock tails); eventually checked by survival costs."],
+    ["Allopatric speciation","Geographic barrier prevents gene flow -> populations diverge -> become separate species. Most common speciation mode."],
+    ["Sympatric speciation","New species arise without geographic barrier; polyploidy in plants is a common mechanism."]
+  ],note:{type:"warn",text:"Common misconception: evolution is NOT organisms 'trying' to change. Natural selection acts on EXISTING variation -- mutations are random. Selection is non-random, but it only acts on what already exists."}},
+  {name:"Ecological succession",tag:"core",defs:[
+    ["Primary succession","On bare, lifeless substrate (volcanic rock, glacial retreat); starts with pioneer species (lichens, mosses); very slow; builds soil from scratch."],
+    ["Secondary succession","Where ecosystem was disturbed but soil remains (abandoned field, post-fire forest); much faster than primary succession."],
+    ["Pioneer species","First colonizers; tolerate harsh conditions; nitrogen-fixing cyanobacteria, lichens, mosses; modify environment for later species."],
+    ["Keystone species","Disproportionately large effect on ecosystem structure relative to its abundance. Example: sea otters control sea urchins -> protect kelp forests."],
+    ["Lichens","Symbiosis of fungi + algae (or cyanobacteria); fungi provide structure/water retention; algae provide photosynthate; classic pioneer species."]
+  ],note:{type:"fact",text:"Lichens are a symbiosis between fungi and algae (or cyanobacteria) -- not a single organism. They are quintessential pioneer species in primary succession, able to colonize bare rock and begin soil formation."}}
+],quizzes:[
+  {q:"The Lotka-Volterra equations model which ecological relationship?",opts:["Competition between species","Predator-prey population cycles","Mutualistic symbiosis","Ecological succession"],ans:1,ex:"Lotka-Volterra equations describe oscillating predator-prey population cycles: prey increases -> predators increase -> prey decreases -> predators decrease."},
+  {q:"The founder effect is a type of:",opts:["Natural selection","Sexual selection","Genetic drift","Gene flow"],ans:2,ex:"The founder effect occurs when a small group establishes a new population, reducing genetic diversity by chance -- this is a form of genetic drift, not natural selection."},
+  {q:"Which biome has the highest biodiversity on Earth?",opts:["Temperate deciduous forest","Taiga","Tropical rainforest","Mangrove"],ans:2,ex:"Tropical rainforests receive 200-400 cm of rain per year and host more species than any other terrestrial biome, despite covering only about 6% of Earth's land surface."},
+  {q:"Lichens serve as pioneer species primarily because they:",opts:["Require rich, fertile soils","Can colonize bare rock and create soil","Reproduce only sexually","Require animal pollinators to spread"],ans:1,ex:"Lichens can grow on bare rock, secrete acids that weather rock into mineral particles, and fix nitrogen -- gradually creating conditions that allow other species to colonize."}
+]}
+];
+
+function buildNav(){
+  const el=document.getElementById("nav");
+  D.forEach((d,i)=>{
+    const b=document.createElement("button");
+    b.className="nav-btn"+(i===0?" active":"");
+    b.id="nb-"+d.id;
+    b.textContent=d.lbl;
+    b.onclick=()=>go(d.id,i);
+    el.appendChild(b);
+  });
+}
+
+function buildSecs(){
+  const el=document.getElementById("secs");
+  D.forEach((d,i)=>{
+    const s=document.createElement("div");
+    s.className="sec"+(i===0?" active":"");
+    s.id="s-"+d.id;
+    s.innerHTML=renderSec(d);
+    el.appendChild(s);
+  });
+  document.querySelectorAll(".opt").forEach(b=>{
+    b.addEventListener("click",handleOpt);
+  });
+}
+
+function renderSec(d){
+  let h=`<div class="sec-hdr"><i class="ti ${d.icon} sec-icon" aria-hidden="true"></i><span class="sec-title">${d.lbl}</span></div><div class="cards">`;
+  d.topics.forEach((t,i)=>{
+    const k=d.id+i;
+    h+=`<div class="card"><div class="card-head" onclick="tog('${k}')"><div class="card-head-l"><span class="tag ${t.tag==='advanced'?'tag-adv':'tag-core'}">${t.tag}</span><span class="card-name">${t.name}</span></div><i class="ti ti-chevron-down chev" aria-hidden="true"></i></div><div class="card-body" id="cb${k}">`;
+    if(t.defs){
+      h+=`<div class="defs">`;
+      t.defs.forEach(([a,b])=>{h+=`<div class="def"><span class="dt">${a}</span><span class="dd">${b}</span></div>`;});
+      h+=`</div>`;
+    }
+    if(t.tbl){
+      h+=`<div style="overflow-x:auto"><table class="tbl"><thead><tr>${t.tbl.h.map(x=>`<th>${x}</th>`).join("")}</tr></thead><tbody>`;
+      t.tbl.r.forEach(r=>{h+=`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`;});
+      h+=`</tbody></table></div>`;
+    }
+    if(t.note){
+      const lbl=t.note.type==="tip"?"Exam tip":t.note.type==="warn"?"Watch out":"Key fact";
+      h+=`<div class="note note-${t.note.type}"><b>${lbl}:</b> ${t.note.text}</div>`;
+    }
+    h+=`</div></div>`;
+  });
+  h+=`</div>`;
+  h+=`<div class="quiz-sec"><p class="quiz-lbl">Practice questions &mdash; ${d.lbl}</p>`;
+  d.quizzes.forEach((q,qi)=>{
+    const k=d.id+"q"+qi;
+    h+=`<div class="quiz-q"><div class="quiz-qt">${qi+1}. ${q.q}</div><div class="quiz-opts">`;
+    q.opts.forEach((o,oi)=>{
+      h+=`<button class="opt" data-k="${k}" data-i="${oi}" data-a="${q.ans}" data-e="${encodeURIComponent(q.ex)}">${String.fromCharCode(65+oi)}) ${o}</button>`;
+    });
+    h+=`</div><div class="expl" id="ex${k}"></div></div>`;
+  });
+  h+=`</div>`;
+  return h;
+}
+
+const done={};
+function handleOpt(){
+  const k=this.dataset.k;
+  if(done[k])return;
+  done[k]=true;
+  const i=+this.dataset.i, a=+this.dataset.a, e=decodeURIComponent(this.dataset.e);
+  this.closest(".quiz-opts").querySelectorAll(".opt").forEach((b,j)=>{
+    if(j===a)b.classList.add("ok");
+    else if(j===i)b.classList.add("no");
+  });
+  const ex=document.getElementById("ex"+k);
+  ex.textContent=e;
+  ex.classList.add("show");
+}
+
+function tog(k){
+  const b=document.getElementById("cb"+k);
+  const h=b.previousElementSibling;
+  const open=b.classList.contains("open");
+  b.classList.toggle("open",!open);
+  h.classList.toggle("open",!open);
+}
+
+function go(id,i){
+  document.querySelectorAll(".sec").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("s-"+id).classList.add("active");
+  document.getElementById("nb-"+id).classList.add("active");
+  document.getElementById("pf").style.width=Math.round(((i+1)/D.length)*100)+"%";
+}
+
+buildNav();
+buildSecs();
+</script>
