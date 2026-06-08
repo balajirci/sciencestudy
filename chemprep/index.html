@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chemistry &mdash; Science Bee JV Study Guide</title>
+<style>
+:root {
+  --blue-50: #E6F1FB; --blue-100: #B5D4F4; --blue-400: #378ADD; --blue-800: #0C447C; --blue-900: #042C53;
+  --teal-50: #E1F5EE; --teal-400: #1D9E75; --teal-600: #0F6E56; --teal-800: #085041;
+  --amber-50: #FAEEDA; --amber-400: #BA7517; --amber-800: #633806;
+  --coral-50: #FAECE7; --coral-400: #D85A30; --coral-800: #712B13;
+  --purple-50: #EEEDFE; --purple-400: #7F77DD; --purple-800: #3C3489;
+  --green-50: #EAF3DE; --green-400: #639922; --green-800: #27500A;
+  --gray-50: #F1EFE8; --gray-100: #D3D1C7; --gray-200: #B4B2A9; --gray-400: #888780; --gray-800: #444441;
+  --red-50: #FCEBEB; --red-400: #E24B4A; --red-800: #791F1F;
+  --text: #1a1a1a; --text-2: #555; --text-3: #888;
+  --bg: #ffffff; --bg-2: #f7f6f3; --bg-3: #f0efe9;
+  --border: rgba(0,0,0,0.12); --border-2: rgba(0,0,0,0.2);
+  --radius: 10px; --radius-sm: 6px;
+  --font: 'Georgia', serif;
+  --mono: 'Courier New', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg-3);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* LAYOUT */
+.app { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 240px;
+  min-width: 240px;
+  background: var(--blue-900);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.sidebar-header h1 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+.sidebar-header p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+}
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.35);
+  padding: 16px 20px 6px;
+}
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 20px;
+  border: none;
+  background: none;
+  color: rgba(255,255,255,0.65);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  line-height: 1.3;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
+.nav-btn.active { background: rgba(55,138,221,0.35); color: #fff; font-weight: 500; }
+.nav-btn .nav-icon {
+  width: 20px;
+  text-align: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.progress-dots {
+  display: flex;
+  gap: 5px;
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: auto;
+}
+.progress-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  transition: background 0.3s;
+}
+.progress-dot.visited { background: var(--blue-400); }
+
+/* MAIN CONTENT */
+.main {
+  flex: 1;
+  padding: 32px 40px;
+  max-width: 900px;
+}
+.section { display: none; }
+.section.active { display: block; }
+
+.section-header {
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.section-header .eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--blue-400);
+  margin-bottom: 6px;
+}
+.section-header h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.section-header .subtitle {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+/* CARDS */
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-title .ct-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+/* TABLES */
+.table-wrap { overflow-x: auto; margin-bottom: 4px; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+  background: var(--bg-2);
+  color: var(--text-2);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 9px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  line-height: 1.55;
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg-2); }
+
+/* CONCEPT BLOCKS */
+.cb {
+  border-left: 3px solid var(--blue-400);
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--bg-2);
+}
+.cb.teal { border-left-color: var(--teal-400); }
+.cb.amber { border-left-color: var(--amber-400); }
+.cb.coral { border-left-color: var(--coral-400); }
+.cb.purple { border-left-color: var(--purple-400); }
+.cb.green { border-left-color: var(--green-400); }
+.cb.red { border-left-color: var(--red-400); }
+.cb-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+.cb-body { font-size: 13px; color: var(--text-2); line-height: 1.65; }
+.cb-body strong { color: var(--text); font-weight: 600; }
+
+/* FACT GRID */
+.fact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.fact-item {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+.fact-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  margin-bottom: 5px;
+}
+.fact-value {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.55;
+}
+.fact-value code {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--bg);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  color: var(--blue-800);
+}
+
+/* FORMULA BOX */
+.formula {
+  background: var(--blue-900);
+  color: #E6F1FB;
+  border-radius: var(--radius-sm);
+  padding: 12px 18px;
+  margin: 10px 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  text-align: center;
+  line-height: 1.7;
+}
+
+/* BADGES */
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 12px;
+}
+.b-blue   { background: var(--blue-50);   color: var(--blue-800); }
+.b-teal   { background: var(--teal-50);   color: var(--teal-800); }
+.b-amber  { background: var(--amber-50);  color: var(--amber-800); }
+.b-coral  { background: var(--coral-50);  color: var(--coral-800); }
+.b-purple { background: var(--purple-50); color: var(--purple-800); }
+.b-green  { background: var(--green-50);  color: var(--green-800); }
+
+/* QUIZ */
+.quiz-section {
+  margin-top: 24px;
+  background: var(--bg-2);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  border: 1px solid var(--border);
+}
+.quiz-header {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--blue-400);
+  margin-bottom: 14px;
+}
+.quiz-item {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.quiz-item:last-child { margin-bottom: 0; }
+.quiz-q {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.quiz-a {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.65;
+  display: none;
+  padding: 10px 12px;
+  background: var(--teal-50);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--teal-400);
+  margin-top: 8px;
+}
+.quiz-a.shown { display: block; }
+.quiz-a strong { color: var(--text); font-weight: 600; }
+.reveal-btn {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border-2);
+  background: var(--bg);
+  color: var(--text-2);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.reveal-btn:hover { background: var(--blue-50); color: var(--blue-800); border-color: var(--blue-100); }
+.reveal-btn.open { background: var(--teal-50); color: var(--teal-600); border-color: var(--teal-400); }
+
+/* DIVIDER */
+.divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+/* SCROLLBAR */
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+@media (max-width: 700px) {
+  .sidebar { display: none; }
+  .main { padding: 20px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h1>&#x1F9EA; Chemistry</h1>
+    <p>Science Bee JV &bull; Grade 9</p>
+  </div>
+  <div class="nav-section-label">Topics</div>
+  <button class="nav-btn active" onclick="showSection('atomic', this)">
+    <span class="nav-icon">&#x269B;</span>Atomic Structure &amp; Periodic Table
+  </button>
+  <button class="nav-btn" onclick="showSection('bonding', this)">
+    <span class="nav-icon">&#x1F517;</span>Chemical Bonding &amp; Geometry
+  </button>
+  <button class="nav-btn" onclick="showSection('physical', this)">
+    <span class="nav-icon">&#x1F321;</span>Physical Chemistry &amp; Thermo
+  </button>
+  <button class="nav-btn" onclick="showSection('organic', this)">
+    <span class="nav-icon">&#x2B21;</span>Organic Chemistry
+  </button>
+  <button class="nav-btn" onclick="showSection('lab', this)">
+    <span class="nav-icon">&#x1F9EC;</span>Lab Techniques &amp; Analytical
+  </button>
+  <button class="nav-btn" onclick="showSection('acids', this)">
+    <span class="nav-icon">&#x1F9EA;</span>Acids, Bases &amp; Solutions
+  </button>
+  <div class="progress-dots" id="prog-dots">
+    <div class="progress-dot visited" id="dot-atomic" title="Atomic Structure"></div>
+    <div class="progress-dot" id="dot-bonding" title="Bonding"></div>
+    <div class="progress-dot" id="dot-physical" title="Physical Chem"></div>
+    <div class="progress-dot" id="dot-organic" title="Organic"></div>
+    <div class="progress-dot" id="dot-lab" title="Lab"></div>
+    <div class="progress-dot" id="dot-acids" title="Acids &amp; Bases"></div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ===== SECTION 1: ATOMIC STRUCTURE ===== -->
+<div id="section-atomic" class="section active">
+  <div class="section-header">
+    <div class="eyebrow">Module 1</div>
+    <h2>Atomic Structure &amp; the Periodic Table</h2>
+    <p class="subtitle">Subatomic particles, isotopes, element groups, periodic trends, and key elements tested in Science Bee.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--blue-50);color:var(--blue-800);">&#x269B;</span>Subatomic Particles</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Particle</th><th>Charge</th><th>Mass (amu)</th><th>Location</th><th>Key fact</th></tr>
+        <tr><td>Proton</td><td>+1</td><td>1.0073</td><td>Nucleus</td><td>Defines atomic number Z. Made of 2 up quarks + 1 down quark.</td></tr>
+        <tr><td>Neutron</td><td>0</td><td>1.0087</td><td>Nucleus</td><td>Determines isotopes. Made of 1 up quark + 2 down quarks.</td></tr>
+        <tr><td>Electron</td><td>&minus;1</td><td>0.000549</td><td>Electron orbitals</td><td>~1836&times; lighter than proton. Determines chemical behaviour.</td></tr>
+      </table>
+    </div>
+    <div class="cb purple" style="margin-top:14px;">
+      <div class="cb-title">Quarks &mdash; the deeper layer</div>
+      <div class="cb-body">Quarks are fundamental particles that make up protons and neutrons. <strong>Up quarks</strong> carry charge +&frac23;; <strong>down quarks</strong> carry &minus;&frac13;. Proton = uud (+&frac23;+&frac23;&minus;&frac13; = +1). Neutron = udd (+&frac23;&minus;&frac13;&minus;&frac13; = 0). Quarks are bound by gluons via the strong nuclear force and are never observed in isolation (colour confinement).</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--teal-50);color:var(--teal-800);">&#x2696;</span>Atomic Mass &amp; Isotopes</div>
+    <div class="fact-grid">
+      <div class="fact-item">
+        <div class="fact-label">Atomic Number (Z)</div>
+        <div class="fact-value">Number of protons. Defines the element. Cannot change without nuclear transmutation.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Mass Number (A)</div>
+        <div class="fact-value">Protons + Neutrons. <code>A = Z + N</code></div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Atomic Mass (amu)</div>
+        <div class="fact-value">Weighted average of all naturally occurring isotopes. Not always a whole number.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Isotopes</div>
+        <div class="fact-value">Same element (same Z), different neutron count. Same chemical behaviour, different mass.</div>
+      </div>
+    </div>
+    <div class="cb teal">
+      <div class="cb-title">Hydrogen Isotopes &mdash; Protium, Deuterium, Tritium</div>
+      <div class="cb-body">
+        <strong>Protium (&sup1;H):</strong> 1p, 0n &mdash; 99.98% of natural hydrogen.<br>
+        <strong>Deuterium (&sup2;H or D):</strong> 1p, 1n &mdash; used in heavy water (D&sub2;O), NMR solvents, nuclear fusion fuel (D&ndash;T reaction).<br>
+        <strong>Tritium (&sup3;H):</strong> 1p, 2n &mdash; radioactive (&beta;-decay); used in nuclear weapons and fusion research.
+      </div>
+    </div>
+    <div class="formula">Atomic Mass = &Sigma; (isotope mass &times; natural abundance fraction)</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--amber-50);color:var(--amber-800);">&#x1F4CB;</span>Periodic Table Groups</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Group</th><th>Name</th><th>Location</th><th>Key Properties</th><th>Examples</th></tr>
+        <tr><td><span class="badge b-blue">Group 1</span></td><td>Alkali Metals</td><td>Col 1 (excl. H)</td><td>1 valence e&minus;; soft; low MP; react violently with water &rarr; MOH + H&sub2;</td><td>Li, Na, K, Rb, Cs, Fr</td></tr>
+        <tr><td><span class="badge b-teal">Group 2</span></td><td>Alkaline Earth Metals</td><td>Col 2</td><td>2 valence e&minus;; reactive but less than Group 1; form 2+ ions</td><td>Be, Mg, Ca, Sr, Ba, Ra</td></tr>
+        <tr><td><span class="badge b-amber">Group 17</span></td><td>Halogens</td><td>Col 17</td><td>7 valence e&minus;; highly electronegative; form &minus;1 ions; diatomic molecules</td><td>F&sub2;, Cl&sub2;, Br&sub2;, I&sub2;</td></tr>
+        <tr><td><span class="badge b-purple">Group 18</span></td><td>Noble Gases</td><td>Col 18</td><td>Full valence shell; chemically inert; monatomic; low boiling points</td><td>He, Ne, Ar, Kr, Xe, Rn</td></tr>
+        <tr><td><span class="badge b-coral">f-block</span></td><td>Lanthanides</td><td>Period 6, f-block</td><td>4f subshell filling; rare earth elements; strong magnetic properties; used in magnets &amp; alloys</td><td>La&ndash;Lu (Z 57&ndash;71)</td></tr>
+        <tr><td><span class="badge b-green">f-block</span></td><td>Actinides</td><td>Period 7, f-block</td><td>5f subshell filling; mostly radioactive; include heaviest naturally occurring elements</td><td>Ac&ndash;Lr (Z 89&ndash;103); U, Pu, Th</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--purple-50);color:var(--purple-800);">&#x1F52C;</span>Key Elements &mdash; Specific Properties</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Element</th><th>Symbol / Z</th><th>Key Properties &amp; Uses</th></tr>
+        <tr><td><strong>Carbon</strong></td><td>C / 6</td><td>Basis of all organic chemistry. Allotropes: diamond (hardest natural material, sp&sup3;), graphite (conductor, sp&sup2;), fullerenes (C&sub6;&sub0;), graphene (2D sheet, exceptional conductor). Forms exactly 4 covalent bonds.</td></tr>
+        <tr><td><strong>Cobalt</strong></td><td>Co / 27</td><td>Transition metal; ferromagnetic; central atom in vitamin B&sub1;&sub2; (cobalamin); used in Li-ion battery cathodes (LiCoO&sub2;); cobalt blue pigment (CoAl&sub2;O&sub4;).</td></tr>
+        <tr><td><strong>Zinc</strong></td><td>Zn / 30</td><td>Transition metal (but d-shell always full); forms Zn&sup2;&plus; ion; galvanizing steel prevents rust; essential trace mineral; cofactor in ~300 enzymes; Zn&ndash;Cu alloy = brass.</td></tr>
+        <tr><td><strong>Bismuth</strong></td><td>Bi / 83</td><td>Post-transition metal; heaviest stable (non-radioactive) element; very low toxicity &mdash; used in Pepto-Bismol (bismuth subsalicylate); forms iridescent oxide crystals; diamagnetic.</td></tr>
+        <tr><td><strong>Iodine</strong></td><td>I / 53</td><td>Halogen; purple-black solid at room temperature; essential for thyroid hormones (thyroxine T&sub4;); used as antiseptic; forms triiodide (I&sub3;&minus;) in solution; starch turns deep blue-black with I&sub2; (classic lab test).</td></tr>
+        <tr><td><strong>Platinum</strong></td><td>Pt / 78</td><td>Platinum-group metal; extremely dense (21.45 g/cm&sup3;); catalytic converters; chemotherapy agent (cisplatin, cis-[PtCl&sub2;(NH&sub3;)&sub2;]); fuel cell catalyst (H&sub2;/O&sub2;); jewelry (inert).</td></tr>
+        <tr><td><strong>Aluminium</strong></td><td>Al / 13</td><td>Most abundant metal in Earth&apos;s crust; amphoteric (reacts with both acids and bases); forms Al&sub2;O&sub3; passive layer; produced by Hall&ndash;H&eacute;roult electrolysis; low density (2.7 g/cm&sup3;).</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--coral-50);color:var(--coral-800);">&#x1F4C8;</span>Periodic Trends</div>
+    <div class="fact-grid">
+      <div class="fact-item">
+        <div class="fact-label">Atomic Radius</div>
+        <div class="fact-value">Increases down groups (more shells). Decreases left &rarr; right across a period (more protons pull electrons inward).</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Ionization Energy (IE)</div>
+        <div class="fact-value">Energy to remove outermost e&minus;. Increases &rarr; across period; decreases down group. Exceptions: B &lt; Be; O &lt; N (half-filled 2p stability).</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Electronegativity</div>
+        <div class="fact-value">Pauling scale. F = 3.98 (highest). Increases &rarr; and upward. Decreases down and leftward. Noble gases excluded.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Electron Affinity</div>
+        <div class="fact-value">Energy released gaining e&minus;. Halogens highest. Exceptions: N, Be, Mg have near-zero or positive EA (filled/half-filled subshells resist adding e&minus;).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-section">
+    <div class="quiz-header">Practice Questions &mdash; Atomic Structure</div>
+    <div class="quiz-item">
+      <div class="quiz-q">1. What is the charge and quark composition of a neutron?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a"><strong>Charge = 0.</strong> Quark composition: 1 up quark (+&frac23;) + 2 down quarks (&minus;&frac13; each) = +&frac23; &minus; &frac13; &minus; &frac13; = 0.</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">2. Deuterium has how many protons and neutrons? Name two of its uses.</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a"><strong>1 proton, 1 neutron.</strong> Uses: (1) heavy water (D&sub2;O) &mdash; neutron moderator in CANDU nuclear reactors; (2) NMR solvents (deuterated chloroform CDCl&sub3;); (3) fuel in nuclear fusion (D&ndash;T reaction).</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">3. Aluminium is described as amphoteric. What does this mean? Give one reaction with a base.</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a"><strong>Amphoteric:</strong> reacts with both acids and bases.<br>With NaOH: 2Al + 2NaOH + 2H&sub2;O &rarr; 2NaAlO&sub2; + 3H&sub2;&uarr;<br>With HCl: 2Al + 6HCl &rarr; 2AlCl&sub3; + 3H&sub2;&uarr;</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">4. Why does iodine turn starch blue-black?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a">I&sub2; molecules thread themselves into the helical coils of <strong>amylose</strong> (a starch component), forming a charge-transfer complex that absorbs visible light at ~600 nm, producing the characteristic deep blue-black colour. This is a classic qualitative test for starch.</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">5. Which element has the highest electronegativity, and what is its value on the Pauling scale?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a"><strong>Fluorine (F)</strong>, with a Pauling electronegativity of <strong>3.98</strong> (often rounded to 4.0). It is the most electronegative element in the periodic table.</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">6. Why does ionization energy have an exception between nitrogen and oxygen (IE of O &lt; N despite O having higher Z)?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a">Nitrogen has a half-filled 2p subshell (2p&sup3; &mdash; one e&minus; per orbital), which is extra stable due to exchange energy. Oxygen has 4 electrons in the 2p subshell, meaning one orbital has a paired electron. The repulsion between paired electrons in the same orbital makes it easier to remove one, so oxygen has a lower IE than nitrogen.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 2: BONDING ===== -->
+<div id="section-bonding" class="section">
+  <div class="section-header">
+    <div class="eyebrow">Module 2</div>
+    <h2>Chemical Bonding &amp; Molecular Geometry</h2>
+    <p class="subtitle">Types of bonds, VSEPR theory, orbital hybridization, sigma/pi bonds, and aromaticity.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--blue-50);color:var(--blue-800);">&#x1F517;</span>Types of Chemical Bonds</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Bond Type</th><th>Between</th><th>Mechanism</th><th>Strength</th><th>Examples</th></tr>
+        <tr><td><strong>Ionic</strong></td><td>Metal + Nonmetal</td><td>Electron <em>transfer</em>; electrostatic attraction between oppositely charged ions in a lattice</td><td>Strong (lattice energy)</td><td>NaCl, MgO, CaCl&sub2;</td></tr>
+        <tr><td><strong>Covalent (polar)</strong></td><td>Nonmetal + Nonmetal (different EN)</td><td>Shared electrons, unequal sharing; partial charges (&delta;+/&delta;&minus;)</td><td>Strong</td><td>H&sub2;O, HF, NH&sub3;</td></tr>
+        <tr><td><strong>Covalent (nonpolar)</strong></td><td>Same or similar EN atoms</td><td>Equal sharing of electron pair</td><td>Strong</td><td>H&sub2;, N&sub2;, CH&sub4;</td></tr>
+        <tr><td><strong>Metallic</strong></td><td>Metal atoms</td><td>&ldquo;Sea of electrons&rdquo; &mdash; delocalized electrons around cation lattice; non-directional</td><td>Variable</td><td>Fe, Cu, Na, brass alloy</td></tr>
+        <tr><td><strong>Hydrogen</strong></td><td>H bonded to N, O, or F &hellip; another N/O/F</td><td>Dipole&ndash;dipole interaction; H is &delta;+, lone pair on N/O/F attracts it</td><td>Weak&ndash;moderate</td><td>H&sub2;O (BP 100&deg;C), DNA base pairs, protein &alpha;-helices</td></tr>
+      </table>
+    </div>
+    <div class="cb amber" style="margin-top:14px;">
+      <div class="cb-title">Why water has anomalously high boiling point</div>
+      <div class="cb-body">H&sub2;O is only 18 g/mol, yet boils at 100&deg;C because each water molecule can form up to <strong>4 hydrogen bonds</strong> (2 as donor through its H atoms, 2 as acceptor through its lone pairs). These must all be broken to vaporise the liquid, requiring far more energy than predicted by molecular weight alone.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--teal-50);color:var(--teal-800);">&#x1F537;</span>VSEPR Theory &amp; Molecular Geometry</div>
+    <div class="cb" style="margin-bottom:14px;">
+      <div class="cb-title">VSEPR Principle</div>
+      <div class="cb-body">Electron pairs around a central atom repel each other and arrange to minimise repulsion. <strong>Repulsion order:</strong> lone pair&ndash;lone pair &gt; lone pair&ndash;bonding pair &gt; bonding pair&ndash;bonding pair. Lone pairs therefore compress bond angles below ideal values.</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Electron Groups</th><th>Lone Pairs</th><th>Geometry</th><th>Bond Angle</th><th>Example</th></tr>
+        <tr><td>2</td><td>0</td><td>Linear</td><td>180&deg;</td><td>CO&sub2;, BeCl&sub2;</td></tr>
+        <tr><td>3</td><td>0</td><td>Trigonal planar</td><td>120&deg;</td><td>BF&sub3;, SO&sub3;</td></tr>
+        <tr><td>3</td><td>1</td><td>Bent / V-shape</td><td>~119&deg;</td><td>SO&sub2;, O&sub3;</td></tr>
+        <tr><td>4</td><td>0</td><td>Tetrahedral</td><td>109.5&deg;</td><td>CH&sub4;, CCl&sub4;</td></tr>
+        <tr><td>4</td><td>1</td><td>Trigonal pyramidal</td><td>107&deg;</td><td>NH&sub3;, PCl&sub3;</td></tr>
+        <tr><td>4</td><td>2</td><td>Bent</td><td>104.5&deg;</td><td>H&sub2;O</td></tr>
+        <tr><td>5</td><td>0</td><td>Trigonal bipyramidal</td><td>90&deg; &amp; 120&deg;</td><td>PCl&sub5;, PF&sub5;</td></tr>
+        <tr><td>5</td><td>1</td><td>See-saw (seesaw)</td><td>&lt;90&deg;, &lt;120&deg;</td><td>SF&sub4;</td></tr>
+        <tr><td>5</td><td>2</td><td>T-shaped</td><td>&lt;90&deg;</td><td>ClF&sub3;</td></tr>
+        <tr><td>6</td><td>0</td><td>Octahedral</td><td>90&deg;</td><td>SF&sub6;, PCl&sub6;&minus;</td></tr>
+        <tr><td>6</td><td>1</td><td>Square pyramidal</td><td>~90&deg;</td><td>BrF&sub5;, ClF&sub5;</td></tr>
+        <tr><td>6</td><td>2</td><td>Square planar</td><td>90&deg;</td><td>XeF&sub4;, [PtCl&sub4;]&sup2;&minus;</td></tr>
+      </table>
+    </div>
+    <div class="cb red" style="margin-top:14px;">
+      <div class="cb-title">Hypervalence &mdash; exceeding the octet</div>
+      <div class="cb-body">Atoms in Period 3 and below can hold more than 8 valence electrons by using d orbitals. PCl&sub5; (10e&minus;), SF&sub6; (12e&minus;), XeF&sub4; (12e&minus;). <strong>Period 2 elements (C, N, O, F) cannot be hypervalent</strong> &mdash; they have no accessible d orbitals.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--purple-50);color:var(--purple-800);">&#x1F9EC;</span>Orbital Hybridization &amp; &sigma;/&pi; Bonds</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Hybridization</th><th>Orbitals mixed</th><th>Geometry</th><th>&sigma; bonds</th><th>&pi; bonds possible</th><th>Example</th></tr>
+        <tr><td>sp</td><td>1s + 1p</td><td>Linear</td><td>2</td><td>2</td><td>C&sub2;H&sub2; (acetylene), CO&sub2;</td></tr>
+        <tr><td>sp&sup2;</td><td>1s + 2p</td><td>Trigonal planar</td><td>3</td><td>1</td><td>C&sub2;H&sub4;, benzene, BF&sub3;</td></tr>
+        <tr><td>sp&sup3;</td><td>1s + 3p</td><td>Tetrahedral</td><td>4</td><td>0</td><td>CH&sub4;, NH&sub3;, H&sub2;O, ethane</td></tr>
+        <tr><td>sp&sup3;d</td><td>1s+3p+1d</td><td>Trigonal bipyramidal</td><td>5</td><td>0</td><td>PCl&sub5;</td></tr>
+        <tr><td>sp&sup3;d&sup2;</td><td>1s+3p+2d</td><td>Octahedral</td><td>6</td><td>0</td><td>SF&sub6;, XeF&sub4;</td></tr>
+      </table>
+    </div>
+    <div class="fact-grid" style="margin-top:14px;">
+      <div class="fact-item">
+        <div class="fact-label">Sigma (&sigma;) Bond</div>
+        <div class="fact-value">End-to-end orbital overlap along the internuclear axis. Every single bond is a &sigma; bond. First bond in any double or triple bond. Rotation around a &sigma; bond is possible.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Pi (&pi;) Bond</div>
+        <div class="fact-value">Side-to-side overlap of p orbitals, above and below the bond axis. Second bond in a double bond; 2nd &amp; 3rd in a triple bond. Prevents rotation &rarr; causes cis/trans isomerism. Generally weaker than &sigma;.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Bond Order Summary</div>
+        <div class="fact-value">Single = 1&sigma;. Double = 1&sigma; + 1&pi;. Triple = 1&sigma; + 2&pi;. Higher bond order &rarr; shorter bond length &rarr; stronger bond.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">H&uuml;ckel&apos;s Rule (Aromaticity)</div>
+        <div class="fact-value">A cyclic, planar, fully conjugated ring with <strong>4n+2 &pi; electrons</strong> (n = 0, 1, 2&hellip;) is aromatic. Benzene: n=1, 6 &pi; e&minus;. Extra thermodynamic stability; prefers EAS not addition.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-section">
+    <div class="quiz-header">Practice Questions &mdash; Bonding &amp; Geometry</div>
+    <div class="quiz-item">
+      <div class="quiz-q">1. What is the molecular geometry and hybridization of XeF&sub4;?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a"><strong>Square planar</strong> molecular geometry. XeF&sub4; has 6 electron groups (4 bonding pairs + 2 lone pairs) &rarr; octahedral electron geometry &rarr; lone pairs occupy opposite axial positions &rarr; square planar arrangement of F atoms. Hybridization: <strong>sp&sup3;d&sup2;</strong>. Bond angle: 90&deg;. Classic hypervalent molecule.</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">2. How many sigma and pi bonds are in a molecule of acetylene (C&sub2;H&sub2;)?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a">Structure: H&mdash;C&equiv;C&mdash;H. Counting: H&mdash;C (1&sigma;) + C&equiv;C (1&sigma; + 2&pi;) + C&mdash;H (1&sigma;) = <strong>3 sigma bonds + 2 pi bonds</strong>. Each carbon is sp hybridized.</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">3. Why does water have a bent shape rather than linear? What is the exact bond angle?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a">Water has 4 electron groups (2 bonding pairs + 2 lone pairs) around oxygen. This gives a tetrahedral electron geometry. The 2 lone pairs exert stronger repulsion than bonding pairs, compressing the H&mdash;O&mdash;H angle from the ideal 109.5&deg; to <strong>104.5&deg;</strong>. Molecular geometry = bent.</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">4. Metallic bonding explains electrical conductivity. Why can ionic compounds not conduct electricity as solids?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a">In metals, electrons are delocalized and free to move under an electric field &rarr; conductivity. In solid ionic compounds, ions are fixed in a rigid crystal lattice &mdash; they cannot move. Ionic compounds <strong>do</strong> conduct when molten or dissolved in water (ions become mobile), but not in the solid state.</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">5. Is pyridine (a 6-membered ring where one CH is replaced by N) aromatic? Explain using H&uuml;ckel&apos;s rule.</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a">Yes. Pyridine is cyclic, planar, and fully conjugated. The nitrogen contributes 1 p orbital to the &pi; system (its lone pair is in an sp&sup2; orbital perpendicular to the ring &mdash; it does NOT enter the &pi; system). Total &pi; electrons = 6 (from 3 double bonds) = 4(1)+2 &rarr; <strong>aromatic by H&uuml;ckel&apos;s rule</strong>. Compare with pyrrole where the N lone pair does enter the &pi; system (also 6 &pi; e&minus;, aromatic).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 3: PHYSICAL CHEMISTRY ===== -->
+<div id="section-physical" class="section">
+  <div class="section-header">
+    <div class="eyebrow">Module 3</div>
+    <h2>Physical Chemistry &amp; Thermodynamics</h2>
+    <p class="subtitle">Kinetics, activation energy, gas laws, thermodynamic state functions, phase changes, equilibrium, and Le Chatelier&apos;s principle.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--amber-50);color:var(--amber-800);">&#x26A1;</span>Reaction Kinetics</div>
+    <div class="cb" style="margin-bottom:12px;">
+      <div class="cb-title">Activation Energy (E&sub;a;) &amp; Arrhenius Equation</div>
+      <div class="cb-body">Minimum energy required for reactants to overcome the transition-state barrier and form products. Governed by the Arrhenius equation. Higher temperature &rarr; more molecules with energy &ge; E&sub;a; &rarr; faster rate.</div>
+    </div>
+    <div class="formula">Arrhenius: k = A &middot; e<sup>&minus;E&sub;a;/RT</sup>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;ln(k&sub;2;/k&sub;1;) = (E&sub;a;/R) &middot; (1/T&sub;1; &minus; 1/T&sub;2;)</div>
+    <div class="cb teal" style="margin-top:12px;">
+      <div class="cb-title">Catalysts &amp; Enzymes</div>
+      <div class="cb-body">
+        <strong>Catalyst:</strong> lowers E&sub;a; by providing an alternative reaction pathway. Not consumed. Does not change &Delta;G, &Delta;H, or the equilibrium position &mdash; only the rate.<br><br>
+        <strong>Enzyme:</strong> biological catalyst (protein, or ribozyme if RNA). Has an active site; binds substrate by lock-and-key or induced-fit model. Activity affected by pH, temperature, competitive inhibitors (block active site; overcome by more substrate) and noncompetitive inhibitors (bind allosteric site; cannot be overcome). K&sub;m; = Michaelis constant = [S] at half-maximal rate (V&sub;max;/2).
+      </div>
+    </div>
+    <div class="fact-grid" style="margin-top:12px;">
+      <div class="fact-item">
+        <div class="fact-label">Rate Law</div>
+        <div class="fact-value"><code>rate = k[A]<sup>m</sup>[B]<sup>n</sup></code>. Orders (m, n) are determined experimentally, NOT from stoichiometric coefficients (unless an elementary step).</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Rate-Determining Step</div>
+        <div class="fact-value">Slowest step in a multi-step mechanism determines overall rate. The rate law is written from this step.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Half-life (t&frac12;)</div>
+        <div class="fact-value">1st order: <code>t&frac12; = ln2/k</code> (constant, independent of [A]). 2nd order: <code>t&frac12; = 1/(k[A]&sub;0;)</code> (depends on initial concentration).</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Collision Theory</div>
+        <div class="fact-value">Reaction requires collision with: (1) sufficient energy (&ge; E&sub;a;) AND (2) correct orientation (steric factor). Rate &prop; collision frequency &times; fraction with E&sub;a; &times; steric factor.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--blue-50);color:var(--blue-800);">&#x1F4A8;</span>Gas Laws</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Law</th><th>Formula</th><th>Variables (held constant)</th><th>Key concept</th></tr>
+        <tr><td>Boyle&apos;s</td><td>P&sub;1;V&sub;1; = P&sub;2;V&sub;2;</td><td>T, n constant</td><td>Pressure &times; Volume = constant at fixed temperature</td></tr>
+        <tr><td>Charles&apos;s</td><td>V&sub;1;/T&sub;1; = V&sub;2;/T&sub;2;</td><td>P, n constant</td><td>Volume &prop; absolute temperature (T in Kelvin!)</td></tr>
+        <tr><td>Gay-Lussac&apos;s</td><td>P&sub;1;/T&sub;1; = P&sub;2;/T&sub;2;</td><td>V, n constant</td><td>Pressure &prop; absolute temperature</td></tr>
+        <tr><td>Avogadro&apos;s</td><td>V &prop; n</td><td>T, P constant</td><td>Equal volumes contain equal moles at same T, P</td></tr>
+        <tr><td><strong>Ideal Gas Law</strong></td><td>PV = nRT</td><td>&mdash;</td><td>R = 8.314 J/mol&middot;K = 0.08206 L&middot;atm/mol&middot;K</td></tr>
+        <tr><td><strong>Van der Waals</strong></td><td>(P + an&sup2;/V&sup2;)(V &minus; nb) = nRT</td><td>&mdash;</td><td>Corrects for intermolecular forces (a) and molecular volume (b)</td></tr>
+        <tr><td>Dalton&apos;s</td><td>P&sub;total; = &Sigma; P&sub;partial;</td><td>&mdash;</td><td>Total pressure = sum of partial pressures of non-reacting gases</td></tr>
+      </table>
+    </div>
+    <div class="cb amber" style="margin-top:12px;">
+      <div class="cb-title">When does ideal gas fail? &mdash; Van der Waals corrections</div>
+      <div class="cb-body">
+        <strong>Term an&sup2;/V&sup2; (pressure correction):</strong> accounts for intermolecular attractive forces &mdash; real molecules attract each other, reducing effective impact on walls &rarr; actual P is lower than ideal.<br>
+        <strong>Term &minus;nb (volume correction):</strong> accounts for finite molecular volume &mdash; real molecules occupy space, so available volume is less than container volume.<br>
+        Deviations are greatest at <strong>high pressure</strong> (molecular volume matters) and <strong>low temperature</strong> (attractive forces dominate).
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--coral-50);color:var(--coral-800);">&#x1F321;</span>Thermodynamics</div>
+    <div class="fact-grid">
+      <div class="fact-item">
+        <div class="fact-label">Enthalpy (&Delta;H)</div>
+        <div class="fact-value">Heat at constant pressure. Exothermic: &Delta;H &lt; 0 (releases heat). Endothermic: &Delta;H &gt; 0. Hess&apos;s Law: &Delta;H is path-independent.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Entropy (&Delta;S)</div>
+        <div class="fact-value">Measure of disorder / dispersal of energy. &Delta;S &gt; 0 = more disorder. Boltzmann: S = k&sub;B; ln(W). Third Law: S = 0 for perfect crystal at 0 K.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Gibbs Free Energy</div>
+        <div class="fact-value"><code>&Delta;G = &Delta;H &minus; T&Delta;S</code>. &Delta;G &lt; 0: spontaneous. &Delta;G = 0: equilibrium. &Delta;G &gt; 0: non-spontaneous. Related: &Delta;G = &minus;RT ln K.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Specific Heat (c)</div>
+        <div class="fact-value"><code>q = mc&Delta;T</code>. Water: c = 4.184 J/g&middot;&deg;C (highest of common liquids). Heat needed to raise 1 g by 1&deg;C.</div>
+      </div>
+    </div>
+    <div class="cb purple" style="margin-top:4px;">
+      <div class="cb-title">Absolute Zero &amp; the Third Law</div>
+      <div class="cb-body">Absolute zero = <strong>0 K = &minus;273.15&deg;C</strong> &mdash; the theoretical temperature at which all molecular motion ceases and entropy reaches its minimum (zero for a perfect crystal). The <strong>Third Law of Thermodynamics</strong> states it is impossible to reach absolute zero in a finite number of steps. It serves as the reference baseline for calculating absolute entropies.</div>
+    </div>
+    <div class="cb teal" style="margin-top:10px;">
+      <div class="cb-title">Phase Changes &amp; Heating Curves</div>
+      <div class="cb-body">During a phase change, <strong>temperature stays constant</strong> while energy breaks intermolecular forces (no kinetic energy change). <strong>&Delta;H&sub;fus;</strong> (melting): ~6 kJ/mol for water. <strong>&Delta;H&sub;vap;</strong> (boiling): ~44 kJ/mol for water &mdash; much larger because molecules must be completely separated. Sublimation: solid &rarr; gas directly (dry ice CO&sub2;, iodine at reduced pressure).</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--green-50);color:var(--green-800);">&#x2696;</span>Chemical Equilibrium &amp; Le Chatelier&apos;s Principle</div>
+    <div class="formula">K&sub;eq; = [products]<sup>coefficients</sup> / [reactants]<sup>coefficients</sup> &nbsp;&nbsp; (pure solids &amp; liquids omitted)</div>
+    <div class="fact-grid" style="margin-top:12px;">
+      <div class="fact-item">
+        <div class="fact-label">Le Chatelier&apos;s Principle</div>
+        <div class="fact-value">A system at equilibrium shifts to oppose any applied stress (concentration, pressure, temperature) and re-establish equilibrium.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Adding reactant</div>
+        <div class="fact-value">Q &lt; K &rarr; forward reaction favoured &rarr; shifts toward products.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Increasing pressure (gas)</div>
+        <div class="fact-value">Shifts toward side with fewer moles of gas to reduce pressure.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Increasing temperature</div>
+        <div class="fact-value">Shifts toward endothermic direction. For exothermic reactions, K&sub;eq; decreases as T rises.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Adding a catalyst</div>
+        <div class="fact-value">Speeds both forward and reverse reactions equally. Does NOT shift equilibrium. K&sub;eq; unchanged.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Q vs K</div>
+        <div class="fact-value">Q &lt; K: forward reaction favoured. Q &gt; K: reverse favoured. Q = K: at equilibrium.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-section">
+    <div class="quiz-header">Practice Questions &mdash; Physical Chemistry &amp; Thermodynamics</div>
+    <div class="quiz-item">
+      <div class="quiz-q">1. Van der Waals adds two correction terms to PV=nRT. What physical reality does each term correct for?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a"><strong>an&sup2;/V&sup2; (pressure correction):</strong> corrects for intermolecular attractive forces. Real molecules attract each other, so wall collisions are slightly weaker &rarr; actual pressure is lower than ideal. The constant &lsquo;a&rsquo; reflects the strength of these attractions.<br><br><strong>&minus;nb (volume correction):</strong> corrects for the finite volume of gas molecules themselves. Real molecules are not point particles &rarr; less volume is available for free motion. Constant &lsquo;b&rsquo; is the excluded volume per mole.</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">2. N&sub;2;(g) + 3H&sub;2;(g) &harr; 2NH&sub;3;(g) + heat (Haber process). What happens to equilibrium if (a) pressure is increased, (b) temperature is increased?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a"><strong>(a) Increasing pressure:</strong> 4 mol gas (reactants) &rarr; 2 mol gas (products). System shifts <strong>right toward products</strong> to reduce moles of gas and lower pressure.<br><br><strong>(b) Increasing temperature:</strong> Reaction is exothermic (&Delta;H &lt; 0) &mdash; heat is a &ldquo;product.&rdquo; Adding heat shifts equilibrium <strong>left toward reactants</strong>. K&sub;eq; decreases. (This is why industrial Haber plants use ~400&ndash;500&deg;C as a compromise between rate and yield.)</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">3. For a reaction where &Delta;H &lt; 0 and &Delta;S &lt; 0, at what temperatures is the reaction spontaneous?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a">Using &Delta;G = &Delta;H &minus; T&Delta;S. With &Delta;H &lt; 0 and &Delta;S &lt; 0: at <strong>low T</strong>, the &Delta;H term dominates &rarr; &Delta;G &lt; 0 &rarr; spontaneous. At high T, the &minus;T&Delta;S term becomes large and positive (since &Delta;S is negative), eventually making &Delta;G &gt; 0 &rarr; non-spontaneous. Spontaneous at <strong>low temperatures only</strong>.</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">4. A first-order reaction has a rate constant k = 0.0347 min&minus;&sup1;. Calculate its half-life.</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a">For a first-order reaction: t&frac12; = ln(2) / k = 0.6931 / 0.0347 min&minus;&sup1; = <strong>19.97 &asymp; 20 minutes</strong>. Note that for first-order reactions, the half-life is constant &mdash; independent of the initial concentration.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 4: ORGANIC CHEMISTRY ===== -->
+<div id="section-organic" class="section">
+  <div class="section-header">
+    <div class="eyebrow">Module 4</div>
+    <h2>Organic Chemistry</h2>
+    <p class="subtitle">Functional groups, aromaticity, reaction mechanisms (SN1, SN2, Diels-Alder, elimination), and polymers.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--purple-50);color:var(--purple-800);">&#x2B21;</span>Hydrocarbon Functional Groups</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Class</th><th>Functional Group</th><th>General Formula</th><th>Example</th><th>Key Properties</th></tr>
+        <tr><td><strong>Alkane</strong></td><td>C&mdash;C single bonds only</td><td>C&sub;n;H&sub;2n+2;</td><td>CH&sub;4;, hexane, cyclohexane</td><td>Saturated; sp&sup3; carbons; relatively unreactive; undergo combustion and free-radical halogenation</td></tr>
+        <tr><td><strong>Alkene</strong></td><td>C=C double bond</td><td>C&sub;n;H&sub;2n;</td><td>C&sub;2;H&sub;4;, propene, isoprene</td><td>sp&sup2; carbons; electrophilic addition; cis/trans isomerism possible; Markovnikov&apos;s rule</td></tr>
+        <tr><td><strong>Alkyne</strong></td><td>C&equiv;C triple bond</td><td>C&sub;n;H&sub;2n&minus;2;</td><td>C&sub;2;H&sub;2; (acetylene)</td><td>sp carbons; addition reactions; terminal alkyne H is weakly acidic (pK&sub;a; ~25); used in welding</td></tr>
+        <tr><td><strong>Ether</strong></td><td>R&mdash;O&mdash;R&prime;</td><td>&mdash;</td><td>Diethyl ether, THF, furan</td><td>Relatively inert; common lab solvents; anesthetic (diethyl ether); bent geometry at O; low BP for mass</td></tr>
+        <tr><td><strong>Aldehyde</strong></td><td>R&mdash;CHO (C=O at chain end)</td><td>&mdash;</td><td>Formaldehyde (HCHO), acetaldehyde</td><td>Reducing agent (positive Benedict&apos;s / Fehling&apos;s test); easily oxidised to carboxylic acid; nucleophilic addition at C=O</td></tr>
+        <tr><td><strong>Epoxide</strong></td><td>3-membered ring with O</td><td>&mdash;</td><td>Ethylene oxide, styrene oxide</td><td>Ring strain &rarr; highly reactive; ring opens with nucleophiles (acid or base catalysis); anti addition; industrial chemical feedstock</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--coral-50);color:var(--coral-800);">&#x2B21;</span>Aromaticity &amp; Benzene</div>
+    <div class="cb" style="margin-bottom:12px;">
+      <div class="cb-title">H&uuml;ckel&apos;s Rule: 4n+2 &pi; electrons</div>
+      <div class="cb-body">A ring must be: (1) cyclic, (2) planar, (3) fully conjugated (alternating bonds, each atom has a p orbital), and (4) contain <strong>4n+2 &pi; electrons</strong>. Benzene: n=1 &rarr; 6 &pi; e&minus; &#x2713;. Antiaromatic: 4n &pi; electrons (e.g. cyclobutadiene, 4 &pi; e&minus;) &mdash; extremely unstable, worse than non-aromatic.</div>
+    </div>
+    <div class="fact-grid">
+      <div class="fact-item">
+        <div class="fact-label">Benzene structure</div>
+        <div class="fact-value">6 sp&sup2; carbons in a ring. Each C has one unhybridized p orbital &rarr; delocalized &pi; system. All C&mdash;C bonds equal length (1.40 &Aring;, between single 1.54 and double 1.34 &Aring;). Resonance-stabilized.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Electrophilic Aromatic Substitution (EAS)</div>
+        <div class="fact-value">Halogenation (Cl&sub;2;/FeCl&sub;3;), nitration (HNO&sub;3;/H&sub;2;SO&sub;4; &rarr; adds NO&sub;2;), sulfonation, Friedel&ndash;Crafts alkylation/acylation. EAS preserves aromaticity (substitution, not addition).</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Activating groups (ring)</div>
+        <div class="fact-value">Electron-donating groups (&mdash;OH, &mdash;NH&sub;2;, &mdash;OR, alkyl) activate ring toward EAS and direct to ortho/para positions.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Deactivating groups (ring)</div>
+        <div class="fact-value">Electron-withdrawing groups (&mdash;NO&sub;2;, &mdash;COOH, &mdash;CHO, &mdash;CN) deactivate ring and direct to meta position.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--teal-50);color:var(--teal-800);">&#x1F504;</span>Reaction Mechanisms</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Mechanism</th><th>Steps</th><th>Best substrate</th><th>Stereochemistry</th><th>Conditions</th></tr>
+        <tr><td><strong>SN2</strong></td><td>One concerted step (bimolecular)</td><td>Primary &gt;&gt; secondary; NOT tertiary (steric block)</td><td>Walden inversion: backside attack &rarr; complete inversion of configuration at chiral centre</td><td>Strong nucleophile (OH&minus;, CN&minus;, I&minus;); polar aprotic solvent (DMSO, acetone, DMF); rate = k[substrate][Nu]</td></tr>
+        <tr><td><strong>SN1</strong></td><td>2 steps: LG departs first &rarr; flat carbocation &rarr; Nu attacks either face</td><td>Tertiary &gt;&gt; secondary; NOT primary</td><td>Racemization (planar carbocation; attack from both faces equally)</td><td>Weak nucleophile OK; polar protic solvent (H&sub;2;O, ROH) stabilises carbocation; rate = k[substrate]</td></tr>
+        <tr><td><strong>E2 (elimination)</strong></td><td>One concerted step</td><td>Secondary or tertiary</td><td>Anti-periplanar: H and leaving group must be anti (trans) to each other; Zaitsev&apos;s rule &rarr; more substituted (stable) alkene</td><td>Strong bulky base (t-BuOK, KOH); competes with SN2</td></tr>
+        <tr><td><strong>Diels-Alder</strong></td><td>Concerted pericyclic [4+2] cycloaddition</td><td>Conjugated diene (must be in s-cis conformation) + electron-poor dienophile</td><td>Syn addition; stereospecific (endo/exo products); forms 6-membered ring (cyclohexene)</td><td>No catalyst needed; thermally allowed; reversible at very high T (retro-Diels-Alder)</td></tr>
+      </table>
+    </div>
+    <div class="cb amber" style="margin-top:14px;">
+      <div class="cb-title">Nucleophiles vs Electrophiles &mdash; key examples</div>
+      <div class="cb-body">
+        <strong>Nucleophiles</strong> (electron-rich; attack e&minus;-poor C): OH&minus;, CN&minus;, I&minus;, Br&minus;, NH&sub;3;, H&sub;2;O, RO&minus;, RS&minus;.<br>
+        <strong>Electrophiles</strong> (electron-poor; accept electrons): H&plus;, carbocations (R&plus;), halogens (Cl&sub;2;, Br&sub;2;), BF&sub;3;, AlCl&sub;3;, carbonyl C.<br>
+        <strong>Best leaving groups</strong> (weak conjugate bases, stable anions): I&minus; &gt; Br&minus; &gt; Cl&minus; &gg; F&minus;; TsO&minus; (tosylate). OH&minus; and NH&sub;2;&minus; are poor leaving groups.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--amber-50);color:var(--amber-800);">&#x1F9F5;</span>Polymers &amp; Plastics</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Polymer</th><th>Type</th><th>Monomer(s)</th><th>Bond formed</th><th>Property / Use</th></tr>
+        <tr><td>Polyethylene (PE)</td><td>Addition</td><td>CH&sub;2;=CH&sub;2; (ethylene)</td><td>C&mdash;C</td><td>LDPE (branched, flexible, bags); HDPE (linear, rigid, bottles, pipes)</td></tr>
+        <tr><td>PVC</td><td>Addition</td><td>CH&sub;2;=CHCl</td><td>C&mdash;C</td><td>Rigid pipes, flooring; plasticisers added for flexibility</td></tr>
+        <tr><td>Polystyrene (PS)</td><td>Addition</td><td>CH&sub;2;=CH&mdash;C&sub;6;H&sub;5;</td><td>C&mdash;C</td><td>Brittle; Styrofoam (expanded PS); disposable containers</td></tr>
+        <tr><td>Teflon (PTFE)</td><td>Addition</td><td>CF&sub;2;=CF&sub;2;</td><td>C&mdash;C</td><td>Extremely non-reactive (strong C&mdash;F bonds); non-stick; low friction</td></tr>
+        <tr><td>Nylon-6,6</td><td>Condensation</td><td>Hexamethylenediamine + adipic acid</td><td>Amide (&mdash;CO&mdash;NH&mdash;)</td><td>H&sub;2;O released; strong fiber; clothing, ropes, gears</td></tr>
+        <tr><td>PET (polyester)</td><td>Condensation</td><td>Ethylene glycol + terephthalic acid</td><td>Ester (&mdash;COO&mdash;)</td><td>H&sub;2;O released; beverage bottles (clear), clothing fibers (polyester)</td></tr>
+        <tr><td>Natural rubber</td><td>Natural / addition</td><td>Isoprene (2-methylbutadiene)</td><td>C&mdash;C</td><td>cis-polyisoprene; vulcanisation (S crosslinks) &rarr; harder, less sticky</td></tr>
+      </table>
+    </div>
+    <div class="cb teal" style="margin-top:12px;">
+      <div class="cb-title">Addition vs Condensation Polymerisation</div>
+      <div class="cb-body">
+        <strong>Addition (chain-growth):</strong> monomers add one at a time to a growing chain; no small molecule released; all atoms of monomer appear in polymer. Requires a C=C double bond in monomer. Example: polyethylene.<br><br>
+        <strong>Condensation (step-growth):</strong> bifunctional monomers react stepwise; small molecule (usually H&sub;2;O, sometimes HCl or CH&sub;3;OH) is released each time a bond forms. Example: nylon-6,6 (amide bond), PET (ester bond).
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-section">
+    <div class="quiz-header">Practice Questions &mdash; Organic Chemistry</div>
+    <div class="quiz-item">
+      <div class="quiz-q">1. Why does a tertiary alkyl halide favour SN1 rather than SN2?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a"><strong>Steric hindrance blocks SN2:</strong> the nucleophile must attack the backside of the carbon bearing the leaving group, but three bulky alkyl groups surround the central carbon, making approach impossible.<br><br><strong>SN1 is favoured because:</strong> the tertiary carbocation formed after the leaving group departs is highly <strong>stabilised</strong> by three alkyl groups donating electron density via hyperconjugation and induction. More stable intermediate &rarr; lower activation energy &rarr; faster ionisation step.</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">2. State the two structural requirements for the diene in a Diels-Alder reaction.</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a">(1) <strong>Must be conjugated</strong> (alternating single and double bonds) to allow orbital overlap with the dienophile.<br>(2) <strong>Must adopt the s-cis conformation</strong> (both double bonds on the same side of the single bond). In the s-trans conformation the terminal carbons are too far apart (~3.9 &Aring;) to reach both ends of the dienophile. Ideally the dienophile has electron-withdrawing groups (C=O, NO&sub;2;, CN) to lower its LUMO energy.</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">3. Predict the product when (R)-2-bromobutane reacts with NaOH in DMSO. What is the stereochemistry?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a">Conditions: strong nucleophile (OH&minus;), polar aprotic solvent (DMSO) &rarr; <strong>SN2 reaction</strong>. Backside attack at C-2 causes Walden inversion. Starting material is (R) &rarr; product is <strong>(S)-2-butanol</strong>. Complete inversion, no racemization (SN2 is stereospecific).</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">4. What bond forms in nylon-6,6 and what small molecule is released during its synthesis?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a">An <strong>amide bond</strong> (&mdash;CO&mdash;NH&mdash;) forms each time a carboxylic acid group of adipic acid reacts with an amine group of hexamethylenediamine. <strong>Water (H&sub;2;O)</strong> is released as the by-product. This is condensation polymerisation. The &ldquo;6,6&rdquo; refers to the 6 carbons in each monomer.</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">5. Markovnikov&apos;s rule states that in the addition of HX to an alkene, the H adds to which carbon?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a">H&plus; adds to the carbon that <strong>already bears more hydrogens</strong> (the less substituted carbon). Equivalently, X&minus; adds to the more substituted carbon (forming the more stable, more substituted carbocation intermediate). Example: HBr + propene &rarr; H adds to C1 (CH&sub;2;=), Br adds to C2 &rarr; 2-bromopropane (major product), not 1-bromopropane.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 5: LAB TECHNIQUES ===== -->
+<div id="section-lab" class="section">
+  <div class="section-header">
+    <div class="eyebrow">Module 5</div>
+    <h2>Lab Techniques &amp; Analytical Chemistry</h2>
+    <p class="subtitle">Titration, distillation, electrophoresis, mass spectrometry, NMR, calorimetry, and chromatography.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--blue-50);color:var(--blue-800);">&#x1F9EA;</span>Separation &amp; Purification Techniques</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Technique</th><th>Principle</th><th>Used for</th><th>Key details</th></tr>
+        <tr><td><strong>Distillation</strong></td><td>Difference in boiling points</td><td>Separating liquids; purifying volatile compounds</td><td>Simple: BP differ &gt;25&deg;C. Fractional: closely boiling mixtures (fractionating column). Vacuum: thermally sensitive compounds. Steam distillation: high-BP compounds with water.</td></tr>
+        <tr><td><strong>Titration</strong></td><td>Stoichiometric neutralization or redox reaction to endpoint</td><td>Determining unknown concentration</td><td>Burette dispenses titrant. Indicator changes colour at equivalence point. Molarity = mol/L. At equivalence: moles acid = moles base (adjusted for stoichiometry).</td></tr>
+        <tr><td><strong>Gel Electrophoresis</strong></td><td>Migration through gel matrix under electric field &mdash; separated by size (and charge)</td><td>DNA/RNA/protein separation; forensic fingerprinting; PCR product analysis</td><td>Agarose gel for DNA (smaller fragments migrate farther toward + electrode). SDS-PAGE for proteins (SDS denatures all to uniform negative charge; separates by molecular weight). Ethidium bromide stains DNA.</td></tr>
+        <tr><td><strong>Chromatography</strong></td><td>Differential partitioning between stationary phase and mobile phase</td><td>Separating and identifying components of a mixture</td><td>TLC: Rf = distance of spot / distance of solvent front. Column, HPLC, GC (gas). Polar stationary phase &rarr; polar compounds retained longer (normal phase).</td></tr>
+        <tr><td><strong>Calorimetry</strong></td><td>Measuring heat released or absorbed</td><td>Determining &Delta;H of reactions</td><td>Bomb calorimeter: constant volume, measures combustion. Coffee-cup: constant pressure (&Delta;H directly). q = mc&Delta;T. q&sub;reaction; = &minus;q&sub;calorimeter;.</td></tr>
+        <tr><td><strong>Pipetting</strong></td><td>Precise volumetric liquid transfer</td><td>Accurate reagent measurement in experiments</td><td>Volumetric pipette: fixed volume, highest precision. Micropipette: &micro;L scale (P200, P1000 etc.) in molecular biology. Never mouth-pipette. Always calibrate.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--teal-50);color:var(--teal-800);">&#x1F4E1;</span>Mass Spectrometry</div>
+    <div class="cb" style="margin-bottom:12px;">
+      <div class="cb-title">How it works &mdash; four stages</div>
+      <div class="cb-body">
+        (1) <strong>Ionisation</strong> &mdash; electron impact: molecule loses e&minus; to give M&plus;&bull; radical cation. Modern methods: ESI (soft, no fragmentation), MALDI (for large biomolecules).<br>
+        (2) <strong>Acceleration</strong> &mdash; ions accelerated through electric field; all given same kinetic energy.<br>
+        (3) <strong>Deflection</strong> &mdash; magnetic or electric field deflects ions; lighter ions deflect more (smaller m/z).<br>
+        (4) <strong>Detection</strong> &mdash; ions detected; spectrum shows relative abundance vs m/z.
+      </div>
+    </div>
+    <div class="fact-grid">
+      <div class="fact-item">
+        <div class="fact-label">Molecular Ion Peak (M&plus;)</div>
+        <div class="fact-value">Highest m/z peak (excluding isotope peaks) = molecular weight of compound. When z=1, m/z = mass in g/mol.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Base Peak</div>
+        <div class="fact-value">Tallest peak (100% relative abundance) = most stable fragment. Not necessarily M&plus;.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Isotope Peaks (M+1, M+2)</div>
+        <div class="fact-value">Cl: M+2 &asymp; M (3:1 ratio, &sup3;&sup5;Cl:&sup3;&sup7;Cl). Br: M &asymp; M+2 (1:1, &sup7;&sup9;Br:&sup8;&sup1;Br). These patterns identify halogens.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Fragmentation patterns</div>
+        <div class="fact-value">Loss of 15 = CH&sub;3;. Loss of 29 = CHO or C&sub;2;H&sub;5;. Loss of 45 = OEt. Loss of 77 = C&sub;6;H&sub;5; (phenyl ring).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--purple-50);color:var(--purple-800);">&#x1F4A1;</span>NMR Spectroscopy</div>
+    <div class="cb purple" style="margin-bottom:12px;">
+      <div class="cb-title">Principles of &sup1;H NMR</div>
+      <div class="cb-body">Protons in different chemical environments absorb radiofrequency radiation at different resonance frequencies in a magnetic field. Key observables: <strong>Chemical shift (&delta;, ppm)</strong> &mdash; position relative to TMS (&delta;=0); <strong>Multiplicity</strong> &mdash; splitting by neighbouring H (n+1 rule); <strong>Integration</strong> &mdash; area &prop; number of equivalent protons.</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Proton environment</th><th>&delta; (ppm)</th><th>Notes</th></tr>
+        <tr><td>TMS reference</td><td>0</td><td>Tetramethylsilane, internal standard</td></tr>
+        <tr><td>Alkyl (&mdash;CH&sub;3;, &mdash;CH&sub;2;&mdash;)</td><td>0.8&ndash;2.0</td><td>Shielded; upfield</td></tr>
+        <tr><td>Adjacent to C=O or halogen</td><td>2.0&ndash;3.5</td><td>Deshielded by induction</td></tr>
+        <tr><td>Alkyne (&equiv;C&mdash;H)</td><td>~2.5</td><td>Unexpectedly upfield due to ring current effect</td></tr>
+        <tr><td>Alkene (=CH&mdash;)</td><td>4.5&ndash;6.5</td><td>sp&sup2; carbon; anisotropic deshielding</td></tr>
+        <tr><td>Aromatic (Ar&mdash;H)</td><td>7.0&ndash;8.5</td><td>Strongly deshielded by ring current</td></tr>
+        <tr><td>Aldehyde (R&mdash;CHO)</td><td>9.5&ndash;10.0</td><td>Very deshielded; often singlet or doublet</td></tr>
+        <tr><td>Carboxylic acid (COOH)</td><td>10&ndash;12</td><td>Very broad; exchangeable with D&sub;2;O</td></tr>
+      </table>
+    </div>
+    <div class="fact-grid" style="margin-top:12px;">
+      <div class="fact-item">
+        <div class="fact-label">n+1 Splitting Rule</div>
+        <div class="fact-value">A proton with n equivalent neighbouring protons splits into n+1 peaks. 0 neighbours = singlet (s); 1 = doublet (d); 2 = triplet (t); 3 = quartet (q).</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">IR Spectroscopy key stretches</div>
+        <div class="fact-value">O&mdash;H (broad): 3200&ndash;3550 cm&minus;&sup1;. N&mdash;H: ~3300 cm&minus;&sup1;. C&mdash;H: 2850&ndash;3000 cm&minus;&sup1;. C&equiv;N: ~2200 cm&minus;&sup1;. C=O (carbonyl): 1700&ndash;1750 cm&minus;&sup1;. C=C: 1620&ndash;1680 cm&minus;&sup1;.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Beer&ndash;Lambert Law (UV-Vis)</div>
+        <div class="fact-value">A = &epsilon;lc. Absorbance (A) = molar absorptivity (&epsilon;) &times; path length (l, cm) &times; concentration (c, mol/L). Used for quantitative analysis of chromophores.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Bragg&apos;s Law (X-ray)</div>
+        <div class="fact-value">n&lambda; = 2d sin&theta;. Used in X-ray crystallography to determine crystal plane spacing (d) and ultimately 3D molecular structure.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-section">
+    <div class="quiz-header">Practice Questions &mdash; Lab Techniques &amp; Analytical</div>
+    <div class="quiz-item">
+      <div class="quiz-q">1. In agarose gel electrophoresis of DNA, do larger or smaller fragments migrate farther? Explain why.</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a"><strong>Smaller fragments migrate farther</strong> (farther from the well toward the positive electrode). All DNA fragments carry negative charge proportional to their size (phosphate backbone), so all move toward + electrode. However, <strong>smaller fragments encounter less resistance</strong> moving through the agarose gel matrix and therefore travel a greater distance in the same time. A DNA ladder (size standards) loaded in a parallel lane allows size determination by comparison.</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">2. A &sup1;H NMR shows a singlet at &delta; 9.8 ppm and the molecular formula contains one oxygen. What functional group does this suggest, and why is the peak so far downfield?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a">This indicates an <strong>aldehyde</strong> (&mdash;CHO). The aldehydic proton appears at ~9&ndash;10 ppm because the adjacent carbonyl group strongly deshields it through both induction (electronegative O withdraws electron density) and anisotropic effects of the C=O &pi; system. It typically appears as a singlet (no adjacent CH) or a doublet if adjacent to a CH. A carboxylic acid (COOH) would appear at ~10&ndash;12 ppm as a broad singlet.</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">3. The M&plus; peak appears at m/z = 136 and there is an equally intense M+2 peak. What element does this pattern indicate?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a">An <strong>approximately equal M and M+2 ratio (1:1)</strong> is the classic signature of <strong>bromine</strong>. Natural bromine is ~50% &sup7;&sup9;Br and ~50% &sup8;&sup1;Br (differ by 2 mass units), giving nearly equal M&plus; and M+2 peaks. By contrast, chlorine (3:1 M:M+2 ratio) gives an M+2 peak at about one-third the height of M&plus;. The molecular weight would be ~136 (the lighter isotopologue).</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">4. You want to separate a mixture of compounds with boiling points 78&deg;C, 80&deg;C, and 115&deg;C. Would you use simple or fractional distillation? Why?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a"><strong>Fractional distillation</strong> is required. Simple distillation works well only when boiling points differ by more than ~25&deg;C. The first two compounds (78&deg;C and 80&deg;C) differ by only 2&deg;C and cannot be separated by simple distillation &mdash; they would co-distil. A fractionating column creates multiple vaporisation&ndash;condensation cycles (theoretical plates), allowing effective separation of closely boiling liquids. The third compound (115&deg;C) could be separated from the first two by either method.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 6: ACIDS & BASES ===== -->
+<div id="section-acids" class="section">
+  <div class="section-header">
+    <div class="eyebrow">Module 6</div>
+    <h2>Acids, Bases &amp; Solutions</h2>
+    <p class="subtitle">Acid&ndash;base theories, pH calculations, buffers, Henderson&ndash;Hasselbalch equation, solubility, and precipitation.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--blue-50);color:var(--blue-800);">&#x2697;</span>Three Acid&ndash;Base Theories</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Theory</th><th>Acid</th><th>Base</th><th>Scope</th><th>Examples</th></tr>
+        <tr><td><strong>Arrhenius</strong></td><td>Produces H&plus; (H&sub;3;O&plus;) in water</td><td>Produces OH&minus; in water</td><td>Narrowest &mdash; aqueous solutions only</td><td>HCl (acid), NaOH (base)</td></tr>
+        <tr><td><strong>Br&oslash;nsted&ndash;Lowry</strong></td><td>Proton (H&plus;) donor</td><td>Proton (H&plus;) acceptor</td><td>Broader &mdash; includes non-aqueous reactions</td><td>NH&sub;4;&plus; (acid), NH&sub;3; (base); every reaction has conjugate pairs</td></tr>
+        <tr><td><strong>Lewis</strong></td><td>Electron pair acceptor</td><td>Electron pair donor</td><td>Broadest &mdash; no proton required</td><td>BF&sub;3; + NH&sub;3; (BF&sub;3; = Lewis acid, empty orbital; NH&sub;3; = Lewis base, lone pair)</td></tr>
+      </table>
+    </div>
+    <div class="cb teal" style="margin-top:12px;">
+      <div class="cb-title">Conjugate Acid&ndash;Base Pairs (Br&oslash;nsted&ndash;Lowry)</div>
+      <div class="cb-body">
+        When an acid donates H&plus;, the remaining species is its <strong>conjugate base</strong> (one fewer H&plus;). When a base accepts H&plus;, it becomes its <strong>conjugate acid</strong>.<br>
+        Example: CH&sub;3;COOH + H&sub;2;O &harr; CH&sub;3;COO&minus; + H&sub;3;O&plus;<br>
+        &bull; CH&sub;3;COOH / CH&sub;3;COO&minus; are a conjugate pair. &bull; H&sub;2;O / H&sub;3;O&plus; are a conjugate pair.<br>
+        <strong>Key rule:</strong> A strong acid has a weak conjugate base. A weak acid has a relatively strong conjugate base.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--coral-50);color:var(--coral-800);">&#x1F4CA;</span>pH, K&sub;a;, and pK&sub;a;</div>
+    <div class="formula">pH = &minus;log[H&sub;3;O&plus;] &nbsp;&nbsp;|&nbsp;&nbsp; pOH = &minus;log[OH&minus;] &nbsp;&nbsp;|&nbsp;&nbsp; pH + pOH = 14 (at 25&deg;C)</div>
+    <div class="formula">K&sub;a; = [H&plus;][A&minus;]/[HA] &nbsp;&nbsp;|&nbsp;&nbsp; pK&sub;a; = &minus;log(K&sub;a;) &nbsp;&nbsp;|&nbsp;&nbsp; K&sub;w; = [H&plus;][OH&minus;] = 1.0&times;10&minus;&sup1;&sup4; at 25&deg;C</div>
+    <div class="fact-grid" style="margin-top:12px;">
+      <div class="fact-item">
+        <div class="fact-label">Strong Acids (fully dissociate)</div>
+        <div class="fact-value">HCl, HBr, HI, HNO&sub;3;, H&sub;2;SO&sub;4; (first H only), HClO&sub;4;. These 6 must be memorised. [H&plus;] = initial acid concentration.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Strong Bases</div>
+        <div class="fact-value">Group 1 hydroxides (LiOH, NaOH, KOH) and heavier Group 2 (Ca(OH)&sub;2;, Sr(OH)&sub;2;, Ba(OH)&sub;2;). Fully dissociate.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Weak Acid Examples &amp; pK&sub;a;</div>
+        <div class="fact-value">Acetic acid: pK&sub;a; 4.74. HF: pK&sub;a; 3.17. Carbonic acid H&sub;2;CO&sub;3;: pK&sub;a;1 6.35. NH&sub;4;&plus;: pK&sub;a; 9.25. Phenol: pK&sub;a; 9.99.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Acid Strength Factors</div>
+        <div class="fact-value">Stronger acid = more stable conjugate base. Increased by: larger atom size (HI &gt; HBr &gt; HCl), more electronegative substituents (inductive effect), resonance stabilisation of A&minus; (carboxylates), oxidation state (HClO&sub;4; &gt; HClO&sub;3;).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--teal-50);color:var(--teal-800);">&#x1F504;</span>Buffers &amp; Henderson&ndash;Hasselbalch Equation</div>
+    <div class="cb" style="margin-bottom:12px;">
+      <div class="cb-title">What is a buffer?</div>
+      <div class="cb-body">A buffer <strong>resists pH change</strong> when small amounts of strong acid or base are added. It consists of a <strong>weak acid and its conjugate base</strong> (or weak base + conjugate acid) present in comparable concentrations. When H&plus; is added: conjugate base (A&minus;) absorbs it &rarr; HA. When OH&minus; is added: weak acid (HA) neutralises it &rarr; A&minus; + H&sub;2;O. Effective buffering range: pK&sub;a; &pm; 1.</div>
+    </div>
+    <div class="formula">Henderson&ndash;Hasselbalch: pH = pK&sub;a; + log([A&minus;]/[HA])</div>
+    <div class="fact-grid" style="margin-top:12px;">
+      <div class="fact-item">
+        <div class="fact-label">When [A&minus;] = [HA]</div>
+        <div class="fact-value">log(1) = 0 &rarr; pH = pK&sub;a;. This is the half-equivalence point in a titration. Maximum buffer capacity.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Buffer Capacity</div>
+        <div class="fact-value">Greatest when [A&minus;] = [HA] (ratio 1:1). Also increases with higher total concentration of both species. Fails when strong acid/base added exceeds the buffer components.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Blood Buffer System</div>
+        <div class="fact-value">CO&sub;2;/HCO&sub;3;&minus; (pK&sub;a; 6.1, effective pH 7.35&ndash;7.45 adjusted by breathing rate). Also: haemoglobin buffer, phosphate buffer. Acidosis: pH &lt; 7.35. Alkalosis: pH &gt; 7.45.</div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-label">Acetate Buffer (lab example)</div>
+        <div class="fact-value">CH&sub;3;COOH / CH&sub;3;COO&minus; (pK&sub;a; 4.74). Effective pH range: 3.74&ndash;5.74. Prepared by mixing acetic acid and sodium acetate.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon" style="background:var(--purple-50);color:var(--purple-800);">&#x1F9EA;</span>Solubility &amp; Precipitation</div>
+    <div class="cb purple" style="margin-bottom:12px;">
+      <div class="cb-title">Solubility Product K&sub;sp;</div>
+      <div class="cb-body">K&sub;sp; is the equilibrium constant for the dissolution of a sparingly soluble ionic salt. For AgCl &harr; Ag&plus; + Cl&minus;: K&sub;sp; = [Ag&plus;][Cl&minus;] = 1.8&times;10&minus;&sup1;&sup0;. If ion product Q &gt; K&sub;sp; &rarr; precipitate forms. If Q &lt; K&sub;sp; &rarr; solution is unsaturated, no precipitate.</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Solubility Rule</th><th>Verdict</th><th>Exceptions (insoluble)</th></tr>
+        <tr><td>Group 1 (alkali metal) salts</td><td><span class="badge b-teal">Soluble</span></td><td>None</td></tr>
+        <tr><td>NH&sub;4;&plus; salts</td><td><span class="badge b-teal">Soluble</span></td><td>None</td></tr>
+        <tr><td>Nitrates (NO&sub;3;&minus;)</td><td><span class="badge b-teal">Soluble</span></td><td>None</td></tr>
+        <tr><td>Chlorides, bromides, iodides</td><td><span class="badge b-teal">Soluble</span></td><td>AgCl, PbCl&sub;2;, Hg&sub;2;Cl&sub;2; (and Ag, Pb, Hg&sub;2; analogs)</td></tr>
+        <tr><td>Sulfates (SO&sub;4;&sup2;&minus;)</td><td><span class="badge b-teal">Soluble</span></td><td>BaSO&sub;4;, PbSO&sub;4;, CaSO&sub;4; (sparingly)</td></tr>
+        <tr><td>Hydroxides (OH&minus;)</td><td><span class="badge b-coral">Insoluble</span></td><td>Group 1, Ba(OH)&sub;2;, Ca(OH)&sub;2; (slightly) are soluble</td></tr>
+        <tr><td>Carbonates, phosphates, sulfides</td><td><span class="badge b-coral">Insoluble</span></td><td>Group 1 and NH&sub;4;&plus; salts are soluble</td></tr>
+      </table>
+    </div>
+    <div class="cb amber" style="margin-top:12px;">
+      <div class="cb-title">Common Ion Effect</div>
+      <div class="cb-body">Adding an ion that is already present in the equilibrium shifts solubility equilibrium to the <strong>left &rarr; reduces solubility</strong>. Example: Adding NaCl to saturated AgCl in water. Extra Cl&minus; &rarr; Q &gt; K&sub;sp; &rarr; more AgCl precipitates. This is Le Chatelier&apos;s principle applied to solubility. Used in gravimetric analysis to ensure complete precipitation.</div>
+    </div>
+  </div>
+
+  <div class="quiz-section">
+    <div class="quiz-header">Practice Questions &mdash; Acids, Bases &amp; Solutions</div>
+    <div class="quiz-item">
+      <div class="quiz-q">1. Calculate the pH of a buffer made from 0.10 M acetic acid and 0.20 M sodium acetate (pK&sub;a; of acetic acid = 4.74).</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a">Using Henderson&ndash;Hasselbalch:<br>pH = pK&sub;a; + log([A&minus;]/[HA]) = 4.74 + log(0.20/0.10) = 4.74 + log(2) = 4.74 + 0.301 = <strong>5.04</strong><br>The pH is above the pK&sub;a; because there is twice as much conjugate base as weak acid &mdash; the solution is slightly more basic than the half-equivalence point.</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">2. BF&sub;3; is a Lewis acid but not a Br&oslash;nsted&ndash;Lowry acid. Explain this distinction.</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a"><strong>Lewis acid:</strong> BF&sub;3; has an empty p orbital on boron and can accept an electron pair from a Lewis base (e.g., NH&sub;3; donates its lone pair &rarr; F&sub;3;B:NH&sub;3; adduct). It is an electron pair acceptor.<br><br><strong>Not a Br&oslash;nsted&ndash;Lowry acid:</strong> BF&sub;3; contains no hydrogen atoms at all, so it cannot donate a proton (H&plus;). Br&oslash;nsted&ndash;Lowry theory is strictly about proton transfer. Lewis theory is broader &mdash; it encompasses all electron-pair interactions, including those with no proton involved.</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">3. Will a precipitate form when 50 mL of 0.001 M AgNO&sub;3; is mixed with 50 mL of 0.001 M NaCl? (K&sub;sp; of AgCl = 1.8&times;10&minus;&sup1;&sup0;)</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a"><strong>Step 1 &mdash; find concentrations after mixing:</strong> Total volume = 100 mL. Concentrations halve: [Ag&plus;] = [Cl&minus;] = 5&times;10&minus;&sup4; M.<br><br><strong>Step 2 &mdash; calculate Q:</strong> Q = [Ag&plus;][Cl&minus;] = (5&times;10&minus;&sup4;)(5&times;10&minus;&sup4;) = 2.5&times;10&minus;&sup7;<br><br><strong>Step 3 &mdash; compare Q to K&sub;sp;:</strong> Q (2.5&times;10&minus;&sup7;) &gt;&gt; K&sub;sp; (1.8&times;10&minus;&sup1;&sup0;) &rarr; <strong>Yes, a white precipitate of AgCl forms.</strong></div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">4. List the six strong acids. Why are these six in particular considered &ldquo;strong&rdquo;?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a"><strong>The six strong acids:</strong> HCl (hydrochloric), HBr (hydrobromic), HI (hydroiodic), HNO&sub;3; (nitric), H&sub;2;SO&sub;4; (sulfuric, first proton only), HClO&sub;4; (perchloric).<br><br><strong>Why strong?</strong> They dissociate essentially 100% in water because their conjugate bases are extremely stable (very weak bases): Cl&minus;, Br&minus;, I&minus; are large, polarisable anions that delocalise charge effectively; NO&sub;3;&minus;, HSO&sub;4;&minus;, ClO&sub;4;&minus; are stabilised by resonance and the high oxidation state of the central atom. A stronger conjugate base = weaker acid; a weaker conjugate base = stronger acid.</div>
+    </div>
+    <div class="quiz-item">
+      <div class="quiz-q">5. A weak acid HA has pK&sub;a; = 5.0. What ratio of [A&minus;]/[HA] is needed to make a buffer at pH 5.5?</div>
+      <button class="reveal-btn" onclick="toggleAnswer(this)">Show answer</button>
+      <div class="quiz-a">pH = pK&sub;a; + log([A&minus;]/[HA])<br>5.5 = 5.0 + log([A&minus;]/[HA])<br>log([A&minus;]/[HA]) = 0.5<br>[A&minus;]/[HA] = 10&sup0;&middot;&sup5; = <strong>3.16</strong><br>So the conjugate base concentration must be approximately 3.16 times greater than the weak acid concentration. This is within the effective buffering range (pK&sub;a; &pm; 1 = pH 4&ndash;6).</div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('dot-' + id).classList.add('visited');
+  document.querySelector('.main').scrollTop = 0;
+  window.scrollTo(0, 0);
+}
+
+function toggleAnswer(btn) {
+  var answer = btn.nextElementSibling;
+  var isShown = answer.classList.contains('shown');
+  answer.classList.toggle('shown');
+  btn.textContent = isShown ? 'Show answer' : 'Hide answer';
+  btn.classList.toggle('open', !isShown);
+}
+</script>
+</body>
+</html>
