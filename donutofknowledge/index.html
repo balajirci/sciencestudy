@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+:root {
+  --bg1: #ffffff;
+  --bg2: #f5f4f1;
+  --bg3: #ebebeb;
+  --t1: #1a1a18;
+  --t2: #555550;
+  --t3: #888880;
+  --bd1: rgba(0,0,0,0.10);
+  --bd2: rgba(0,0,0,0.06);
+  --c-formal: #6C63D6;
+  --c-natural: #1A9E6E;
+  --c-applied: #C07A12;
+  --c-social: #C94070;
+  --c-arts: #C84E28;
+  --c-backbone: #2B7FCC;
+}
+@media(prefers-color-scheme:dark){
+  :root {
+    --bg1: #1a1a18;
+    --bg2: #252522;
+    --bg3: #2e2e2b;
+    --t1: #f0ede6;
+    --t2: #b0ada6;
+    --t3: #706e68;
+    --bd1: rgba(255,255,255,0.10);
+    --bd2: rgba(255,255,255,0.06);
+    --c-formal: #9B94F0;
+    --c-natural: #3DC99A;
+    --c-applied: #E0A040;
+    --c-social: #E86090;
+    --c-arts: #E87050;
+    --c-backbone: #5AABF0;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg1);color:var(--t1);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;line-height:1.6;padding:0 0 2rem 0}
+
+.page{max-width:660px;margin:0 auto;padding:1.5rem 1.25rem}
+
+/* HERO */
+.hero{text-align:center;margin-bottom:1.75rem}
+.hero h1{font-size:20px;font-weight:600;color:var(--t1);margin-bottom:8px;letter-spacing:-.01em}
+.hero p{font-size:13px;color:var(--t2);max-width:520px;margin:0 auto;line-height:1.65}
+
+/* NAV */
+.ring-nav{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:1.5rem}
+.ring-btn{font-size:12px;font-weight:500;padding:5px 14px;border-radius:99px;border:1.5px solid;cursor:pointer;background:transparent;transition:opacity .15s,background .15s;color:var(--t2);border-color:var(--bd1)}
+.ring-btn:hover{background:var(--bg2)}
+.ring-btn.active{color:var(--bg1) !important;border-color:transparent !important}
+.ring-btn[data-panel="overview"].active{background:#555550;color:var(--bg1)}
+.ring-btn[data-panel="formal"].active{background:var(--c-formal);color:#fff}
+.ring-btn[data-panel="natural"].active{background:var(--c-natural);color:#fff}
+.ring-btn[data-panel="applied"].active{background:var(--c-applied);color:#fff}
+.ring-btn[data-panel="social"].active{background:var(--c-social);color:#fff}
+.ring-btn[data-panel="arts"].active{background:var(--c-arts);color:#fff}
+.ring-btn[data-panel="backbone"].active{background:var(--c-backbone);color:#fff}
+
+/* PANELS */
+.panel{display:none}
+.panel.active{display:block}
+
+/* RING HEADER */
+.ring-header{display:flex;align-items:center;gap:12px;margin-bottom:1rem;padding-bottom:.9rem;border-bottom:1px solid var(--bd1)}
+.ring-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.ring-title{font-size:17px;font-weight:600;color:var(--t1)}
+.ring-tagline{font-size:12px;color:var(--t3);margin-top:2px}
+
+/* DISCIPLINE CARDS */
+.disciplines{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:1.1rem}
+.disc-card{border:1px solid var(--bd1);border-radius:8px;padding:10px 12px;background:var(--bg1);transition:background .15s}
+.disc-card:hover{background:var(--bg2)}
+.disc-name{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:3px}
+.disc-blurb{font-size:11px;color:var(--t2);line-height:1.5}
+
+/* CONNECTION BOX */
+.conn-box{background:var(--bg2);border-radius:9px;padding:12px 14px;margin-bottom:.9rem}
+.conn-box h3{font-size:11px;font-weight:600;color:var(--t3);margin-bottom:8px;letter-spacing:.04em;text-transform:uppercase}
+.conn-tags{display:flex;flex-wrap:wrap;gap:6px}
+.conn-tag{font-size:11px;padding:3px 10px;border-radius:99px;border:1px solid var(--bd1);color:var(--t2);cursor:pointer;background:var(--bg1)}
+.conn-tag:hover{color:var(--t1);border-color:var(--bd1)}
+
+/* INSIGHT BOX */
+.insight{border-left:3px solid;padding:10px 13px;border-radius:0 6px 6px 0;margin-bottom:.8rem;background:var(--bg2)}
+.insight p{font-size:13px;line-height:1.65;color:var(--t1)}
+.insight strong{color:var(--t1)}
+
+/* OVERVIEW GRID */
+.ov-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:1.25rem}
+.ov-card{border:1px solid var(--bd1);border-radius:10px;padding:12px;cursor:pointer;transition:background .15s;background:var(--bg1)}
+.ov-card:hover{background:var(--bg2)}
+.ov-swatch{width:26px;height:5px;border-radius:3px;margin-bottom:8px}
+.ov-label{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:4px}
+.ov-desc{font-size:11px;color:var(--t2);line-height:1.5}
+
+/* BACKBONE LIST */
+.bb-list{display:flex;flex-direction:column;gap:7px;margin-bottom:1rem}
+.bb-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:8px;background:var(--bg2)}
+.bb-icon{width:30px;height:30px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;background:var(--bg3);color:var(--c-backbone)}
+.bb-title{font-size:13px;font-weight:600;color:var(--t1)}
+.bb-desc{font-size:12px;color:var(--t2);line-height:1.5;margin-top:2px}
+
+/* NAV FOOTER */
+.nav-foot{display:flex;justify-content:space-between;margin-top:1.5rem;padding-top:.9rem;border-top:1px solid var(--bd1)}
+.nav-foot button{font-size:12px;color:var(--t2);background:var(--bg2);border:1px solid var(--bd1);border-radius:6px;padding:6px 14px;cursor:pointer}
+.nav-foot button:hover{color:var(--t1);background:var(--bg3)}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <h1>The Donut of Knowledge: a field guide</h1>
+    <p>Dominic Walliman's map arranges all human knowledge in concentric rings: the most abstract disciplines at the core, the most applied at the edge. Each ring depends on the one inside it.</p>
+  </div>
+
+  <div class="ring-nav" id="ring-nav">
+    <button class="ring-btn active" data-panel="overview">Overview</button>
+    <button class="ring-btn" data-panel="formal" style="color:var(--c-formal);border-color:var(--c-formal)">Formal sciences</button>
+    <button class="ring-btn" data-panel="natural" style="color:var(--c-natural);border-color:var(--c-natural)">Natural sciences</button>
+    <button class="ring-btn" data-panel="applied" style="color:var(--c-applied);border-color:var(--c-applied)">Applied sciences</button>
+    <button class="ring-btn" data-panel="social" style="color:var(--c-social);border-color:var(--c-social)">Social sciences</button>
+    <button class="ring-btn" data-panel="arts" style="color:var(--c-arts);border-color:var(--c-arts)">Arts and humanities</button>
+    <button class="ring-btn" data-panel="backbone" style="color:var(--c-backbone);border-color:var(--c-backbone)">The backbone</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="panel active" id="panel-overview">
+    <div class="ov-grid">
+      <div class="ov-card" onclick="switchTo('formal')"><div class="ov-swatch" style="background:var(--c-formal)"></div><div class="ov-label">Formal sciences</div><div class="ov-desc">The innermost ring. Pure logic, mathematics, computer science. Truths established by proof, not experiment.</div></div>
+      <div class="ov-card" onclick="switchTo('natural')"><div class="ov-swatch" style="background:var(--c-natural)"></div><div class="ov-label">Natural sciences</div><div class="ov-desc">Physics, chemistry, biology -- the empirical core. They explain how the universe actually behaves.</div></div>
+      <div class="ov-card" onclick="switchTo('applied')"><div class="ov-swatch" style="background:var(--c-applied)"></div><div class="ov-label">Applied sciences</div><div class="ov-desc">Medicine, engineering, meteorology. Natural science knowledge put to practical human use.</div></div>
+      <div class="ov-card" onclick="switchTo('social')"><div class="ov-swatch" style="background:var(--c-social)"></div><div class="ov-label">Social sciences</div><div class="ov-desc">Economics, psychology, sociology -- studying human behaviour and collective systems.</div></div>
+      <div class="ov-card" onclick="switchTo('arts')"><div class="ov-swatch" style="background:var(--c-arts)"></div><div class="ov-label">Arts and humanities</div><div class="ov-desc">The outermost ring. Meaning, culture, expression -- irreducible to equations alone.</div></div>
+      <div class="ov-card" onclick="switchTo('backbone')"><div class="ov-swatch" style="background:var(--c-backbone)"></div><div class="ov-label">The backbone</div><div class="ov-desc">Philosophy and the scientific method -- the roots from which all other disciplines grow.</div></div>
+    </div>
+    <div class="insight" style="border-color:#888">
+      <p><strong>The core idea:</strong> Knowledge is not a flat list of subjects. It forms a nested structure -- each outer ring borrows the tools and language of the rings inside it. A doctor (applied) uses biology (natural) which uses chemistry which uses physics which uses mathematics (formal). The donut makes this dependency visible.</p>
+    </div>
+    <div class="insight" style="border-color:var(--c-social)">
+      <p><strong>Why a donut, not a pyramid?</strong> A pyramid implies hierarchy -- that maths matters more than poetry. The ring shape says something subtler: every discipline is fully legitimate at its boundary, but each one rests on what is inside it. Nothing is above or below -- only closer to abstraction or closer to human life.</p>
+    </div>
+  </div>
+
+  <!-- FORMAL -->
+  <div class="panel" id="panel-formal">
+    <div class="ring-header">
+      <div class="ring-dot" style="background:var(--c-formal)"></div>
+      <div><div class="ring-title" style="color:var(--c-formal)">Formal sciences</div><div class="ring-tagline">Innermost ring -- pure abstract structure</div></div>
+    </div>
+    <div class="disciplines">
+      <div class="disc-card"><div class="disc-name">Mathematics</div><div class="disc-blurb">The language of quantity, pattern, and structure. Gives every other science its grammar.</div></div>
+      <div class="disc-card"><div class="disc-name">Logic</div><div class="disc-blurb">The rules of valid reasoning. Underpins both mathematics and philosophy.</div></div>
+      <div class="disc-card"><div class="disc-name">Statistics</div><div class="disc-blurb">Reasoning under uncertainty. The bridge between raw data and reliable conclusions.</div></div>
+      <div class="disc-card"><div class="disc-name">Computer science</div><div class="disc-blurb">The science of computation and information -- rooted in mathematical logic.</div></div>
+    </div>
+    <div class="conn-box">
+      <h3>Feeds into</h3>
+      <div class="conn-tags">
+        <span class="conn-tag" onclick="switchTo('natural')">Physics</span>
+        <span class="conn-tag" onclick="switchTo('natural')">Chemistry</span>
+        <span class="conn-tag" onclick="switchTo('applied')">Engineering</span>
+        <span class="conn-tag" onclick="switchTo('social')">Economics</span>
+        <span class="conn-tag" onclick="switchTo('applied')">Medicine (data)</span>
+      </div>
+    </div>
+    <div class="insight" style="border-color:var(--c-formal)">
+      <p>Formal sciences are unique: their truths are established by proof, not experiment. A theorem proven in 300 BC is still valid today. This makes them the most stable foundation -- every other discipline borrows their rigor while adding the empirical messiness of its own domain.</p>
+    </div>
+  </div>
+
+  <!-- NATURAL -->
+  <div class="panel" id="panel-natural">
+    <div class="ring-header">
+      <div class="ring-dot" style="background:var(--c-natural)"></div>
+      <div><div class="ring-title" style="color:var(--c-natural)">Natural sciences</div><div class="ring-tagline">Empirical core -- how the universe actually works</div></div>
+    </div>
+    <div class="disciplines">
+      <div class="disc-card"><div class="disc-name">Physics</div><div class="disc-blurb">The most fundamental -- forces, energy, space-time. All natural sciences ultimately reduce to it.</div></div>
+      <div class="disc-card"><div class="disc-name">Chemistry</div><div class="disc-blurb">How atoms bond and react. Built on quantum physics; builds into biology.</div></div>
+      <div class="disc-card"><div class="disc-name">Biology</div><div class="disc-blurb">Life as an emergent chemical phenomenon. Chemistry with memory and purpose.</div></div>
+      <div class="disc-card"><div class="disc-name">Earth science</div><div class="disc-blurb">Geology, oceanography -- physics and chemistry of a planet over deep time.</div></div>
+      <div class="disc-card"><div class="disc-name">Astronomy</div><div class="disc-blurb">Physics at the largest scales -- stars, galaxies, cosmology.</div></div>
+      <div class="disc-card"><div class="disc-name">Ecology</div><div class="disc-blurb">Biology of interacting populations and environments.</div></div>
+    </div>
+    <div class="conn-box">
+      <h3>Draws from</h3>
+      <div class="conn-tags">
+        <span class="conn-tag" onclick="switchTo('formal')">Mathematics</span>
+        <span class="conn-tag" onclick="switchTo('formal')">Statistics</span>
+        <span class="conn-tag" onclick="switchTo('backbone')">Scientific method</span>
+      </div>
+    </div>
+    <div class="conn-box">
+      <h3>Feeds into</h3>
+      <div class="conn-tags">
+        <span class="conn-tag" onclick="switchTo('applied')">Medicine</span>
+        <span class="conn-tag" onclick="switchTo('applied')">Engineering</span>
+        <span class="conn-tag" onclick="switchTo('applied')">Environmental science</span>
+        <span class="conn-tag" onclick="switchTo('applied')">Meteorology</span>
+      </div>
+    </div>
+    <div class="insight" style="border-color:var(--c-natural)">
+      <p><strong>The reductionist ladder:</strong> Biology reduces to chemistry, chemistry reduces to physics, physics (we hope) reduces to mathematics. This does not mean biology is "just chemistry" -- emergent complexity at each level creates genuinely new phenomena that cannot be predicted from the level below alone.</p>
+    </div>
+  </div>
+
+  <!-- APPLIED -->
+  <div class="panel" id="panel-applied">
+    <div class="ring-header">
+      <div class="ring-dot" style="background:var(--c-applied)"></div>
+      <div><div class="ring-title" style="color:var(--c-applied)">Applied sciences</div><div class="ring-tagline">Natural science harnessed for human ends</div></div>
+    </div>
+    <div class="disciplines">
+      <div class="disc-card"><div class="disc-name">Medicine</div><div class="disc-blurb">Applied biology and chemistry -- understanding and repairing the human body.</div></div>
+      <div class="disc-card"><div class="disc-name">Engineering</div><div class="disc-blurb">Applied physics and mathematics -- designing systems that work in the real world.</div></div>
+      <div class="disc-card"><div class="disc-name">Neuroscience</div><div class="disc-blurb">The biology of the brain -- bridging natural science and psychology.</div></div>
+      <div class="disc-card"><div class="disc-name">Meteorology</div><div class="disc-blurb">Applied fluid dynamics and thermodynamics -- predicting the atmosphere.</div></div>
+      <div class="disc-card"><div class="disc-name">Materials science</div><div class="disc-blurb">Chemistry and physics of solids -- enabling everything from chips to bridges.</div></div>
+      <div class="disc-card"><div class="disc-name">Public health</div><div class="disc-blurb">Medicine at population scale -- where biology meets sociology.</div></div>
+    </div>
+    <div class="conn-box">
+      <h3>Key crossovers</h3>
+      <div class="conn-tags">
+        <span class="conn-tag" onclick="switchTo('social')">Nutrition and social policy</span>
+        <span class="conn-tag" onclick="switchTo('social')">Neuroscience and psychology</span>
+        <span class="conn-tag" onclick="switchTo('arts')">Architecture and design</span>
+        <span class="conn-tag" onclick="switchTo('formal')">Engineering and computer science</span>
+      </div>
+    </div>
+    <div class="insight" style="border-color:var(--c-applied)">
+      <p>Applied sciences are where knowledge becomes capability. A physicist discovers how transistors work; an engineer designs a chip; a computer scientist writes software; a doctor uses that software for diagnosis. Each step translates inner-ring knowledge into outer-ring use.</p>
+    </div>
+  </div>
+
+  <!-- SOCIAL -->
+  <div class="panel" id="panel-social">
+    <div class="ring-header">
+      <div class="ring-dot" style="background:var(--c-social)"></div>
+      <div><div class="ring-title" style="color:var(--c-social)">Social sciences</div><div class="ring-tagline">Human behaviour and collective systems</div></div>
+    </div>
+    <div class="disciplines">
+      <div class="disc-card"><div class="disc-name">Psychology</div><div class="disc-blurb">The science of mind and behaviour -- bridge between biology and society.</div></div>
+      <div class="disc-card"><div class="disc-name">Economics</div><div class="disc-blurb">Decision-making under scarcity -- uses heavy mathematics from the formal ring.</div></div>
+      <div class="disc-card"><div class="disc-name">Sociology</div><div class="disc-blurb">How groups, institutions, and norms emerge from individual behaviour.</div></div>
+      <div class="disc-card"><div class="disc-name">Political science</div><div class="disc-blurb">Power, governance, and collective decision-making at scale.</div></div>
+      <div class="disc-card"><div class="disc-name">Geography</div><div class="disc-blurb">How physical space shapes human activity -- spans natural and social sciences.</div></div>
+      <div class="disc-card"><div class="disc-name">Linguistics</div><div class="disc-blurb">Structure and use of language -- connects psychology, biology, and culture.</div></div>
+      <div class="disc-card"><div class="disc-name">Anthropology</div><div class="disc-blurb">Human cultures across time and space -- bridges biology and humanities.</div></div>
+      <div class="disc-card"><div class="disc-name">Education</div><div class="disc-blurb">How knowledge is transmitted -- applied psychology at civilisational scale.</div></div>
+    </div>
+    <div class="insight" style="border-color:var(--c-social)">
+      <p><strong>The hardest sciences?</strong> Social sciences study systems where the subjects can read and respond to theories about themselves. An electron does not change its behaviour upon learning quantum mechanics. Humans do -- making social science both harder and stranger than physics.</p>
+    </div>
+  </div>
+
+  <!-- ARTS -->
+  <div class="panel" id="panel-arts">
+    <div class="ring-header">
+      <div class="ring-dot" style="background:var(--c-arts)"></div>
+      <div><div class="ring-title" style="color:var(--c-arts)">Arts and humanities</div><div class="ring-tagline">Outermost ring -- meaning, expression, and culture</div></div>
+    </div>
+    <div class="disciplines">
+      <div class="disc-card"><div class="disc-name">Art</div><div class="disc-blurb">Visual creation -- the oldest form of human expression and meaning-making.</div></div>
+      <div class="disc-card"><div class="disc-name">Music</div><div class="disc-blurb">Structured sound over time -- deeply mathematical yet irreducibly experiential.</div></div>
+      <div class="disc-card"><div class="disc-name">Literature</div><div class="disc-blurb">Language as art -- narrative, metaphor, imagination beyond the literal.</div></div>
+      <div class="disc-card"><div class="disc-name">Theatre and cinema</div><div class="disc-blurb">Collaborative storytelling -- synthesis of nearly every other art form.</div></div>
+      <div class="disc-card"><div class="disc-name">History</div><div class="disc-blurb">The record and interpretation of human events over time.</div></div>
+      <div class="disc-card"><div class="disc-name">Architecture</div><div class="disc-blurb">Where engineering meets aesthetics -- applied physics in service of beauty.</div></div>
+      <div class="disc-card"><div class="disc-name">Law</div><div class="disc-blurb">Formalised rules for human coexistence -- applied philosophy and political science.</div></div>
+      <div class="disc-card"><div class="disc-name">Gender studies</div><div class="disc-blurb">Critical examination of identity and power as social constructs.</div></div>
+    </div>
+    <div class="insight" style="border-color:var(--c-arts)">
+      <p><strong>Why arts belong on the donut:</strong> The humanities are not decoration on top of "real" knowledge. They are the domain in which humans have always decided what knowledge is for. Ethics, meaning, and beauty cannot be derived from equations -- they are the questions that motivate the equations in the first place.</p>
+    </div>
+  </div>
+
+  <!-- BACKBONE -->
+  <div class="panel" id="panel-backbone">
+    <div class="ring-header">
+      <div class="ring-dot" style="background:var(--c-backbone)"></div>
+      <div><div class="ring-title" style="color:var(--c-backbone)">The backbone</div><div class="ring-tagline">Philosophy and the scientific method -- roots of all knowledge</div></div>
+    </div>
+    <div class="bb-list">
+      <div class="bb-item"><div class="bb-icon">ph</div><div><div class="bb-title">Philosophy</div><div class="bb-desc">The original discipline. Before physics, chemistry, or mathematics were separate, there was philosophy -- asking how we can know anything at all. Aristotle appears on the map for good reason.</div></div></div>
+      <div class="bb-item"><div class="bb-icon">L</div><div><div class="bb-title">Logic</div><div class="bb-desc">Valid inference -- the rules that prevent contradictions. Belongs simultaneously to philosophy and formal science.</div></div></div>
+      <div class="bb-item"><div class="bb-icon">R</div><div><div class="bb-title">Rationalism</div><div class="bb-desc">The view that reason alone can yield knowledge. Gives mathematics its authority independent of experiment.</div></div></div>
+      <div class="bb-item"><div class="bb-icon">E</div><div><div class="bb-title">Empiricism</div><div class="bb-desc">The view that knowledge comes from observation and experience. Gives the natural sciences their method.</div></div></div>
+      <div class="bb-item"><div class="bb-icon">H</div><div><div class="bb-title">Testable hypotheses</div><div class="bb-desc">The key criterion of science: a claim must be falsifiable. This is what separates science from other forms of knowing.</div></div></div>
+      <div class="bb-item"><div class="bb-icon">O</div><div><div class="bb-title">Objectivity and reductionism</div><div class="bb-desc">Two postures science takes -- removing the observer's bias, and explaining complex things via their simpler components.</div></div></div>
+    </div>
+    <div class="insight" style="border-color:var(--c-backbone)">
+      <p><strong>The invisible infrastructure:</strong> The backbone items are not themselves sciences -- they are the epistemological commitments that make science possible. Every researcher implicitly operates inside these assumptions every day. Walliman includes them as a reminder that all of science rests on philosophical choices made centuries ago.</p>
+    </div>
+  </div>
+
+  <div class="nav-foot">
+    <button onclick="stepPanel(-1)">Back</button>
+    <button onclick="switchTo('overview')">Overview</button>
+    <button onclick="stepPanel(1)">Next</button>
+  </div>
+
+</div>
+<script>
+var order = ['overview','formal','natural','applied','social','arts','backbone'];
+var current = 0;
+function switchTo(id){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
+  document.querySelectorAll('.ring-btn').forEach(function(b){b.classList.remove('active')});
+  document.getElementById('panel-'+id).classList.add('active');
+  document.querySelector('[data-panel="'+id+'"]').classList.add('active');
+  current = order.indexOf(id);
+  window.scrollTo(0,0);
+}
+function stepPanel(dir){
+  var next = (current + dir + order.length) % order.length;
+  switchTo(order[next]);
+}
+document.querySelectorAll('.ring-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){switchTo(btn.dataset.panel)});
+});
+</script>
+</body>
+</html>
