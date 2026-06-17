@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Tree of Life - Abhinav IAC Study Guide</title>
+<style>
+:root{
+--bg1:#0d1117;--bg2:#161b22;--bg3:#21262d;
+--t1:#e6edf3;--t2:#8b949e;--t3:#6e7681;--bd:#30363d;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg1);color:var(--t1);font-family:system-ui,sans-serif;font-size:13px;line-height:1.5;overflow:hidden}
+#app{display:flex;flex-direction:column;height:100vh}
+.hero{background:var(--bg2);border-bottom:1px solid var(--bd);padding:10px 16px 8px;flex-shrink:0}
+.hero h1{font-size:18px;font-weight:600;background:linear-gradient(90deg,#a78bfa,#34d399,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:11px;color:var(--t3)}
+.tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--bd);overflow-x:auto;flex-shrink:0}
+.tab{padding:8px 13px;font-size:12px;cursor:pointer;color:var(--t3);border-bottom:2px solid transparent;white-space:nowrap}
+.tab:hover{color:var(--t1)}
+.tab.active{color:#34d399;border-bottom-color:#34d399}
+.panel{display:none;flex:1;overflow:hidden;min-height:0}
+.panel.active{display:flex;flex-direction:column}
+#panel-tree{flex-direction:row !important}
+.tree-left{flex:1;overflow-y:auto;overflow-x:auto;padding:10px 12px 20px;min-width:0}
+.tree-right{width:320px;flex-shrink:0;border-left:1px solid var(--bd);overflow-y:auto;background:var(--bg2)}
+.detail-inner{padding:14px}
+.dp-placeholder{color:var(--t3);font-size:12px;text-align:center;padding:40px 16px;line-height:2}
+.dp-title{font-size:14px;font-weight:700;line-height:1.3;margin-bottom:2px}
+.dp-common{font-size:11px;margin-bottom:6px;font-style:italic;opacity:.8}
+.dp-sub{font-size:11px;color:var(--t2);margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+.dp-key{font-size:11px;border-radius:6px;padding:8px 10px;margin-bottom:8px;line-height:1.5}
+.dp-notes{font-size:11px;color:var(--t2);margin-bottom:8px;line-height:1.5}
+.dp-ex-label{font-size:9px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.dp-chips{display:flex;flex-wrap:wrap;gap:4px}
+.dp-chip{font-size:10px;background:var(--bg3);border:1px solid var(--bd);border-radius:4px;padding:2px 7px;color:var(--t2);font-style:italic}
+.dp-lineage{margin-top:8px;font-size:10px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.25);border-radius:5px;padding:6px 9px;color:#34d399}
+.level-label{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#c9d1d9;padding:10px 0 5px;margin-top:6px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:8px}
+.level-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08)}
+.node-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:2px}
+.tnode{border-radius:6px;padding:5px 9px;cursor:pointer;transition:all .15s;border:1px solid transparent;min-width:95px;max-width:190px;user-select:none}
+.tnode:hover{filter:brightness(1.3);transform:translateY(-1px)}
+.tnode.sel{outline:2px solid #fff;outline-offset:1px}
+.tn-name{font-size:11px;font-weight:700;line-height:1.3}
+.tn-common{font-size:10px;opacity:.75;line-height:1.2;margin-top:1px}
+.tn-ex{font-size:9px;opacity:.5;margin-top:2px;font-style:italic;line-height:1.2}
+.tn-path{font-size:8px;background:rgba(52,211,153,.2);color:#34d399;border-radius:3px;padding:1px 4px;margin-top:2px;display:inline-block}
+.tn-you{font-size:8px;background:rgba(244,114,182,.3);color:#f9a8d4;border-radius:3px;padding:1px 4px;margin-top:2px;display:inline-block}
+.legend{display:flex;flex-wrap:wrap;gap:4px;padding:6px 0 4px}
+.leg{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--t2);background:var(--bg2);border:1px solid var(--bd);border-radius:4px;padding:2px 7px}
+.leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.scroll-panel{flex:1;overflow-y:auto;padding:12px 16px 40px}
+.fc-wrap{perspective:1000px;margin-bottom:12px}
+.flip-card{width:100%;min-height:150px;border-radius:10px;cursor:pointer;transition:transform .45s;transform-style:preserve-3d;position:relative}
+.flip-card.flipped{transform:rotateY(180deg)}
+.card-face{position:absolute;width:100%;min-height:150px;border-radius:10px;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px 14px;text-align:center}
+.card-front{background:var(--bg2);border:1px solid #34d399}
+.card-back{background:var(--bg3);border:1px solid #f472b6;transform:rotateY(180deg)}
+.fc-q{font-size:14px;font-weight:500;color:var(--t1);margin-bottom:5px}
+.fc-h{font-size:11px;color:var(--t3)}
+.fc-a{font-size:13px;color:#34d399;font-weight:600;margin-bottom:5px}
+.fc-d{font-size:10px;color:var(--t2)}
+.row{display:flex;align-items:center;gap:8px;margin-top:8px}
+.btn{background:var(--bg3);border:1px solid var(--bd);border-radius:6px;padding:5px 13px;color:var(--t1);cursor:pointer;font-size:12px}
+.btn:hover{border-color:#34d399;color:#34d399}
+.btn-g{background:rgba(52,211,153,.12);border-color:#34d399;color:#34d399}
+.cloze-text{font-size:14px;color:var(--t1);line-height:2.4}
+.blank{display:inline-block;min-width:65px;border-bottom:2px solid #34d399;text-align:center;color:#34d399;cursor:pointer;padding:0 4px;font-weight:600}
+.blank.rev{border-bottom-color:#a78bfa;color:#a78bfa}
+.quiz-q{background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px;margin-bottom:8px}
+.qt{font-size:13px;font-weight:500;margin-bottom:7px}
+.qopts{display:flex;flex-direction:column;gap:4px}
+.qopt{background:var(--bg3);border:1px solid var(--bd);border-radius:5px;padding:7px 11px;cursor:pointer;font-size:12px;color:var(--t2);text-align:left}
+.qopt:hover{border-color:#34d399;color:var(--t1)}
+.qopt.ok{background:rgba(52,211,153,.12);border-color:#34d399;color:#34d399}
+.qopt.no{background:rgba(244,63,94,.1);border-color:#f43f5e;color:#f43f5e}
+.sbar{background:var(--bg3);border-radius:20px;height:4px;overflow:hidden;margin:4px 0 10px}
+.sfill{height:100%;background:#34d399;border-radius:20px;transition:width .4s}
+.mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:7px}
+.mc{background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:10px}
+.mk{font-size:15px;font-weight:700;color:#fbbf24;margin-bottom:3px}
+.mb{font-size:11px;color:var(--t2);margin-bottom:5px}
+.md{font-size:11px;font-style:italic;color:#34d399;background:var(--bg3);padding:4px 8px;border-radius:4px}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px}
+.cc{border-radius:8px;padding:10px;border:1px solid}
+.ch{font-size:12px;font-weight:700;margin-bottom:5px}
+.cr{font-size:10px;color:var(--t3);margin-bottom:2px}
+.cr span{color:var(--t2)}
+.cdiv{height:1px;background:var(--bd);margin:5px 0}
+.cf{font-size:10px;color:var(--t3);font-style:italic}
+.cvbox{background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:10px;margin-top:7px;font-size:11px;color:var(--t2)}
+.tl{position:relative;padding-left:24px}
+.tl::before{content:'';position:absolute;left:4px;top:0;bottom:0;width:1px;background:var(--bd)}
+.tli{position:relative;margin-bottom:13px}
+.tli::before{content:'';position:absolute;left:-22px;top:4px;width:8px;height:8px;border-radius:50%;background:var(--bg3);border:2px solid var(--t3)}
+.tli.key::before{background:#34d399;border-color:#34d399}
+.ty{font-size:10px;color:#fbbf24;font-weight:700;margin-bottom:1px}
+.te{font-size:12px;color:var(--t1);font-weight:500}
+.tn2{font-size:11px;color:var(--t3);margin-top:1px}
+.prow{display:flex;align-items:stretch;gap:8px;margin-bottom:4px}
+.prank{width:82px;font-size:9px;color:var(--t3);padding-top:9px;text-align:right;flex-shrink:0}
+.pline{width:1px;flex-shrink:0;opacity:.5}
+.pcard{border-radius:6px;padding:7px 10px;flex:1;border:1px solid}
+.pname{font-size:12px;font-weight:700}
+.pkey{font-size:10px;color:var(--t2);margin-top:2px;line-height:1.4}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="hero">
+    <h1>The Tree of Life</h1>
+    <div class="hero-sub">Complete Taxonomy &amp; Classification -- Abhinav Grade 9 | IAC Science Bee</div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('tree',this)">Full Tree</div>
+    <div class="tab" onclick="switchTab('path',this)">Your Lineage</div>
+    <div class="tab" onclick="switchTab('flash',this)">Flashcards</div>
+    <div class="tab" onclick="switchTab('cloze',this)">Fill-in-Blanks</div>
+    <div class="tab" onclick="switchTab('quiz',this)">Quiz</div>
+    <div class="tab" onclick="switchTab('mnemonics',this)">Mnemonics</div>
+    <div class="tab" onclick="switchTab('compare',this)">4-Animal Compare</div>
+    <div class="tab" onclick="switchTab('timeline',this)">Evo Timeline</div>
+  </div>
+  <div id="panel-tree" class="panel active">
+    <div class="tree-left">
+      <div class="legend" id="legend"></div>
+      <div id="tree-root"></div>
+    </div>
+    <div class="tree-right">
+      <div class="detail-inner" id="detail-inner">
+        <div class="dp-placeholder">Click any node in the tree<br>to see details here</div>
+      </div>
+    </div>
+  </div>
+  <div id="panel-path" class="panel"><div class="scroll-panel" id="path-content"></div></div>
+  <div id="panel-flash" class="panel">
+    <div class="scroll-panel">
+      <div class="fc-wrap">
+        <div class="flip-card" id="flipcard" onclick="this.classList.toggle('flipped')">
+          <div class="card-face card-front"><div class="fc-q" id="fc-q"></div><div class="fc-h" id="fc-h"></div></div>
+          <div class="card-face card-back"><div class="fc-a" id="fc-a"></div><div class="fc-d" id="fc-d"></div></div>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn" onclick="fcNav(-1)">Prev</button>
+        <span style="font-size:11px;color:var(--t3)" id="fc-prog">1/25</span>
+        <button class="btn" onclick="fcNav(1)">Next</button>
+        <button class="btn" onclick="shuffleFC()">Shuffle</button>
+        <button class="btn-g btn" onclick="document.getElementById('flipcard').classList.remove('flipped')">Unflip</button>
+      </div>
+    </div>
+  </div>
+  <div id="panel-cloze" class="panel">
+    <div class="scroll-panel">
+      <div class="row" style="margin-bottom:12px">
+        <span style="font-size:11px;color:var(--t3)">Click blank to reveal</span>
+        <button class="btn" onclick="clozeNav(-1)">Prev</button>
+        <span style="font-size:11px;color:var(--t3)" id="cloze-prog"></span>
+        <button class="btn" onclick="clozeNav(1)">Next</button>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:16px" id="cloze-area"></div>
+    </div>
+  </div>
+  <div id="panel-quiz" class="panel">
+    <div class="scroll-panel">
+      <div class="row" style="margin-bottom:4px">
+        <span style="font-size:11px;color:var(--t3)">Multiple choice</span>
+        <span style="font-size:11px;color:var(--t2);margin-left:auto">Score: <span id="qsc" style="color:#34d399">0</span>/<span id="qtot">0</span></span>
+      </div>
+      <div class="sbar"><div class="sfill" id="sfill" style="width:0%"></div></div>
+      <div id="quiz-area"></div>
+      <button class="btn-g btn" onclick="loadQuiz()" style="margin-top:10px">New 5 Questions</button>
+    </div>
+  </div>
+  <div id="panel-mnemonics" class="panel"><div class="scroll-panel"><div class="mg" id="mnem-grid"></div></div></div>
+  <div id="panel-compare" class="panel"><div class="scroll-panel"><div class="cg" id="cmp-grid"></div><div class="cvbox" id="conv-box"></div></div></div>
+  <div id="panel-timeline" class="panel"><div class="scroll-panel"><div class="tl" id="timeline"></div></div></div>
+</div>
+<script>
+const C={
+  domain:{bg:'#1a1535',bd:'#7c3aed',t:'#a78bfa'},
+  protist:{bg:'#0a2030',bd:'#0284c7',t:'#38bdf8'},
+  fungi:{bg:'#2a1500',bd:'#c2410c',t:'#fb923c'},
+  plant:{bg:'#052010',bd:'#15803d',t:'#4ade80'},
+  animal:{bg:'#0a1535',bd:'#1d4ed8',t:'#60a5fa'},
+  invert:{bg:'#2a0a15',bd:'#be123c',t:'#fb7185'},
+  fish:{bg:'#0a1a28',bd:'#0369a1',t:'#38bdf8'},
+  amphi:{bg:'#0f2000',bd:'#4d7c0f',t:'#a3e635'},
+  reptile:{bg:'#251200',bd:'#b45309',t:'#fbbf24'},
+  bird:{bg:'#200828',bd:'#9d174d',t:'#e879f9'},
+  mammal:{bg:'#1a1200',bd:'#b45309',t:'#fbbf24'},
+  monotreme:{bg:'#201500',bd:'#92400e',t:'#fcd34d'},
+  marsupial:{bg:'#1a1500',bd:'#78350f',t:'#fde68a'},
+  placental:{bg:'#0a1a10',bd:'#065f46',t:'#34d399'},
+  carnivora:{bg:'#200a10',bd:'#9f1239',t:'#fb7185'},
+  artiodact:{bg:'#0a1800',bd:'#166534',t:'#86efac'},
+  perisso:{bg:'#1a0a20',bd:'#6b21a8',t:'#c4b5fd'},
+  cetacea:{bg:'#0a1a28',bd:'#075985',t:'#7dd3fc'},
+  rodentia:{bg:'#1a1200',bd:'#713f12',t:'#fcd34d'},
+  primates:{bg:'#0a0a20',bd:'#3730a3',t:'#818cf8'},
+  hominid:{bg:'#0a0818',bd:'#4c1d95',t:'#c4b5fd'},
+  human:{bg:'#200818',bd:'#9d174d',t:'#f472b6'},
+  path:{bg:'#0a2018',bd:'#065f46',t:'#34d399'},
+};
+
+const N={
+  bacteria:{name:'Bacteria',common:'Bacteria (Prokaryotes)',ck:'domain',path:false,sub:'No nucleus, no organelles',ex:'E. coli, Lactobacillus (yogurt), Salmonella, Cyanobacteria',notes:'Single-celled prokaryotes. Most diverse life on Earth by number.',key:'First life ~3.8 bya. No nucleus = prokaryote.'},
+  archaea:{name:'Archaea',common:'Ancient Extreme-Environment Microbes',ck:'domain',path:false,sub:'Genetically closer to Eukarya than to Bacteria',ex:'Methanogens (swamp gas), Halophiles (salt flats), Thermophiles (hot springs)',notes:'Look like bacteria but genetically closer to Eukarya.',key:'Archaea are genetically CLOSER to us than to Bacteria!'},
+  eukarya:{name:'Domain Eukarya',common:'All Complex Life (Plants, Animals, Fungi, Protists)',ck:'path',path:true,sub:'True membrane-bound nucleus',ex:'All plants, animals, fungi, protists',notes:'Cells with a true nucleus and organelles. All complex life.',key:'OUR domain. Nucleus protects DNA in its own compartment.'},
+  protista:{name:'Kingdom Protista',common:'Protists / Algae / Microbes',ck:'protist',path:false,sub:'Mostly single-celled eukaryotes',ex:'Amoeba, Paramecium, Euglena, Nori (sushi seaweed), Kelp, Volvox',notes:'Diverse catch-all kingdom. Mostly single-celled.',key:'Green algae (Chlorophyta) = direct ancestors of ALL land plants!'},
+  fungi:{name:'Kingdom Fungi',common:'Fungi / Mushrooms / Molds / Yeasts',ck:'fungi',path:false,sub:'Chitin walls, absorb nutrients by decomposing',ex:"Baker's yeast (bread), Penicillium (antibiotic), Portobello mushroom, Morel, Black bread mold",notes:'Break down organic matter. Chitin cell walls.',key:'Fungi are MORE closely related to animals than to plants!'},
+  plantae:{name:'Kingdom Plantae',common:'Plants',ck:'plant',path:false,sub:'Photosynthetic, cellulose cell walls',ex:'Peat moss, Boston fern, Giant sequoia, Ginkgo biloba, Sunflower, Apple tree, Rice',notes:'Photosynthetic multicellular eukaryotes.',key:'Angiosperms (flowering plants) = ~300,000 species, most dominant today.'},
+  nonvasc:{name:'Non-vascular Plants',common:'Mosses / Liverworts / Hornworts',ck:'plant',path:false,sub:'Bryophyta, no internal water pipes',ex:'Peat moss (Sphagnum), Liverworts, Hornworts',notes:'No internal water-conducting tissue. Absorb water like sponges.',key:'First colonizers of land ~470 mya. Most primitive land plants.'},
+  seedlessvask:{name:'Seedless Vascular',common:'Ferns / Horsetails / Clubmosses',ck:'plant',path:false,sub:'Have pipes, but reproduce by spores not seeds',ex:'Boston fern, Maidenhair fern, Giant horsetail, Clubmoss',notes:'Internal vascular tissue but reproduce via spores.',key:'Dominated Earth 350 mya -- coal swamp forests we burn as fossil fuels today!'},
+  gymno:{name:'Gymnosperms',common:'Conifers / Pines / Ginkgo / Cycads',ck:'plant',path:false,sub:'Naked seeds exposed on cones',ex:'Scots pine, Spruce (Christmas tree), Giant sequoia, Ginkgo biloba (living fossil), Sago palm',notes:'Seeds exposed on cone scales. No fruit.',key:'Gymno = naked seeds. Dominated land before flowering plants evolved.'},
+  angio:{name:'Angiosperms',common:'Flowering Plants',ck:'plant',path:false,sub:'Seeds enclosed inside flowers and fruits',ex:'Sunflower, Apple, Rose, Corn, Rice, Orchid, Oak, Tomato, Grass',notes:'Flowers attract pollinators. Seeds protected inside fruits.',key:'Most successful land plants. ~300,000 species. Every grain of rice is one!'},
+  animalia:{name:'Kingdom Animalia',common:'Animals',ck:'animal',path:true,sub:'Multicellular, heterotrophic, no cell walls',ex:'Sponges, jellyfish, worms, insects, fish, frogs, lizards, birds, mammals',notes:'Multicellular heterotrophs. No cell walls. Develop from embryos.',key:'OUR kingdom. ~8.7 million animal species estimated.'},
+  porifera:{name:'Phylum Porifera',common:'Sponges',ck:'invert',path:false,sub:'No true tissues, no organs, filter feeders',ex:'Barrel sponge, Glass sponge (Venus flower basket), Bath sponge',notes:'Most primitive animals. No nervous system, no muscles.',key:'No brain, no muscles, no organs. Most primitive animals alive today.'},
+  cnidaria:{name:'Phylum Cnidaria',common:'Jellyfish / Corals / Sea Anemones',ck:'invert',path:false,sub:'Stinging nematocysts, radial symmetry',ex:'Moon jellyfish, Sea anemone, Brain coral, Box jellyfish (deadly), Portuguese man-o-war',notes:'Radial symmetry, stinging cells, 2 tissue layers.',key:'First animals with TRUE tissues. Radial not bilateral like us.'},
+  bilateria:{name:'Bilateria',common:'Bilateral Animals (All Higher Animals)',ck:'path',path:true,sub:'Left-right + front-back symmetry',ex:'All worms, insects, fish, amphibians, reptiles, birds, mammals',notes:'Front/back + left/right symmetry. Our ancestral lineage branches here.',key:'KEY milestone. Enables directional movement + brain at front (cephalization).'},
+  protostomia:{name:'Protostomia',common:'Mouth-First Invertebrates (NOT our lineage)',ck:'invert',path:false,sub:'Mouth forms FIRST in embryo',ex:'Earthworms, snails, octopuses, spiders, beetles, crabs',notes:'NOT our lineage. Mouth before anus in embryo. ~80% of all animal species.',key:'Includes ~80% of animal species. Lophotrochozoa + Ecdysozoa subgroups.'},
+  deuterostomia:{name:'Deuterostomia',common:'Anus-First Animals (Our Group!)',ck:'path',path:true,sub:'Anus forms FIRST in embryo',ex:'Starfish, sea urchins, tunicates, all vertebrates',notes:'OUR lineage. Anus forms before mouth in embryo development.',key:'Deutero=second, stoma=mouth. Anus FIRST -- strange but unforgettable!'},
+  lophot:{name:'Lophotrochozoa',common:'Flatworms + Segmented Worms + Mollusks',ck:'invert',path:false,sub:'Soft complex protostome invertebrates',ex:'Planarians, tapeworms, earthworms, leeches, snails, clams, octopuses',notes:'Soft-bodied complex invertebrates. Protostome subgroup.',key:'Mollusca here: octopus = most intelligent invertebrate (3 hearts, blue blood)!'},
+  ecdysozoa:{name:'Ecdysozoa',common:'Molting Animals (Insects / Spiders / Crabs)',ck:'invert',path:false,sub:'Shed exoskeleton (ecdysis) to grow',ex:'Roundworms, spiders, scorpions, centipedes, crabs, beetles, flies',notes:'Exoskeleton/cuticle shed to grow. Protostome subgroup.',key:'~80% of all animal species are ecdysozoans!'},
+  platyhel:{name:'Platyhelminthes',common:'Flatworms (Tapeworms / Planarians)',ck:'invert',path:false,sub:'Flat body, no circulatory or respiratory system',ex:'Marine planarian, Tapeworm (intestinal parasite), Liver fluke, Planaria (can regenerate!)',notes:'Flat bodies. No blood. Absorb oxygen through skin.',key:'No blood, no lungs. Tapeworms can grow to 10m inside intestines!'},
+  annelida:{name:'Annelida',common:'Segmented Worms (Earthworms / Leeches)',ck:'invert',path:false,sub:'Ringed segments, true circulatory system',ex:'Earthworm, Medicinal leech, Polychaete worm (sea bristle worm)',notes:'Ringed segmented bodies. First animals with true circulatory system.',key:'Earthworms aerate soil -- critical for all agriculture. Leeches still used medically.'},
+  mollusca:{name:'Mollusca',common:'Mollusks (Snails / Clams / Octopus / Squid)',ck:'invert',path:false,sub:'Soft body, many with calcium shells',ex:'Garden snail, Giant clam, Common octopus, Giant squid, Nautilus, Oyster, Abalone',notes:'Soft body, many secrete calcium shells. Highly diverse.',key:'Octopus = most intelligent invertebrate. 3 hearts, blue blood, 8 arms, camouflage!'},
+  nematoda:{name:'Nematoda',common:'Roundworms',ck:'invert',path:false,sub:'Unsegmented microscopic roundworms',ex:'C. elegans (genetics model), Hookworm (parasite), Vinegar eel, Roundworm (Ascaris)',notes:'Unsegmented roundworms. Astronomically numerous.',key:'~1 trillion per m2 of soil. Most abundant animals on Earth by number.'},
+  arthropoda:{name:'Phylum Arthropoda',common:'Arthropods (Insects / Spiders / Crabs)',ck:'invert',path:false,sub:'Jointed legs + segmented exoskeleton',ex:'Spiders, scorpions, centipedes, crabs, lobsters, beetles, butterflies, flies, bees',notes:'Jointed legs, segmented body, hard exoskeleton. Largest phylum.',key:'~1 million insect species described. Most diverse animal phylum on Earth.'},
+  chelicerata:{name:'Chelicerata',common:'Spiders / Scorpions / Ticks / Horseshoe Crabs',ck:'invert',path:false,sub:'8 legs, no antennae, chelicerae (fangs/pincers)',ex:'Black widow spider, Emperor scorpion, Deer tick, Horseshoe crab, House dust mite',notes:'8 legs, no antennae. Chelicerae = modified feeding appendages.',key:'Horseshoe crab = living fossil 450 mya. Blue blood used to test drug safety!'},
+  myriapoda:{name:'Myriapoda',common:'Centipedes / Millipedes',ck:'invert',path:false,sub:'1 pair per segment = centipede; 2 pairs = millipede',ex:'Yellow-legged centipede (predator), Giant African millipede (decomposer), Stone centipede',notes:'Centipedes = predators (1 pair legs/segment). Millipedes = decomposers (2 pairs).',key:'Key ID: 1 pair per segment = centipede (predator). 2 pairs = millipede (decomposer).'},
+  crustacea:{name:'Crustacea',common:'Crabs / Lobsters / Shrimp / Barnacles / Krill',ck:'invert',path:false,sub:'Mostly aquatic, 2 pairs of antennae',ex:'Blue crab, Maine lobster, Krill, Barnacle, Shrimp, Woodlouse (pillbug), Daphnia (water flea)',notes:'Mostly aquatic. Two pairs of antennae.',key:'Krill = foundation of Antarctic food web. Pillbugs = only fully terrestrial crustaceans.'},
+  hexapoda:{name:'Hexapoda (Insects)',common:'Insects -- 6 Legs + 3 Body Segments',ck:'invert',path:false,sub:'Head + thorax + abdomen, 6 legs, most diverse class',ex:'Beetles, butterflies, bees, ants, flies, mosquitoes, dragonflies, grasshoppers',notes:'6 legs, 3 body segments. Most diverse class of animals.',key:'~1 million described species, possibly 5-10 million total!'},
+  coleoptera:{name:'Coleoptera',common:'Beetles (Ladybug / Stag Beetle / Firefly / Scarab)',ck:'invert',path:false,sub:'Front wings hardened into elytra protective cases',ex:'Ladybug, Stag beetle, Firefly, Scarab beetle, Weevil, Dung beetle, Goliath beetle',notes:'Front wings = elytra (hard protective cases). ~400,000 species.',key:'"God has an inordinate fondness for beetles." 400,000 spp = 25% of all animals!'},
+  lepidoptera:{name:'Lepidoptera',common:'Butterflies / Moths',ck:'invert',path:false,sub:'Scales on wings, complete metamorphosis',ex:'Monarch butterfly, Atlas moth (largest wingspan), Blue morpho, Luna moth, Silk moth (Bombyx)',notes:'Scales on wings. Complete metamorphosis: egg-larva-pupa-adult.',key:'Monarch migration = 4,000 km. Uses Earths magnetic field for navigation!'},
+  hymenoptera:{name:'Hymenoptera',common:'Bees / Wasps / Ants',ck:'invert',path:false,sub:'Eusocial colonies, narrow waist',ex:'Honey bee, Leafcutter ant, Paper wasp, Bumblebee, Fire ant, Bullet ant (most painful sting!)',notes:'Most socially complex insects. Eusocial colonies.',key:'Honey bees pollinate 1/3 of human food supply. Ants = ~20% of all animal biomass!'},
+  diptera:{name:'Diptera',common:'True Flies (Housefly / Mosquito / Fruit Fly)',ck:'invert',path:false,sub:'1 pair of wings; halteres for balance',ex:'Housefly, Mosquito (deadliest animal to humans!), Fruit fly (Drosophila), Crane fly, Horse fly',notes:'One pair functional wings. Halteres = gyroscope organs for balance.',key:'Drosophila melanogaster = most important genetics model organism in history.'},
+  echinodermata:{name:'Phylum Echinodermata',common:'Starfish / Sea Urchins / Sea Cucumbers',ck:'invert',path:false,sub:'Spiny skin, tube feet, radial symmetry as adults',ex:'Common starfish, Purple sea urchin, Sea cucumber, Brittle star, Sand dollar, Feather star',notes:'Spiny skin, water vascular system, radial symmetry as adults.',key:'OUR closest invertebrate relatives! Bilateral as larvae, radial as adults.'},
+  chordata:{name:'Phylum Chordata',common:'Chordates (Notochord + Nerve Cord Animals)',ck:'path',path:true,sub:'Notochord + dorsal nerve cord + gill slits + tail',ex:'Sea squirts, lancelets, all fish, all amphibians, reptiles, birds, mammals',notes:'4 defining features: notochord, dorsal hollow nerve cord, pharyngeal slits, post-anal tail.',key:'OUR phylum. All 4 features present in human embryo!'},
+  urochordata:{name:'Urochordata',common:'Sea Squirts / Tunicates / Salps',ck:'animal',path:false,sub:'Chordate tadpole larvae; sponge-like adults',ex:'Sea squirt (Ciona), Salp, Larvacean',notes:'Tadpole larvae have notochord; sessile adults lose it.',key:'Shows evolutionary regression: complex chordate larva simplifies into sessile adult.'},
+  cephalochordata:{name:'Cephalochordata',common:'Lancelets / Amphioxus',ck:'animal',path:false,sub:'Tiny translucent filter feeders buried in sand',ex:'European lancelet (Amphioxus / Branchiostoma)',notes:'Translucent blade-shaped filter feeders buried in ocean sand.',key:'Best living model of ancestral chordate body plan. Kept all 4 chordate features.'},
+  vertebrata:{name:'Subphylum Vertebrata',common:'Vertebrates (Backbone Animals)',ck:'path',path:true,sub:'Vertebral column encloses and protects nerve cord',ex:'All fish, amphibians, reptiles, birds, mammals',notes:'Notochord replaced by vertebral column. Cranium protects brain.',key:'OUR subphylum. ~65,000 vertebrate species. Spine = our defining feature.'},
+  agnatha:{name:'Agnatha',common:'Jawless Fish (Lampreys / Hagfish)',ck:'fish',path:false,sub:'No jaws, no scales, eel-like body',ex:'Sea lamprey (blood parasite), Pacific hagfish (slime eel), Brook lamprey',notes:'Most primitive vertebrates. No jaws, no paired fins.',key:'Hagfish release buckets of slime when attacked. Lamprey are blood parasites!'},
+  gnathostomata:{name:'Gnathostomata',common:'Jawed Vertebrates',ck:'path',path:true,sub:'Jaws evolved from modified gill arches ~420 mya',ex:'All sharks, bony fish, amphibians, reptiles, birds, mammals',notes:'Jaws evolved from modified gill arches. Enabled active predation.',key:'Jaws = game changer. Almost all vertebrates alive today are gnathostomes.'},
+  chondrichthyes:{name:'Chondrichthyes',common:'Cartilaginous Fish (Sharks / Rays / Skates)',ck:'fish',path:false,sub:'Cartilage skeleton, no swim bladder, lateral line',ex:'Great white shark, Manta ray, Hammerhead, Whale shark (largest fish!), Spotted eagle ray',notes:'Flexible cartilage skeletons. Lateral line organs.',key:'Shark skin = denticles (tiny teeth). ~500 species. Ancient lineage ~450 mya.'},
+  osteichthyes:{name:'Osteichthyes',common:'Bony Fish (Salmon / Tuna / Clownfish / Coelacanth)',ck:'fish',path:false,sub:'Bony skeleton, swim bladder for buoyancy',ex:'Atlantic salmon, Clownfish (Nemo!), Bluefin tuna, Coelacanth (living fossil!), Goldfish, Lungfish',notes:'Bony skeletons. Swim bladder for buoyancy. ~30,000 species.',key:'Coelacanth = living fossil! Lobe-finned fish related to our tetrapod ancestors.'},
+  tetrapoda:{name:'Tetrapoda',common:'Four-Limbed Land Animals',ck:'path',path:true,sub:'Fins became 4 limbs ~375 mya',ex:'Frogs, salamanders, lizards, snakes, crocodiles, birds, mammals',notes:'Four limbs evolved from lobe-finned fish. Colonized land.',key:'Tiktaalik fossil (375 mya) shows the exact fish-to-tetrapod transition!'},
+  amphibia:{name:'Class Amphibia',common:'Amphibians (Frogs / Salamanders / Caecilians)',ck:'amphi',path:false,sub:'Water + land; shell-less eggs must be laid in water',ex:'American bullfrog, Spotted salamander, Axolotl (never metamorphoses!), Caecilian, Poison dart frog',notes:'Semi-aquatic. Must return to water for shell-less eggs. Permeable skin.',key:'"Double life." First true land vertebrates but still tied to water for reproduction.'},
+  amniota:{name:'Amniota',common:'Amniotes (Reptiles + Birds + Mammals)',ck:'path',path:true,sub:'Self-contained waterproof amniotic egg',ex:'All reptiles, birds, and mammals',notes:'Amniotic egg with 4 membranes: amnion, chorion, allantois, yolk sac.',key:'KEY innovation: freed vertebrates from needing water to reproduce!'},
+  lepidosauria:{name:'Lepidosauria',common:'Lizards / Snakes / Tuatara',ck:'reptile',path:false,sub:'Overlapping scales, ectothermic (cold-blooded)',ex:'Green iguana, King cobra, Gila monster, Komodo dragon, Chameleon, Gecko, Tuatara',notes:'Lizards, snakes, tuatara. Overlapping scales.',key:'Tuatara = living fossil, sole survivor of ancient order Rhynchocephalia. New Zealand only!'},
+  testudines:{name:'Testudines',common:'Turtles / Tortoises / Terrapins',ck:'reptile',path:false,sub:'Bony shell fused to spine and ribs',ex:'Leatherback sea turtle, Galapagos giant tortoise (150+ yrs!), Snapping turtle, Box turtle',notes:'Shell = modified ribcage fused to spine. Cannot be removed.',key:'Shell IS their spine -- cannot be removed. Galapagos tortoises live 150+ years!'},
+  crocodilia:{name:'Crocodilia',common:'Crocodiles / Alligators / Gharials',ck:'reptile',path:false,sub:'Closest reptile relatives of BIRDS (both Archosauria)',ex:'Saltwater crocodile (largest reptile!), Nile crocodile, American alligator, Indian gharial, Caiman',notes:'4-chambered heart like birds/mammals. Most ancient archosaurs surviving today.',key:'Crocodilians = CLOSEST reptile relatives of birds! Both are Archosauria.'},
+  aves:{name:'Class Aves',common:'Birds (Living Avian Dinosaurs)',ck:'bird',path:false,sub:'Feathers, hollow bones, endothermic (warm-blooded)',ex:'Peregrine falcon (fastest animal: 389 km/h!), Emperor penguin, Ostrich, Bald eagle, Albatross, Hummingbird',notes:'Feathers, hollow bones, endothermic. Evolved from theropod dinosaurs.',key:'Birds ARE living dinosaurs (avian dinosaurs). Survived K-Pg extinction 66 mya.'},
+  mammalia:{name:'Class Mammalia',common:'Mammals (Fur + Milk + Warm-blooded)',ck:'mammal',path:true,sub:'Hair, mammary glands, 3 middle ear bones, diaphragm',ex:'Platypus, Kangaroo, Cat, Dog, Whale, Elephant, Bat, Human',notes:'Endothermic, hair/fur, mammary glands, 3 middle ear bones, diaphragm.',key:'OUR class. ~6,500 species. 3 subclasses: Monotremata, Marsupialia, Placentalia.'},
+  monotremata:{name:'Monotremata',common:'Egg-laying Mammals (Platypus + Echidnas)',ck:'monotreme',path:false,sub:'Only mammals that lay eggs; no nipples; cloaca',ex:'Duck-billed platypus, Short-beaked echidna, Long-beaked echidna (3 species in New Guinea)',notes:'Lay eggs. Have cloaca. Produce milk but no nipples. Electroreception (platypus).',key:'Only 5 species alive! Platypus = venomous + uses electroreception to hunt in murky water.'},
+  marsupialia:{name:'Marsupialia',common:'Pouched Mammals (Kangaroo / Koala / Opossum)',ck:'marsupial',path:false,sub:'Born tiny, finish developing in external pouch',ex:'Red kangaroo, Koala (not a bear!), Virginia opossum (only N.American marsupial!), Tasmanian devil, Wombat, Quokka',notes:'Born undeveloped; finish growing in external pouch (marsupium). Mostly Australia.',key:'Opossum = only marsupial native to N.America. "Playing possum" = real catatonic defense!'},
+  placentalia:{name:'Placentalia',common:'Placental Mammals (Most Mammals)',ck:'placental',path:true,sub:'Fully develop inside mother via placenta',ex:'Cats, dogs, cows, elephants, whales, bats, humans',notes:'Young develop fully inside mother via placenta. Born relatively well-developed.',key:'OUR subclass. Most successful mammals. Placenta = efficient nutrient/waste exchange.'},
+  carnivora:{name:'Order Carnivora',common:'Carnivores (Cats + Dogs + Bears + Seals)',ck:'carnivora',path:false,sub:'Carnassial shearing teeth; includes omnivores too',ex:'Cats, dogs, lions, wolves, bears, hyenas, sea lions, otters, raccoons',notes:'Carnassial teeth for shearing meat. Includes omnivores like bears and pandas.',key:'Carnivora does NOT mean only meat-eaters -- panda, bear, raccoon all included!'},
+  feliformia:{name:'Feliformia',common:'Cat-like Carnivores (Cats / Lions / Tigers / Hyenas)',ck:'carnivora',path:false,sub:'Retractable claws, short snout, ambush predators',ex:'Domestic cat (Felis catus), African lion, Bengal tiger, Cheetah, Leopard, Snow leopard, Cougar, Ocelot, Hyena, Mongoose',notes:'Short snout, retractable claws, ambush predation.',key:'Cheetah = fastest land animal (112 km/h). Cannot roar -- only purrs. Non-retractable claws!'},
+  caniformia:{name:'Caniformia',common:'Dog-like Carnivores (Dogs / Wolves / Bears / Seals)',ck:'carnivora',path:false,sub:'Long snout, non-retractable claws, stamina hunters',ex:'Gray wolf, Domestic dog, Red fox, Grizzly bear, Polar bear, Sea lion, Walrus, Wolverine, Raccoon, Otter',notes:'Long snouts, non-retractable claws, built for endurance.',key:'Bears, sea lions, walruses, otters, raccoons are ALL Caniformia! Not just dogs.'},
+  artiodactyla:{name:'Order Artiodactyla',common:'Even-toed Hoofed Mammals',ck:'artiodact',path:false,sub:'Even number of weight-bearing toes; many ruminants',ex:'Cows, pigs, deer, giraffes, hippos, camels, sheep, goats',notes:'Even number of weight-bearing toes. Many ruminants (multi-stomach digestion).',key:'Hippos = closest living land relative of WHALES! Both are Artiodactyla.'},
+  bovinae:{name:'Subfamily Bovinae',common:'Cattle / Bison / Buffalo / Yak',ck:'artiodact',path:false,sub:'Hollow unbranched permanent horns, ruminants',ex:'Domestic cow (Bos taurus), American bison, Water buffalo, Tibetan yak, Gaur, Banteng',notes:'Unbranched hollow horns (never shed). 4-chambered ruminant stomach.',key:'Cows have 4-chambered stomach. No upper incisors -- uses hard palate instead!'},
+  suidae:{name:'Suidae + Hippos',common:'Pigs / Wild Boar / Hippos / Peccaries',ck:'artiodact',path:false,sub:'Pigs, peccaries, hippos',ex:'Wild boar, Domestic pig, Common hippo, Pygmy hippo, Peccary, Babirusa',notes:'Pigs = omnivores. Hippos = semi-aquatic, closest land relatives of whales.',key:'Hippo milk is pink! Contains hipposudoric acid (natural sunscreen + antibiotic).'},
+  cervidae:{name:'Cervidae + Giraffidae',common:'Deer / Moose / Giraffe / Antelope / Okapi',ck:'artiodact',path:false,sub:'Branching antlers shed annually (vs permanent horns)',ex:'White-tailed deer, Moose (largest deer), Reindeer, Giraffe (tallest animal 5.5m!), Okapi, Springbok, Impala',notes:'Branching antlers shed and regrow annually vs permanent horns.',key:'Giraffe = tallest living animal (5.5m). Has SAME 7 neck vertebrae as you!'},
+  camelidae:{name:'Camelidae',common:'Camels / Llamas / Alpacas / Vicunas',ck:'artiodact',path:false,sub:'Padded feet, fat stored in humps (NOT water!)',ex:'Dromedary camel (1 hump), Bactrian camel (2 humps), Llama, Alpaca, Vicuna, Guanaco',notes:'Padded feet not true hooves. Store FAT (not water) in humps.',key:'Camels store FAT not water in humps. Can drink 200 liters in one sitting!'},
+  cetacea:{name:'Order Cetacea',common:'Whales / Dolphins / Porpoises',ck:'cetacea',path:false,sub:'Fully aquatic; evolved from land Artiodactyla ~50 mya',ex:'Humpback whale, Blue whale (largest animal EVER 33m!), Bottlenose dolphin, Orca, Narwhal, Beluga, Sperm whale',notes:'Fully aquatic. Horizontal tail flukes. Evolved from land artiodactyls ~50 mya.',key:'Pakicetus = 50 mya walking whale ancestor. Blue whale = largest animal that EVER lived!'},
+  perissodactyla:{name:'Order Perissodactyla',common:'Odd-toed Hoofed Mammals (Horses / Rhinos / Tapirs)',ck:'perisso',path:false,sub:'Odd number toes; weight on middle (3rd) toe',ex:'Plains zebra, Domestic horse (1 toe!), White rhino, Black rhino, Sumatran rhino (critically endangered), Malayan tapir',notes:'Odd number of weight-bearing toes. Weight on middle (3rd) toe. Hindgut fermenters.',key:'Horse = 1 toe (hoof). Rhino = 3 toes. Tapir = 4 front + 3 back toes. All Perissodactyla!'},
+  proboscidea:{name:'Order Proboscidea',common:'Elephants (+ Extinct Mammoths / Mastodons)',ck:'perisso',path:false,sub:'Prehensile trunk = fused nose + upper lip',ex:'African bush elephant (largest land animal!), African forest elephant, Asian elephant, Woolly mammoth (extinct), Mastodon (extinct)',notes:'Prehensile trunk = fused nose + upper lip. Tusks = elongated incisors.',key:'Elephants mourn dead, recognize themselves in mirrors, use tools, show empathy.'},
+  chiroptera:{name:'Order Chiroptera',common:'Bats (Only Flying Mammals)',ck:'perisso',path:false,sub:'True powered flight + echolocation in most species',ex:'Little brown bat, Flying fox (fruit bat; 1.7m wingspan!), Vampire bat, Horseshoe bat, Bumblebee bat (smallest mammal by size)',notes:'Only mammals with true powered flight. Echolocation in most species.',key:'~1,400 bat species = 20% of ALL mammal species! Vital pollinators of many crops.'},
+  rodentia:{name:'Order Rodentia',common:'Rodents (Mice / Rats / Squirrels / Beavers)',ck:'rodentia',path:false,sub:'Ever-growing incisors; must gnaw constantly',ex:'House mouse, Norway rat, Eastern gray squirrel, North American beaver, Capybara (65kg largest rodent!), Prairie dog, Porcupine',notes:'Ever-growing incisors. Must gnaw constantly or teeth overgrow.',key:'~40% of all mammal species are rodents. Capybara = largest living rodent (65 kg).'},
+  lagomorpha:{name:'Order Lagomorpha',common:'Rabbits / Hares / Pikas',ck:'rodentia',path:false,sub:'4 upper incisors (not 2 like rodents); cannot vomit',ex:'European rabbit, Jackrabbit, Snowshoe hare, American pika, Eastern cottontail',notes:'4 upper incisors (not 2 like rodents). Cannot vomit.',key:'Rabbits eat own droppings (cecotrophy) for nutrients. NOT rodents!'},
+  insectivora:{name:'Insectivora + allies',common:'Hedgehogs / Shrews / Moles',ck:'rodentia',path:false,sub:'Small primitive insect-eating placental mammals',ex:'European hedgehog, Common shrew (smallest mammal by weight!), European mole, Moonrat, Tenrec',notes:'Primitive placental mammals. Small, insect-eating.',key:'Shrews must eat every 2 hours or starve to death. Highest mammal metabolism!'},
+  primates:{name:'Order Primates',common:'Primates (Lemurs / Monkeys / Apes / Humans)',ck:'primates',path:true,sub:'Large brain, 3D binocular vision, opposable thumbs',ex:'Ring-tailed lemur, Capuchin, Baboon, Gibbon, Orangutan, Gorilla, Chimp, Bonobo, Human',notes:'Large brains, forward-facing eyes (3D binocular vision), grasping hands.',key:'OUR order. 3D vision evolved for catching insects or navigating in trees.'},
+  strepsirrhini:{name:'Strepsirrhini',common:'Wet-nosed Primates (Lemurs / Lorises / Bushbabies)',ck:'primates',path:false,sub:'Moist rhinarium (wet nose); mostly Madagascar',ex:'Ring-tailed lemur, Aye-aye (tap-extracts insects!), Slow loris, Bushbaby (galago), Sifaka, Indri',notes:'Moist rhinarium. Most primitive primates. Mostly Madagascar.',key:'Aye-aye = worlds largest nocturnal primate. Uses elongated finger to tap-extract insects!'},
+  haplorrhini:{name:'Haplorhini',common:'Dry-nosed Primates (Monkeys / Apes / Humans)',ck:'primates',path:true,sub:'Dry nose, larger brains, trichromatic color vision',ex:'Capuchin, Macaque, Baboon, Gibbon, Orangutan, Gorilla, Chimp, Bonobo, Human',notes:'Dry nose, larger brains, trichromatic color vision.',key:'Includes ALL monkeys and apes. Trichromatic (red/green/blue) color vision.'},
+  platyrrhini:{name:'Platyrrhini',common:'New World Monkeys (Americas)',ck:'primates',path:false,sub:'Flat nose sideways; some have prehensile tails; Americas',ex:'Capuchin monkey, Spider monkey, Howler monkey (4.8km roar!), Marmoset, Tamarin, Squirrel monkey',notes:'Flat noses pointing sideways. Some have prehensile tails. Americas only.',key:'Howler monkey = loudest land animal. Call heard 4.8 km away!'},
+  catarrhini:{name:'Catarrhini',common:'Old World Monkeys + All Apes + Humans',ck:'primates',path:true,sub:'Narrow downward nose; no prehensile tail; Africa + Asia',ex:'Baboon, Macaque, Mandrill, Gibbon, Orangutan, Gorilla, Chimp, Bonobo, Human',notes:'Narrow downward-pointing noses. No prehensile tails. Africa + Asia.',key:'Includes ALL apes. We are Catarrhini.'},
+  cercopithecidae:{name:'Cercopithecidae',common:'Old World Monkeys (Baboons / Macaques / Mandrills)',ck:'primates',path:false,sub:'Ischial callosities (hard sitting pads)',ex:'Japanese macaque (snow monkey), Mandrill (most colorful mammal!), Gelada, Proboscis monkey, Colobus',notes:'Old World monkeys with ischial callosities (hard sitting pads).',key:'Mandrill = most colorful mammal alive. Males have vivid blue/red/purple face!'},
+  hominoidea:{name:'Hominoidea',common:'Apes (Gibbons + Great Apes + Humans)',ck:'hominid',path:true,sub:'No tail, large brain, broad chest, flexible shoulders',ex:'Gibbon, Siamang, Orangutan, Gorilla, Chimp, Bonobo, Human',notes:'No tail, larger brains, broader chest, more flexible shoulders than monkeys.',key:'All apes lack a tail. Gibbons = lesser apes. Great apes = orangutans, gorillas, chimps, bonobos, us.'},
+  hylobatidae:{name:'Hylobatidae',common:'Gibbons / Siamangs (Lesser Apes)',ck:'hominid',path:false,sub:'Smallest apes, brachiation (arm-swinging) champions',ex:'Siamang, Lar gibbon (white-handed gibbon), Hoolock gibbon, Kloss gibbon',notes:'Smallest apes. Masters of brachiation (arm-swinging locomotion).',key:'Gibbons = fastest arboreal animals (55 km/h arm-swinging). 20 species.'},
+  hominidae:{name:'Family Hominidae',common:'Great Apes (Orangutan / Gorilla / Chimp / Bonobo / Human)',ck:'hominid',path:true,sub:'Large brain, no tail, complex social behavior',ex:'Bornean orangutan, Sumatran orangutan, Western gorilla, Mountain gorilla, Common chimp, Bonobo, Human',notes:'Large bodies, no tail, large brains, complex social behavior.',key:'We share 98.7% DNA with chimps, 98.3% with bonobos, 96% with gorillas.'},
+  ponginae:{name:'Ponginae',common:'Orangutans (Only Asian Great Apes)',ck:'hominid',path:false,sub:'Only great apes outside Africa; most solitary',ex:'Bornean orangutan, Sumatran orangutan, Tapanuli orangutan (discovered 2017! Only ~800 left)',notes:'Asia-only great apes. Most solitary great apes. Reddish-orange hair.',key:'Tapanuli orangutan discovered 2017 -- only ~800 individuals. Most endangered great ape!'},
+  gorillini:{name:'Gorillini',common:'Gorillas',ck:'hominid',path:false,sub:'Largest living primates; knuckle-walkers',ex:'Western lowland gorilla, Eastern lowland gorilla, Mountain gorilla, Cross River gorilla',notes:'Largest living primates. Males up to 180 kg. Knuckle-walkers.',key:'Gorillas share 96% DNA with humans. Silverbacks lead family troops of 5-30.'},
+  hominini:{name:'Tribe Hominini',common:'Chimps + Bonobos + Humans (Closest Relatives)',ck:'human',path:true,sub:'Shared common ancestor ~6-7 million years ago',ex:'Common chimpanzee (Pan troglodytes), Bonobo (Pan paniscus), Homo sapiens (you!)',notes:'Closest living relatives. Shared ancestor ~6-7 million years ago.',key:'Bonobos = most peaceful great ape. Chimps = most aggressive. Humans = in between!'},
+  panini:{name:'Genus Pan',common:'Chimpanzees + Bonobos',ck:'hominid',path:false,sub:'98.7% shared DNA with humans; 2 species only',ex:'Common chimpanzee (Pan troglodytes), Bonobo (Pan paniscus)',notes:'Only 2 species. Our closest living relatives. 98.7% shared DNA.',key:'Chimps make and use tools. Bonobos resolve conflict through social bonding.'},
+  homo:{name:'Genus Homo',common:'Humans + Extinct Human Species',ck:'human',path:true,sub:'Fully bipedal, ~1400cc brain, complex language',ex:'Homo sapiens (us!), H. neanderthalensis (extinct ~40,000 ya), H. erectus (extinct), H. habilis (handy man)',notes:'Fully bipedal, enormous brain (~1,400cc), complex abstract language.',key:'H. sapiens emerged ~300,000 ya in Africa. We interbred with Neanderthals (4% of our DNA)!'},
+  sapiens:{name:'Homo sapiens',common:'Modern Humans -- YOU!',ck:'human',path:true,sub:'At the tip of 3.8 billion years of unbroken evolution',ex:'Abhinav! -- and 8 billion other humans alive today',notes:'Modern humans. Only surviving Homo species. Capable of studying this entire taxonomy.',key:'YOU are at the very tip of an unbroken 3.8-billion-year lineage. Every single ancestor survived!'},
+};
+
+const ROWS=[
+  {r:'THREE DOMAINS OF LIFE',ids:['bacteria','archaea','eukarya']},
+  {r:'KINGDOMS OF EUKARYA',ids:['protista','fungi','plantae','animalia']},
+  {r:'PLANT SUBDIVISIONS',ids:['nonvasc','seedlessvask','gymno','angio']},
+  {r:'ANIMAL PHYLA',ids:['porifera','cnidaria','bilateria']},
+  {r:'BILATERAL SPLIT',ids:['protostomia','deuterostomia']},
+  {r:'PROTOSTOME GROUPS',ids:['lophot','ecdysozoa']},
+  {r:'LOPHOTROCHOZOA PHYLA',ids:['platyhel','annelida','mollusca']},
+  {r:'ECDYSOZOA PHYLA',ids:['nematoda','arthropoda']},
+  {r:'ARTHROPOD CLASSES',ids:['chelicerata','myriapoda','crustacea','hexapoda']},
+  {r:'INSECT ORDERS',ids:['coleoptera','lepidoptera','hymenoptera','diptera']},
+  {r:'DEUTEROSTOME PHYLA',ids:['echinodermata','chordata']},
+  {r:'CHORDATE SUBDIVISIONS',ids:['urochordata','cephalochordata','vertebrata']},
+  {r:'FISH-GRADE VERTEBRATES',ids:['agnatha','chondrichthyes','osteichthyes']},
+  {r:'TETRAPODS + AMPHIBIA',ids:['tetrapoda','amphibia']},
+  {r:'AMNIOTE CLASSES',ids:['lepidosauria','testudines','crocodilia','aves','mammalia']},
+  {r:'MAMMAL SUBCLASSES',ids:['monotremata','marsupialia','placentalia']},
+  {r:'PLACENTAL MAMMAL ORDERS',ids:['carnivora','artiodactyla','cetacea','perissodactyla','proboscidea','chiroptera','rodentia','lagomorpha','insectivora','primates']},
+  {r:'CARNIVORA SUBORDERS',ids:['feliformia','caniformia']},
+  {r:'ARTIODACTYLA FAMILIES',ids:['bovinae','suidae','cervidae','camelidae']},
+  {r:'PRIMATE SUBORDERS',ids:['strepsirrhini','haplorrhini']},
+  {r:'HAPLORHINE DIVISIONS',ids:['platyrrhini','catarrhini']},
+  {r:'CATARRHINE FAMILIES',ids:['cercopithecidae','hominoidea']},
+  {r:'APE FAMILIES',ids:['hylobatidae','hominidae']},
+  {r:'GREAT APE SUBFAMILIES',ids:['ponginae','gorillini','hominini']},
+  {r:'TRIBE HOMININI',ids:['panini','homo']},
+  {r:'SPECIES',ids:['sapiens']},
+];
+
+function renderTree(){
+  let h='';
+  ROWS.forEach(row=>{
+    const nodes=row.ids.map(id=>({id,...N[id]})).filter(n=>n.name);
+    if(!nodes.length)return;
+    h+=`<div class="level-label">${row.r}</div><div class="node-row">`;
+    nodes.forEach(n=>{
+      const c=C[n.ck]||C.animal;
+      let badge=n.id==='sapiens'?'<div class="tn-you">YOU ARE HERE!</div>':n.path?'<div class="tn-path">your lineage</div>':'';
+      h+=`<div class="tnode" id="tn-${n.id}" style="background:${c.bg};border-color:${c.bd};color:${c.t}" onclick="showDetail('${n.id}')">
+        <div class="tn-name">${n.name}</div>
+        <div class="tn-common">${n.common}</div>
+        <div class="tn-ex">${(n.ex||'').split(',').slice(0,2).join(',').trim()}...</div>
+        ${badge}
+      </div>`;
+    });
+    h+='</div>';
+  });
+  document.getElementById('tree-root').innerHTML=h;
+}
+
+let selId=null;
+function showDetail(id){
+  if(selId){const old=document.getElementById('tn-'+selId);if(old)old.classList.remove('sel');}
+  selId=id;
+  const el=document.getElementById('tn-'+id);if(el)el.classList.add('sel');
+  const n=N[id];if(!n)return;
+  const c=C[n.ck]||C.animal;
+  const chips=(n.ex||'').split(',').map(e=>`<span class="dp-chip">${e.trim()}</span>`).join('');
+  document.getElementById('detail-inner').innerHTML=`
+    <div class="dp-title" style="color:${c.t}">${n.name}</div>
+    <div class="dp-common" style="color:${c.t}">${n.common}</div>
+    <div class="dp-sub">${n.sub}</div>
+    <div class="dp-key" style="background:${c.bg};border:1px solid ${c.bd};color:${c.t}"><strong>Key:</strong> ${n.key}</div>
+    <div class="dp-notes">${n.notes}</div>
+    <div class="dp-ex-label">Examples</div>
+    <div class="dp-chips">${chips}</div>
+    ${n.path?'<div class="dp-lineage">Part of YOUR evolutionary lineage</div>':''}
+  `;
+}
+
+[{l:'Your lineage',c:'#34d399'},{l:'Domain',c:'#a78bfa'},{l:'Protist',c:'#38bdf8'},{l:'Fungi',c:'#fb923c'},{l:'Plant',c:'#4ade80'},{l:'Invertebrate',c:'#fb7185'},{l:'Fish',c:'#38bdf8'},{l:'Amphibian',c:'#a3e635'},{l:'Reptile',c:'#fbbf24'},{l:'Bird',c:'#e879f9'},{l:'Mammal',c:'#fbbf24'},{l:'Carnivora',c:'#fb7185'},{l:'Artiodactyla',c:'#86efac'},{l:'Cetacea',c:'#7dd3fc'},{l:'Perissodactyla',c:'#c4b5fd'},{l:'Rodentia',c:'#fcd34d'},{l:'Primates',c:'#818cf8'},{l:'Hominids/You',c:'#f472b6'}]
+.forEach(x=>document.getElementById('legend').insertAdjacentHTML('beforeend',`<div class="leg"><div class="leg-dot" style="background:${x.c}"></div>${x.l}</div>`));
+
+const PATH_IDS=['eukarya','animalia','bilateria','deuterostomia','chordata','vertebrata','gnathostomata','tetrapoda','amniota','mammalia','placentalia','primates','haplorrhini','catarrhini','hominoidea','hominidae','hominini','homo','sapiens'];
+const PATH_RANKS=['Domain','Kingdom','Subdivision','Superphylum','Phylum','Subphylum','Subdivision','Superclass','Clade','Class','Subclass','Order','Suborder','Parvorder','Superfamily','Family','Tribe','Genus','Species'];
+function renderPath(){
+  let h='<div style="font-size:11px;color:#6e7681;margin-bottom:10px">Your complete 19-step taxonomic journey from Domain to Species</div>';
+  PATH_IDS.forEach((id,i)=>{
+    const n=N[id];if(!n)return;
+    const c=C[n.ck]||C.path;
+    h+=`<div class="prow"><div class="prank">${PATH_RANKS[i]}</div><div class="pline" style="background:${c.bd}"></div>
+    <div class="pcard" style="background:${c.bg};border-color:${c.bd}">
+      <div class="pname" style="color:${c.t}">${n.name} <span style="font-size:10px;opacity:.7">-- ${n.common}</span></div>
+      <div class="pkey">${n.key}</div>
+    </div></div>`;
+  });
+  document.getElementById('path-content').innerHTML=h;
+}
+
+const CARDS=[
+  {q:'THREE domains of life?',h:'BAE',a:'Bacteria, Archaea, Eukarya',d:'Bacteria and Archaea = prokaryotes (no nucleus). Only Eukarya have a nucleus.'},
+  {q:'What embryonic feature defines Deuterostomia?',h:'Anus...mouth...',a:'Anus forms FIRST; mouth forms second',d:'Deutero=second, stoma=mouth. We are deuterostomes.'},
+  {q:'Name the 4 Chordata defining features (NNPP)',h:'Notochord...',a:'Notochord, dorsal Nerve cord, Pharyngeal slits, Post-anal tail',d:'All 4 present in human embryo!'},
+  {q:'What did Amniota evolve and why is it significant?',h:'Think: eggs on land',a:'Amniotic egg with 4 membranes -- freed vertebrates from needing water to reproduce',d:'Amnion, chorion, allantois, yolk sac.'},
+  {q:'3 mammal subclasses with real examples',h:'Egg / Pouch / Placenta',a:'Monotremata (platypus, echidna), Marsupialia (kangaroo, koala, opossum), Placentalia (cats, dogs, whales, humans)',d:'Only 5 monotreme species alive.'},
+  {q:'Feliformia vs Caniformia -- examples of each',h:'Cats vs Dogs',a:'Feliformia (retractable claws): lion, tiger, cheetah, hyena. Caniformia (long snout): wolf, dog, grizzly bear, sea lion, walrus',d:'Both are Order Carnivora.'},
+  {q:'Why are hippos and whales closely related?',h:'Artiodactyla...',a:'Both are Artiodactyla. Whales evolved from land artiodactyls ~50 mya. Pakicetus = walking whale ancestor.',d:'Blue whale = largest animal ever lived (33m).'},
+  {q:'Order Perissodactyla -- animals and toe counts',h:'Odd-toed...',a:'Horse (1 toe/hoof), Zebra (1 toe), Rhino (3 toes), Tapir (4 front + 3 back toes)',d:'Odd number of weight-bearing toes. Weight on middle (3rd) toe.'},
+  {q:'6 animals in Order Cetacea',h:'All aquatic mammals...',a:'Humpback whale, Blue whale, Bottlenose dolphin, Orca, Narwhal, Beluga, Sperm whale',d:'Horizontal tail flukes. Evolved from land mammals ~50 mya.'},
+  {q:'Full classification of a domestic cat',h:'DKPCOFGS',a:'Eukarya, Animalia, Chordata, Mammalia, Carnivora, Felidae, Felis, F. catus',d:'Felidae = lions, tigers, leopards, cheetahs + domestic cats.'},
+  {q:'Full classification of a domestic cow',h:'Even-toed hoofed...',a:'Eukarya, Animalia, Chordata, Mammalia, Artiodactyla, Bovidae (Bovinae), Bos, B. taurus',d:'4-chambered stomach. No upper incisors!'},
+  {q:'4 Arthropod classes with examples',h:'8-legs/many-legs/aquatic/6-legs',a:'Chelicerata (spiders, scorpions), Myriapoda (centipedes, millipedes), Crustacea (crabs, lobsters), Hexapoda/Insects (beetles, butterflies)',d:'Arthropoda = most diverse animal phylum.'},
+  {q:'What makes Monotremata unique? Name all 5 species.',h:'Egg-laying mammals...',a:'Only egg-laying mammals. No nipples. Electroreception (platypus). 5 species: 1 platypus + 4 echidna spp.',d:'All in Australia/New Guinea.'},
+  {q:'Tiktaalik -- what is it and why important?',h:'375 million years ago...',a:'375 mya lobe-finned fish with proto-limbs. Shows exact fish-to-tetrapod transition.',d:'Found Canada 2004. Had neck, ribs, proto-wrist for pushing up onto land.'},
+  {q:'% DNA shared: humans with chimps and gorillas?',h:'Very close...',a:'98.7% with chimps and bonobos; 96% with gorillas',d:'Split from chimps ~6-7 mya. Split from gorillas ~8-9 mya.'},
+  {q:'Strepsirrhini vs Haplorhini with examples',h:'Wet vs dry nose...',a:'Strepsirrhini (wet nose): lemurs, lorises, bushbabies. Haplorhini (dry nose): all monkeys, apes, humans.',d:'We are Haplorhini with trichromatic color vision.'},
+  {q:'Name all Hominidae (Great Apes) species',h:'Count carefully...',a:'3 orangutan spp + gorilla (4 subspecies) + common chimp + bonobo + human',d:'Tapanuli orangutan discovered 2017! Only ~800 individuals.'},
+  {q:'Platyrrhini vs Catarrhini differences',h:'New vs Old World monkeys',a:'Platyrrhini (Americas): flat nose, prehensile tails. Catarrhini (Africa/Asia): narrow nose, all apes.',d:'Howler monkey = loudest land animal. Call heard 4.8 km away.'},
+  {q:'4 insect orders with examples',h:'CLHD',a:'Coleoptera (beetles, fireflies), Lepidoptera (butterflies, moths), Hymenoptera (bees, ants, wasps), Diptera (flies, mosquitoes)',d:'Together ~500,000+ described species.'},
+  {q:'Gymnosperms vs Angiosperms -- examples',h:'Naked vs enclosed seeds',a:'Gymnosperms (naked seeds on cones): pine, spruce, sequoia, ginkgo. Angiosperms (in fruits): rose, apple, sunflower, rice.',d:'Angiosperms = ~300,000 species and most dominant plants today.'},
+  {q:'What is the water vascular system in Echinoderms?',h:'Hydraulic tubes...',a:'Hydraulic system of fluid-filled canals powering thousands of tube feet for movement, feeding, and sensing.',d:'Echinoderms = closest invertebrate relatives!'},
+  {q:'Order Chiroptera -- what makes bats unique?',h:'Only mammals that...',a:'Only mammals with true powered flight. Echolocation in most. ~1,400 species = 20% of all mammal species.',d:'Bumblebee bat = worlds smallest mammal by size.'},
+  {q:'When and where did Homo sapiens emerge?',h:'Recent...',a:'~300,000 years ago in Africa. "Out of Africa" migration ~60,000-70,000 ya.',d:'Interbred with Neanderthals (up to 4% Neanderthal DNA in non-African humans today).'},
+  {q:'Lophotrochozoa -- 3 phyla with examples',h:'Soft complex protostomes...',a:'Platyhelminthes (tapeworms, planarians), Annelida (earthworms, leeches), Mollusca (octopus, snails, clams)',d:'Octopus = most intelligent invertebrate. 3 hearts, blue blood.'},
+  {q:'Ecdysozoa -- what animals are in this group?',h:'Molting...',a:'Nematodes, Chelicerata (spiders), Myriapoda (centipedes), Crustacea (crabs), Insects (beetles, flies)',d:'~80% of all animal species are ecdysozoans.'},
+];
+let fcIdx=0,fcOrd=[...Array(CARDS.length).keys()];
+function renderFC(){
+  const c=CARDS[fcOrd[fcIdx]];
+  document.getElementById('fc-q').textContent=c.q;
+  document.getElementById('fc-h').textContent='Hint: '+c.h;
+  document.getElementById('fc-a').textContent=c.a;
+  document.getElementById('fc-d').textContent=c.d;
+  document.getElementById('fc-prog').textContent=(fcIdx+1)+'/'+CARDS.length;
+  document.getElementById('flipcard').classList.remove('flipped');
+}
+function fcNav(d){fcIdx=(fcIdx+d+CARDS.length)%CARDS.length;renderFC();}
+function shuffleFC(){for(let i=fcOrd.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[fcOrd[i],fcOrd[j]]=[fcOrd[j],fcOrd[i]];}fcIdx=0;renderFC();}
+
+const CLOZES=[
+  {t:'The three domains: {Bacteria}, {Archaea}, and Eukarya. Only Eukarya have a true nucleus.',b:['Bacteria','Archaea']},
+  {t:'In {Deuterostomia}, the anus forms FIRST in embryo; mouth forms second. We ARE deuterostomes.',b:['Deuterostomia']},
+  {t:'4 Chordate features: {notochord}, dorsal nerve cord, {pharyngeal slits}, and post-anal tail.',b:['notochord','pharyngeal slits']},
+  {t:'Mammalia: egg-laying {Monotremata} (platypus, echidna), pouched {Marsupialia} (kangaroo, koala), and {Placentalia} (us!).',b:['Monotremata','Marsupialia','Placentalia']},
+  {t:'Order {Carnivora} splits into {Feliformia} (cats: retractable claws) and Caniformia (dogs, bears).',b:['Carnivora','Feliformia']},
+  {t:'Order {Perissodactyla}: horses ({1} toe/hoof), rhinos ({3} toes), tapirs (4 front + 3 back).',b:['Perissodactyla','1','3']},
+  {t:'Order {Cetacea} (whales, dolphins, porpoises) evolved from land {Artiodactyla} ~50 million years ago.',b:['Cetacea','Artiodactyla']},
+  {t:'Humans share {98.7}% DNA with chimpanzees and {96}% with gorillas.',b:['98.7','96']},
+  {t:'Chimps + bonobos + humans = Tribe {Hominini}. Our genus is {Homo}. Our species is H. {sapiens}.',b:['Hominini','Homo','sapiens']},
+  {t:'Arthropoda: {Chelicerata} (spiders: 8 legs), Myriapoda (centipedes), Crustacea (crabs), and {Hexapoda} (insects: 6 legs).',b:['Chelicerata','Hexapoda']},
+  {t:'Fossil {Tiktaalik} (375 mya) shows the transition from {lobe-finned fish} to four-limbed tetrapods.',b:['Tiktaalik','lobe-finned fish']},
+  {t:'{Strepsirrhini} (wet-nosed: lemurs, lorises) and {Haplorhini} (dry-nosed: monkeys, apes, humans) are the two primate suborders.',b:['Strepsirrhini','Haplorhini']},
+];
+let clozeIdx=0;
+function renderCloze(){
+  const c=CLOZES[clozeIdx];
+  let txt=c.t;
+  c.b.forEach((b,i)=>{txt=txt.replace(`{${b}}`,`<span class="blank" id="bl${i}" onclick="revB(${i},'${b}')">&nbsp;&nbsp;&nbsp;&nbsp;</span>`);});
+  document.getElementById('cloze-area').innerHTML=`<div class="cloze-text">${txt}</div>`;
+  document.getElementById('cloze-prog').textContent=`${clozeIdx+1} / ${CLOZES.length}`;
+}
+function revB(i,a){const el=document.getElementById('bl'+i);if(el){el.textContent=a;el.classList.add('rev');}}
+function clozeNav(d){clozeIdx=(clozeIdx+d+CLOZES.length)%CLOZES.length;renderCloze();}
+
+const QB=[
+  {q:'Which ORDER do whales and dolphins belong to?',o:['Artiodactyla','Cetacea','Perissodactyla','Carnivora'],a:1},
+  {q:'How many toes does a horse have?',o:['3','2','4','1'],a:3},
+  {q:'Crocodilians are most closely related to which modern animals?',o:['Lizards','Turtles','Birds','Mammals'],a:2},
+  {q:'Platypus is unique because it:',o:['Has no backbone','Lays eggs AND nurses young with milk','Is fully aquatic','Has no fur'],a:1},
+  {q:'In which group does the MOUTH form FIRST in embryo?',o:['Deuterostomia','Bilateria','Protostomia','Amniota'],a:2},
+  {q:'Hippos are closest living land relatives of:',o:['Rhinoceroses','Whales (Cetacea)','Pigs','Elephants'],a:1},
+  {q:'% DNA humans share with chimpanzees?',o:['85%','92%','98.7%','96%'],a:2},
+  {q:'Correct taxonomic rank order?',o:['Domain-Kingdom-Class-Phylum','Domain-Kingdom-Phylum-Class','Kingdom-Domain-Phylum-Class','Domain-Phylum-Kingdom-Class'],a:1},
+  {q:'Tapanuli orangutan was discovered in:',o:['1975','1998','2017','1938'],a:2},
+  {q:'~40% of all mammal species belong to which order?',o:['Chiroptera','Insectivora','Carnivora','Rodentia'],a:3},
+  {q:'Green algae (Chlorophyta) in Protista are ancestors of:',o:['Fungi','All land plants','Brown algae','Marine invertebrates'],a:1},
+  {q:'Which of these is Caniformia (NOT Feliformia)?',o:['Tiger','Cheetah','Grizzly bear','Snow leopard'],a:2},
+  {q:'Which fossil shows the fish-to-tetrapod transition?',o:['Archaeopteryx','Tiktaalik','Coelacanth','Pakicetus'],a:1},
+  {q:'How many Monotremata species are alive today?',o:['2','5','12','1'],a:1},
+  {q:'Howler monkey belongs to which primate group?',o:['Strepsirrhini','Catarrhini','Platyrrhini','Haplorhini only'],a:2},
+];
+let qSc=0,qTot=0;
+function loadQuiz(){
+  const sh=[...QB].sort(()=>Math.random()-.5).slice(0,5);
+  document.getElementById('quiz-area').innerHTML=sh.map((q,i)=>`
+    <div class="quiz-q" id="qq${i}">
+      <div class="qt">${i+1}. ${q.q}</div>
+      <div class="qopts">${q.o.map((o,j)=>`<button class="qopt" onclick="ansQ(${i},${j},${q.a},'qq${i}')">${o}</button>`).join('')}</div>
+    </div>`).join('');
+}
+function ansQ(qi,oi,cor,box){
+  const b=document.getElementById(box);
+  b.querySelectorAll('.qopt').forEach(x=>x.onclick=null);
+  b.querySelectorAll('.qopt')[oi].classList.add(oi===cor?'ok':'no');
+  b.querySelectorAll('.qopt')[cor].classList.add('ok');
+  if(oi===cor)qSc++;qTot++;
+  document.getElementById('qsc').textContent=qSc;
+  document.getElementById('qtot').textContent=qTot;
+  document.getElementById('sfill').style.width=Math.round(qSc/qTot*100)+'%';
+}
+
+[
+  {k:'DKPCOFGS',b:'Domain, Kingdom, Phylum, Class, Order, Family, Genus, Species',d:'"Dear King Philip Came Over For Great Spaghetti"'},
+  {k:'3 Domains = BAE',b:'Bacteria / Archaea / Eukarya',d:'"BAE" -- easy to remember, starts with the simplest life'},
+  {k:'Deuterostome trick',b:'Anus forms BEFORE mouth in embryo',d:'"Deu = second mouth, so anus is FIRST." Weird = memorable!'},
+  {k:'4 Chordate features NNPP',b:'Notochord, Nerve cord, Pharyngeal slits, Post-anal tail',d:'"No Naughty Professors Pretend" = NNPP'},
+  {k:'3 Mammal subclasses',b:'Monotremata (eggs) / Marsupialia (pouch) / Placentalia (placenta)',d:'"Eggs in a Moms Pouch, Please!" = E-P-P order'},
+  {k:'Carnivora split',b:'FELiformia = cats. CANiformia = dogs + bears + sea lions!',d:'"FELine = FELiformia." Fel = cat in Latin'},
+  {k:'Perissodactyla toes',b:'Horse (1), Rhino (3), Tapir (4/3)',d:'"PERI-scope sees ODD numbers of toes"'},
+  {k:'Artiodactyla',b:'Even-toed: cow (2), pig (4), hippo (4), camel (2)',d:'"ART draws with EVEN toes" -- A-R-T-iodactyla'},
+  {k:'Cetacea = ex-land mammals',b:'Whales evolved from land Artiodactyla ~50 mya',d:'"Whales CETA-d in the sea and never came back"'},
+  {k:'Tiktaalik',b:'375 mya fish-to-tetrapod transition fossil, found Canada',d:'"TikTAA-lik TikTok-ed out of water onto land"'},
+  {k:'98.7% chimp DNA',b:'Humans and chimps share 98.7% DNA',d:'"Only 1.3% makes you YOU"'},
+  {k:'Hominini Tribe',b:'Pan (chimps + bonobos) + Homo (humans)',d:'"Homo and Pan are in the HOMININI clan"'},
+  {k:'Monotremes: 5 species only',b:'1 platypus + 4 echidna species',d:'"MONO-tremes: one platypus, four echidnas"'},
+  {k:'Tapanuli 2017',b:'Tapanuli orangutan found 2017 -- only ~800 left',d:'"20-17 = 2017, only 800 (= 8 x 100) left"'},
+].forEach(m=>document.getElementById('mnem-grid').insertAdjacentHTML('beforeend',`<div class="mc"><div class="mk">${m.k}</div><div class="mb">${m.b}</div><div class="md">${m.d}</div></div>`));
+
+const CAs=[
+  {n:'Domestic Cat',c:C.carnivora,rows:[['Domain','Eukarya'],['Kingdom','Animalia'],['Phylum','Chordata'],['Class','Mammalia'],['Order','Carnivora'],['Suborder','Feliformia'],['Family','Felidae'],['Genus','Felis'],['Species','F. catus']],f:'32 teeth, retractable claws, purrs 25-150 Hz'},
+  {n:'Domestic Dog',c:C.carnivora,rows:[['Domain','Eukarya'],['Kingdom','Animalia'],['Phylum','Chordata'],['Class','Mammalia'],['Order','Carnivora'],['Suborder','Caniformia'],['Family','Canidae'],['Genus','Canis'],['Species','C. lupus familiaris']],f:'Subspecies of gray wolf. Smell 10,000x better than us.'},
+  {n:'Domestic Cow',c:C.artiodact,rows:[['Domain','Eukarya'],['Kingdom','Animalia'],['Phylum','Chordata'],['Class','Mammalia'],['Order','Artiodactyla'],['Family','Bovidae'],['Subfamily','Bovinae'],['Genus','Bos'],['Species','B. taurus']],f:'4-chambered stomach. No upper incisors!'},
+  {n:'You (Human)',c:C.human,rows:[['Domain','Eukarya'],['Kingdom','Animalia'],['Phylum','Chordata'],['Class','Mammalia'],['Order','Primates'],['Family','Hominidae'],['Tribe','Hominini'],['Genus','Homo'],['Species','H. sapiens']],f:'86 billion neurons, permanent bipedalism, language'},
+];
+document.getElementById('cmp-grid').innerHTML=CAs.map(a=>`
+  <div class="cc" style="background:${a.c.bg};border-color:${a.c.bd}">
+    <div class="ch" style="color:${a.c.t}">${a.n}</div>
+    ${a.rows.map((r,i)=>`<div class="cr" style="${i===4?'font-weight:700;color:'+a.c.t:''}">${r[0]}: <span style="${i===4?'color:'+a.c.t:''}">${r[1]}</span></div>`).join('')}
+    <div class="cdiv"></div><div class="cf">${a.f}</div>
+  </div>`).join('');
+document.getElementById('conv-box').innerHTML=`<strong style="color:#34d399">Where all four converge:</strong> Domain Eukarya &rarr; Kingdom Animalia &rarr; Phylum Chordata &rarr; Class Mammalia &rarr; Subclass Placentalia. Common ancestor ~90 million years ago -- dinosaurs still ruled Earth!<br><br><strong style="color:#8b949e">Where they diverge (Order level):</strong> Cat &amp; Dog into <span style="color:#fb7185">Carnivora</span> &bull; Cow into <span style="color:#86efac">Artiodactyla</span> &bull; You into <span style="color:#818cf8">Primates</span>. Three separate evolutionary paths for 85 million years.`;
+
+[
+  {y:'3,800 mya',e:'First life on Earth',n:'Bacteria-like prokaryotes. No nucleus.',k:true},
+  {y:'2,100 mya',e:'First eukaryotes',n:'True nucleus appears. Domain Eukarya begins.',k:true},
+  {y:'1,200 mya',e:'First multicellular organisms',n:'Sexual reproduction. Genetic diversity explodes.'},
+  {y:'600 mya',e:'First animals (Ediacaran)',n:'Soft-bodied multicellular animals in ocean.'},
+  {y:'541 mya',e:'Cambrian Explosion',n:'Rapid diversification of body plans. Bilateral symmetry dominates.',k:true},
+  {y:'525 mya',e:'First vertebrates -- jawless fish (Agnatha)',n:'No jaws, no paired fins, eel-like bodies.'},
+  {y:'470 mya',e:'Land plants colonize Earth',n:'From green algae (Chlorophyta). Bryophytes first.'},
+  {y:'420 mya',e:'Jaws evolve (Gnathostomata)',n:'Modified gill arches become jaws. Active predation now possible.',k:true},
+  {y:'375 mya',e:'Tiktaalik -- fish-to-tetrapod transition',n:'Lobe-finned fish with proto-limbs walks onto land.',k:true},
+  {y:'350 mya',e:'Amphibians colonize land',n:'First true tetrapods. Still need water for shell-less eggs.'},
+  {y:'320 mya',e:'Amniotic egg evolves',n:'Freedom from water! Reptiles, birds, and mammals now possible.',k:true},
+  {y:'225 mya',e:'First mammals appear',n:'Small, nocturnal, insectivorous. Dinosaurs also appear.'},
+  {y:'150 mya',e:'First birds from theropod dinosaurs',n:'Archaeopteryx. Feathers, hollow bones.'},
+  {y:'66 mya',e:'K-Pg mass extinction',n:'Asteroid impact. Non-avian dinosaurs extinct. Mammals diversify explosively.',k:true},
+  {y:'50 mya',e:'Whales return to sea (Pakicetus)',n:'Walking whale ancestor confirms artiodactyl origin.'},
+  {y:'55 mya',e:'Primates diversify',n:'Warm tropical forests. Large brains, 3D vision evolve.'},
+  {y:'6-7 mya',e:'Human-chimp last common ancestor',n:'Our lineage splits from genus Pan.',k:true},
+  {y:'4 mya',e:'Australopithecus -- bipedal apes',n:'First fully bipedal hominins in Africa.'},
+  {y:'2 mya',e:'Homo erectus -- first human outside Africa',n:'Used fire, tools. ~900cc brain.'},
+  {y:'300,000 ya',e:'Homo sapiens emerges in Africa',n:'Modern humans. Complex language, art, abstract thought.',k:true},
+  {y:'60-70,000 ya',e:'"Out of Africa" migration',n:'Modern humans spread globally. Interbred with Neanderthals.'},
+  {y:'40,000 ya',e:'Neanderthals go extinct',n:'Last other Homo species. We carry up to 4% Neanderthal DNA.'},
+  {y:'TODAY',e:'You -- Abhinav -- at the tip of 3.8 billion years',n:'Every ancestor survived long enough to reproduce. YOU are the result.',k:true},
+].forEach(t=>document.getElementById('timeline').insertAdjacentHTML('beforeend',`<div class="tli ${t.k?'key':''}"><div class="ty">${t.y}</div><div class="te">${t.e}</div><div class="tn2">${t.n}</div></div>`));
+
+function switchTab(name,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  el.classList.add('active');
+}
+
+renderTree(); renderFC(); renderCloze(); renderPath(); loadQuiz();
+</script>
+</body>
+</html>
